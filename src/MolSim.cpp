@@ -6,6 +6,7 @@
 #include <list>
 #include <cstring>
 #include <cstdlib>
+#include <cmath>
 #include <iostream>
 
 using namespace std;
@@ -16,6 +17,35 @@ using namespace std;
  * calculate the force for all particles
  */
 void calculateF();
+
+/**
+ * interface for methods of force calculation between two particles
+ * p is the main particle, for which the force is calculated
+ * p2 is the interaction partner
+ */
+class ForceCalc
+{
+public:
+	static double* calc(Particle p, Particle p2);
+};
+
+/**
+ * interface for input methods
+ */
+class Input
+{
+public:
+	static string read();
+};
+
+/**
+ * interface for output methods
+ */
+class Output
+{
+public:
+	static void write(string text);
+};
 
 /**
  * calculate the position for all particles
@@ -37,19 +67,69 @@ double start_time = 0;
 double end_time = 1000;
 double delta_t = 0.014;
 
-std::list<Particle> particles;
+//std::list<Particle> particles;
+
+/**
+ * container for encapsulation and iteration of the particle list
+ */
+class ParticleContainer {
+public:
+	list<Particle> particleList;
+	list<Particle>::iterator molecule, molPartner;
+
+	ParticleContainer () {
+		resetIterators();
+	}
+
+	void resetIterators()
+	{
+		molecule = particleList.begin();
+		molPartner = particleList.begin();
+	}
+} particles;
 
 
 int main(int argc, char* argsv[]) {
 
 	cout << "Hello from MolSim for PSE!" << endl;
-	if (argc != 2) {
-		cout << "Errounous programme call! " << endl;
-		cout << "./molsym filename" << endl;
+	
+	// parsing commandline parameters
+	if (argc < 2) {
+		cout << "Erroneous programme call! " << endl;
+		cout << "./molsim filename [end_time [delta_t]]" << endl;
+		exit(1);
+	}
+	else if (argc > 2) {
+		double tmp = atof(argsv[2]);
+
+		if (tmp > 0) {
+			cout << "using parameter end_time=" << tmp << endl;
+			end_time = tmp;
+		} else {
+			cout << "invalid parameter end_time!" << endl;
+			exit(1);
+		}
+		
+		if (argc > 3) {
+			double tmp = atof(argsv[3]);
+
+			if (tmp > 0) {
+				cout << "using parameter delta_t=" << tmp << endl;
+				delta_t = tmp;
+			} else {
+				cout << "invalid parameter delta_t!" << endl;
+				exit(1);
+			}
+
+			if (argc > 4) {
+				cout << "to many parameter!" <<endl;
+				exit(1);
+			}
+		}
 	}
 
 	FileReader fileReader;
-	fileReader.readFile(particles, argsv[1]);
+	fileReader.readFile(particles.particleList, argsv[1]);
 	// the forces are needed to calculate x, but are not given in the input file.
 	calculateF();
 
@@ -80,52 +160,95 @@ int main(int argc, char* argsv[]) {
 	return 0;
 }
 
+/**
+ * calculate the gravitational force between two particles
+ */
+class GravityEq : ForceCalc
+{
+public:
+	static double* calc(Particle p, Particle p2)
+	{
+		// calculate distance between p1 and p2
+		double distance = sqrt(	pow( (p.getX()[0] - p2.getX()[0]), 2) +
+								pow( (p.getX()[1] - p2.getX()[1]), 2) +
+								pow( (p.getX()[2] - p2.getX()[2]), 2) );
+
+		double a = p.getM() * p2.getM() / pow(distance, 3);
+
+		static double F[3];
+		for (int i=0; i<3; i++) {
+			F[i] = a * (p2.getX()[i] - p.getX()[i]);
+		}
+		return F;
+	}
+};
 
 void calculateF() {
-	list<Particle>::iterator iterator;
-	iterator = particles.begin();
+	particles.resetIterators();
 
-	while (iterator != particles.end()) {
-		list<Particle>::iterator innerIterator = particles.begin();
+	//iterate over all particles
+	while (particles.molecule != particles.particleList.end()) {
+		particles.molPartner = particles.particleList.begin();
+		Particle& p1 = *particles.molecule;
 
-		while (innerIterator != particles.end()) {
-			if (innerIterator != iterator) {
+		p1.getOldF() = p1.getF();	// set OldF to current F.
+		p1.getF()[0] = p1.getF()[1] = p1.getF()[2] = 0;	// set new F to zero.	
 
-				Particle& p1 = *iterator;
-				Particle& p2 = *innerIterator;
+		//iterate over the interaction partners
+		while (particles.molPartner != particles.particleList.end()) {
+			if (particles.molPartner != particles.molecule) {
 
-				// insert calculation of force here!
+				Particle& p2 = *particles.molPartner;
+				
+				double* F_i_j = GravityEq::calc(p1,p2);
+
+				// calculate force for each particle, add 
+				for (int i=0; i<3; i++) {
+					p1.getF()[i] += F_i_j[i];
+				}
 
 			}
-			++innerIterator;
+			++particles.molPartner;
 		}
-		++iterator;
+		++particles.molecule;
 	}
 }
-
 
 void calculateX() {
-	list<Particle>::iterator iterator = particles.begin();
-	while (iterator != particles.end()) {
+	particles.resetIterators();
 
-		Particle& p = *iterator;
+	//iterate over all particles
+	while (particles.molecule != particles.particleList.end()) {
 
-		// insert calculation of X here!
+		Particle& p = *particles.molecule;
 
-		++iterator;
+		double a = delta_t * delta_t / p.getM() / 2;
+		
+		// calculate x for each component
+		for (int i=0; i<3; i++) {
+			p.getX()[i] = p.getX()[i] + delta_t*p.getV()[i] + a*p.getF()[i];
+		}
+		
+		++particles.molecule;
 	}
 }
 
-
 void calculateV() {
-	list<Particle>::iterator iterator = particles.begin();
-	while (iterator != particles.end()) {
+	particles.resetIterators();
 
-		Particle& p = *iterator;
+	//iterate over all particles
+	while (particles.molecule != particles.particleList.end()) {
 
-		// insert calculation of velocity here!
+		Particle& p = *particles.molecule;
 
-		++iterator;
+		double a = delta_t / p.getM() / 2;
+		
+		// calculate v for each component
+		for (int i=0; i<3; i++) {
+			p.getV()[i] = p.getV()[i] + a * (p.getF()[i] + p.getOldF()[i]);
+		}
+		
+		++particles.molecule;
 	}
 }
 
@@ -135,5 +258,7 @@ void plotParticles(int iteration) {
 	string out_name("MD_vtk");
 
 	outputWriter::XYZWriter writer;
-	writer.plotParticles(particles, out_name, iteration);
+	writer.plotParticles(particles.particleList, out_name, iteration);
 }
+
+
