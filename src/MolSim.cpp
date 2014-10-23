@@ -26,7 +26,7 @@ void calculateF();
 class ForceCalc
 {
 public:
-	static double* calc(Particle p, Particle p2);
+	static utils::Vector<double, 3> calc(Particle& p, Particle& p2);
 };
 
 /**
@@ -95,7 +95,7 @@ int main(int argc, char* argsv[]) {
 	
 	// parsing commandline parameters
 	if (argc < 2) {
-		cout << "Erroneous programme call! " << endl;
+		cout << "Erroneous program call! " << endl;
 		cout << "./molsim filename [end_time [delta_t]]" << endl;
 		exit(1);
 	}
@@ -166,7 +166,7 @@ int main(int argc, char* argsv[]) {
 class GravityEq : ForceCalc
 {
 public:
-	static double* calc(Particle p, Particle p2)
+	static utils::Vector<double, 3>& calc(Particle& p, Particle& p2)
 	{
 		// calculate distance between p1 and p2
 		double distance = sqrt(	pow( (p.getX()[0] - p2.getX()[0]), 2) +
@@ -175,7 +175,7 @@ public:
 
 		double a = p.getM() * p2.getM() / pow(distance, 3);
 
-		static double F[3];
+		static utils::Vector<double, 3> F;
 		for (int i=0; i<3; i++) {
 			F[i] = a * (p2.getX()[i] - p.getX()[i]);
 		}
@@ -192,7 +192,7 @@ void calculateF() {
 		Particle& p1 = *particles.molecule;
 
 		p1.getOldF() = p1.getF();	// set OldF to current F.
-		p1.getF()[0] = p1.getF()[1] = p1.getF()[2] = 0;	// set new F to zero.	
+		p1.getF()[0] = p1.getF()[1] = p1.getF()[2] = 0;	// set new F to zero.
 
 		//iterate over the interaction partners
 		while (particles.molPartner != particles.particleList.end()) {
@@ -200,7 +200,7 @@ void calculateF() {
 
 				Particle& p2 = *particles.molPartner;
 				
-				double* F_i_j = GravityEq::calc(p1,p2);
+				utils::Vector<double, 3> F_i_j = GravityEq::calc(p1,p2);
 
 				// calculate force for each particle, add 
 				for (int i=0; i<3; i++) {
@@ -257,8 +257,19 @@ void plotParticles(int iteration) {
 
 	string out_name("MD_vtk");
 
-	outputWriter::XYZWriter writer;
-	writer.plotParticles(particles.particleList, out_name, iteration);
+	outputWriter::VTKWriter writer;
+	writer.initializeOutput(particles.particleList.size());
+
+	particles.resetIterators();
+	while (particles.molecule != particles.particleList.end()){
+
+		Particle& p = *particles.molecule;
+
+		writer.plotParticle(p);
+		++particles.molecule;
+	}
+
+	writer.writeFile(out_name, iteration);
 }
 
 
