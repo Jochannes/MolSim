@@ -13,10 +13,15 @@
 
 #include <list>
 
+/**
+ * \brief Namespace for saving the particle list in different file formats.
+ */
 namespace outputWriter {
 
 /**
- * This class implements the functionality to generate vtk output from particles.
+ * \brief Generate VTK output from particles.
+ *
+ * This class implements the functionality to generate VTK output from particles.
  */
 class VTKWriter {
 

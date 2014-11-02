@@ -10,6 +10,13 @@
 
 #include "utils/Vector.h"
 
+/**
+ * \brief Class for saving all the parameters associated with a particle.
+ *
+ * This class saves the position, velocity, current and recent force
+ * and provides functions for accessing these parameters. It furthermore
+ * overrides the operator for comparing particles.
+ */
 class Particle {
 
 private:
@@ -23,7 +30,7 @@ private:
 	/** the force effective on this particle */
 	utils::Vector<double, 3> f;
 
-	/** the force wich was effective on this particle */
+	/** the force which was effective on this particle */
 	utils::Vector<double, 3> old_f;
 
 	/** the mass of this particle */
@@ -68,5 +75,6 @@ public:
 };
 
 std::ostream& operator<<(std::ostream& stream, Particle& p);
+
 
 #endif /* PARTICLE_H_ */

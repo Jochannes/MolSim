@@ -14,6 +14,7 @@
 
 using namespace std;
 
+
 namespace outputWriter {
 
 VTKWriter::VTKWriter() {

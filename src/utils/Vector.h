@@ -12,7 +12,20 @@
 #include <sstream>
 #include <iostream>
 
+/**
+ * \brief Namespace for general utilities.
+ */
 namespace utils {
+
+
+/**
+ * \brief Class for easy handling of vectors.
+ *
+ * This class implements a data structure for easy and readable saving of vectors.
+ * It overloads the methods for summation, multiplication and comparison of vectors.
+ * It furthermore implements a method for calculation of the L2-norm and simplifies the
+ * access to vector components by using `[` and `]` brackets.
+ */
 template <typename type, int length>
 class Vector;
 }

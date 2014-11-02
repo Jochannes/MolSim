@@ -1,7 +1,11 @@
 
-#include "outputWriter/XYZWriter.h"
-#include "outputWriter/VTKWriter.h"
-#include "FileReader.h"
+
+#include "ParticleContainer.h"
+#include "ParticleInput_FileReader.h"
+#include "ParticleOutput_VTK.h"
+#include "handler/PositionCalculator.h"
+#include "handler/VelocityCalculator.h"
+#include "handler/ForceCalculator_Gravity.h"
 
 #include <list>
 #include <cstring>
@@ -14,79 +18,38 @@ using namespace std;
 /**** forward declaration of the calculation functions ****/
 
 /**
- * calculate the force for all particles
+ * \brief Calculate the force for all particles.
  */
 void calculateF();
 
 /**
- * interface for methods of force calculation between two particles
- * p is the main particle, for which the force is calculated
- * p2 is the interaction partner
- */
-class ForceCalc
-{
-public:
-	static utils::Vector<double, 3> calc(Particle& p, Particle& p2);
-};
-
-/**
- * interface for input methods
- */
-class Input
-{
-public:
-	static string read();
-};
-
-/**
- * interface for output methods
- */
-class Output
-{
-public:
-	static void write(string text);
-};
-
-/**
- * calculate the position for all particles
+ * \brief Calculate the position for all particles.
  */
 void calculateX();
 
 /**
- * calculate the position for all particles
+ * \brief Calculate the velocity for all particles.
  */
 void calculateV();
 
 /**
- * plot the particles to a xyz-file
+ * \brief Plot the particles.
  */
 void plotParticles(int iteration);
 
 
-double start_time = 0;
-double end_time = 1000;
-double delta_t = 0.014;
+// global variables
+double start_time = 0; //!< Starting time of the simulation.
+double end_time   = 1000; //!< End time of the simulation.
+double delta_t    = 0.014; //!< Time step size of the simulation.
 
-//std::list<Particle> particles;
+ParticleContainer	particles; //!< Container for encapsulating the particle list.
+ParticleInput* 		particleIn; //!< Object for defining the input method to be used.
+ParticleOutput*		particleOut; //!< Object for defining the output method to be used.
 
-/**
- * container for encapsulation and iteration of the particle list
- */
-class ParticleContainer {
-public:
-	list<Particle> particleList;
-	list<Particle>::iterator molecule, molPartner;
-
-	ParticleContainer () {
-		resetIterators();
-	}
-
-	void resetIterators()
-	{
-		molecule = particleList.begin();
-		molPartner = particleList.begin();
-	}
-} particles;
+PositionCalculator*	xcalc; //!< Object for defining the coordinate calculator to be used in the simulation.
+VelocityCalculator*		vcalc; //!< Object for defining the velocity calculator to be used in the simulation.
+ForceCalculator*		fcalc; //!< Object for defining the force calculator to be used in the simulation.
 
 
 int main(int argc, char* argsv[]) {
@@ -94,42 +57,50 @@ int main(int argc, char* argsv[]) {
 	cout << "Hello from MolSim for PSE!" << endl;
 	
 	// parsing commandline parameters
-	if (argc < 2) {
-		cout << "Erroneous program call! " << endl;
-		cout << "./molsim filename [end_time [delta_t]]" << endl;
-		exit(1);
-	}
-	else if (argc > 2) {
-		double tmp = atof(argsv[2]);
+	switch (argc)
+	{
+	case 4:		// 3 parameters are given.
+		delta_t = atof(argsv[3]);
 
-		if (tmp > 0) {
-			cout << "using parameter end_time=" << tmp << endl;
-			end_time = tmp;
+		if (delta_t > 0.0) {
+			cout << "using parameter delta_t=" << delta_t << endl;
+		} else {
+			cout << "invalid parameter delta_t!" << endl;
+			return 1;
+		}
+		/* no break */
+
+	case 3:		// 2 parameters are given.
+		delta_t = atof(argsv[2]);
+
+		if (end_time > 0.0) {
+			cout << "using parameter end_time=" << end_time << endl;
 		} else {
 			cout << "invalid parameter end_time!" << endl;
-			exit(1);
+			return 1;
 		}
-		
-		if (argc > 3) {
-			double tmp = atof(argsv[3]);
+		/* no break */
 
-			if (tmp > 0) {
-				cout << "using parameter delta_t=" << tmp << endl;
-				delta_t = tmp;
-			} else {
-				cout << "invalid parameter delta_t!" << endl;
-				exit(1);
-			}
+	case 2:		// 1 parameter is given.
+		cout << "using parameter filename=\"" << argsv[1] << "\"" << endl;
+		break;
 
-			if (argc > 4) {
-				cout << "to many parameter!" <<endl;
-				exit(1);
-			}
-		}
-	}
+	default:	// no or more than 3 parameters are given.
+		cout << "Erroneous program call! " << endl;
+		cout << "./MolSim filename [end_time [delta_t]]" << endl;
+		return 1;
+	};
 
-	FileReader fileReader;
-	fileReader.readFile(particles.particleList, argsv[1]);
+	// configure all handlers
+	particleIn  = new ParticleInput_FileReader(particles, argsv[1]);
+	particleOut = new ParticleOutput_VTK(particles, "MD_vtk");
+	xcalc = new PositionCalculator();
+	vcalc = new VelocityCalculator();
+	fcalc = new ForceCalculator_Gravity();
+
+	// create particles using respective input method
+	particleIn->input();
+
 	// the forces are needed to calculate x, but are not given in the input file.
 	calculateF();
 
@@ -139,13 +110,10 @@ int main(int argc, char* argsv[]) {
 
 	 // for this loop, we assume: current x, current f and current v are known
 	while (current_time < end_time) {
-		// calculate new x
-		calculateX();
 
-		// calculate new f
-		calculateF();
-		// calculate new v
-		calculateV();
+		calculateX(); // calculate new coordinates
+		calculateF(); // calculate new forces
+		calculateV(); // calculate new velocities
 
 		iteration++;
 		if (iteration % 10 == 0) {
@@ -160,116 +128,43 @@ int main(int argc, char* argsv[]) {
 	return 0;
 }
 
+
 /**
- * calculate the gravitational force between two particles
+ * The forces are calculated by first resetting them to 0
+ * and then using the iteration function in ParticleHandler
+ * to call the force calculation method saved in `fcalc` for each particle.
  */
-class GravityEq : ForceCalc
-{
-public:
-	static utils::Vector<double, 3>& calc(Particle& p, Particle& p2)
-	{
-		// calculate distance between p1 and p2
-		double distance = sqrt(	pow( (p.getX()[0] - p2.getX()[0]), 2) +
-								pow( (p.getX()[1] - p2.getX()[1]), 2) +
-								pow( (p.getX()[2] - p2.getX()[2]), 2) );
-
-		double a = p.getM() * p2.getM() / pow(distance, 3);
-
-		static utils::Vector<double, 3> F;
-		for (int i=0; i<3; i++) {
-			F[i] = a * (p2.getX()[i] - p.getX()[i]);
-		}
-		return F;
-	}
-};
-
 void calculateF() {
-	particles.resetIterators();
+	// update OldF and set F to 0.0
+	particles.prepare_forces();
 
-	//iterate over all particles
-	while (particles.molecule != particles.particleList.end()) {
-		particles.molPartner = particles.particleList.begin();
-		Particle& p1 = *particles.molecule;
-
-		p1.getOldF() = p1.getF();	// set OldF to current F.
-		p1.getF()[0] = p1.getF()[1] = p1.getF()[2] = 0;	// set new F to zero.
-
-		//iterate over the interaction partners
-		while (particles.molPartner != particles.particleList.end()) {
-			if (particles.molPartner != particles.molecule) {
-
-				Particle& p2 = *particles.molPartner;
-				
-				utils::Vector<double, 3> F_i_j = GravityEq::calc(p1,p2);
-
-				// calculate force for each particle, add 
-				for (int i=0; i<3; i++) {
-					p1.getF()[i] += F_i_j[i];
-				}
-
-			}
-			++particles.molPartner;
-		}
-		++particles.molecule;
-	}
+	// calculate forces
+	particles.iterate_pairs(*fcalc);
 }
 
+
+/**
+ * The positions are calculated by using the iteration function in ParticleHandler
+ * to call the position calculation method saved in `xcalc` for each particle.
+ */
 void calculateX() {
-	particles.resetIterators();
-
-	//iterate over all particles
-	while (particles.molecule != particles.particleList.end()) {
-
-		Particle& p = *particles.molecule;
-
-		double a = delta_t * delta_t / p.getM() / 2;
-		
-		// calculate x for each component
-		for (int i=0; i<3; i++) {
-			p.getX()[i] = p.getX()[i] + delta_t*p.getV()[i] + a*p.getF()[i];
-		}
-		
-		++particles.molecule;
-	}
+	particles.iterate_all(*xcalc);
 }
 
+
+/**
+ * The velocities are calculated by using the iteration function in ParticleHandler
+ * to call the velocity calculation method saved in `xcalc` for each particle.
+ */
 void calculateV() {
-	particles.resetIterators();
-
-	//iterate over all particles
-	while (particles.molecule != particles.particleList.end()) {
-
-		Particle& p = *particles.molecule;
-
-		double a = delta_t / p.getM() / 2;
-		
-		// calculate v for each component
-		for (int i=0; i<3; i++) {
-			p.getV()[i] = p.getV()[i] + a * (p.getF()[i] + p.getOldF()[i]);
-		}
-		
-		++particles.molecule;
-	}
+	particles.iterate_all(*vcalc);
 }
 
-
+/**
+ * The particles for this time step are saved using
+ * the function defined in the object particleOut.
+ */
 void plotParticles(int iteration) {
-
-	string out_name("MD_vtk");
-
-	outputWriter::VTKWriter writer;
-	writer.initializeOutput(particles.particleList.size());
-
-	particles.resetIterators();
-	while (particles.molecule != particles.particleList.end()){
-
-		Particle& p = *particles.molecule;
-
-		writer.plotParticle(p);
-		++particles.molecule;
-	}
-
-	writer.writeFile(out_name, iteration);
+	particleOut->output(iteration);
 }
-
 
