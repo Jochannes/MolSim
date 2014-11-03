@@ -17,12 +17,6 @@
 
 /**
  * \brief Class for calculating the gravitational force between two particles.
- *
- * This class implements the calculation of the gravitational force between two particles.
- * This force is calculated using the following equation:
- * \f[
- * F_{ij} = \frac{m_i m_j}{\left( \left\lVert x_i - x_j \right\rVert_2 \right)^3} \cdot \left( x_j - x_i \right)
- * \f]
  */
 class ForceCalculator_Gravity : public ForceCalculator
 {

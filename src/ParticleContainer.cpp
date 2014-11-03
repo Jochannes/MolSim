@@ -11,6 +11,7 @@
 
 /**
  * \brief Function for iterating over all particles.
+ * \param handler Object providing the compute function, which is called for every particle.
  *
  * This function iterates over all particles and processes
  * each by calling the provided function.
@@ -29,6 +30,7 @@ void ParticleContainer::iterate_all(ParticleHandler& handler)
 
 /**
  * \brief Function for iterating over all particle pairs.
+ * \param handler Object providing the compute function, which is called for every particle pair.
  *
  * This function iterates over all particle pairs and processes
  * each by calling the provided function.
@@ -55,6 +57,7 @@ void ParticleContainer::iterate_pairs(PairHandler& handler)
 
 /**
  * \brief Function for iterating over unique particle pairs.
+ * \param handler Object providing the compute function, which is called for every particle pair.
  *
  * This function uniquely iterates over all particle pairs and processes
  * each by calling the provided function. While `iterate_pairs` would process

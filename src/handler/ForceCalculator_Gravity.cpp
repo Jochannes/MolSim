@@ -25,7 +25,7 @@ ForceCalculator_Gravity::~ForceCalculator_Gravity() {
  * and adds it to the force acting on the first particle.
  * The force is calculated using the following equation:
  * \f[
- * F_{ij} = \frac{m_i m_j}{\left( \left\lVert x_i - x_j \right\rVert_2 \right)^3} \cdot \left( x_j - x_i \right)
+ * F_{ij} = \frac{m_i m_j}{\left( \left\| x_i - x_j \right\|_2 \right)^3} \cdot \left( x_j - x_i \right)
  * \f]
  */
 void ForceCalculator_Gravity::compute(Particle& P1, Particle& P2)

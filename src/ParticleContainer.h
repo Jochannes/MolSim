@@ -29,6 +29,7 @@ class ParticleContainer
 {
 	friend class ParticleInput_FileReader;
 	friend class ParticleOutput_VTK;
+	friend class UTest_ParticleContainer;
 
 
 private:

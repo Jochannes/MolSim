@@ -14,13 +14,15 @@ ForceCalculator_LennardJones::~ForceCalculator_LennardJones() {
 }
 
 /**
- * \brief Function for computing the forces caused by the Lennard-Jones-Potential.
+ * \brief Function for computing the forces caused by the Lennard-Jones potential.
  *
- * Calculates the forces between two particles caused by the Lennard-Jones-Potential
+ * Calculates the forces between two particles caused by the Lennard-Jones potential
  * and adds it to the force acting on the first particle.
  * The force is calculated using the following equation:
  * \f[
- * F_{ij} = \frac{24 \cdot \epsilon}{\left( \left\lVert x_i - x_j \right\rVert _2 \right) ^2} \cdot \left( \left( \frac{\sigma}{\left\lVert x_i - x_j \right\rVert _2}^6 - 2 \cdot \left( \frac{\sigma}{\left\lVert x_i - x_j \right\rVert _2} \right) ^{12} \right) \cdot \left( x_j - x_i \right)
+ * F_{ij} = \frac{24 \cdot \epsilon}{\left( \left\| x_i - x_j \right\|_2 \right)^2} \cdot
+ * \left( \left( \frac{\sigma}{\left\| x_i - x_j \right\|_2} \right)^6 - 2 \cdot \left( \frac{\sigma}{\left\| x_i - x_j \right\|_2} \right)^{12} \right)
+ * \cdot \left( x_j - x_i \right)
  * \f]
  */
 void ForceCalculator_LennardJones::compute(Particle& P1, Particle& P2)

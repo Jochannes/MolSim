@@ -9,6 +9,9 @@ src/handler/ForceCalculator_Gravity.cpp\
 src/handler/ForcePrepareHandler.cpp\
 src/handler/ForceCalculator_LennardJones.cpp\
 src/ParticleInput_FileReader.cpp\
+src/UnitTests/countParticles.cpp\
+src/UnitTests/UTest_ParticleContainer.cpp\
+src/UnitTests/countPairs.cpp\
 src/ParticleContainer.cpp\
 src/MolSim.cpp\
 src/ParticleOutput_VTK.cpp\
