@@ -12,8 +12,11 @@
 #include <sstream>
 #include <iostream>
 #include <cstdlib>
+#include <log4cxx/logger.h>
 
 using namespace std;
+using namespace log4cxx;
+
 
 FileReader::FileReader() {
 }
@@ -23,6 +26,8 @@ FileReader::~FileReader() {
 
 
 void FileReader::readFile(std::list<Particle>& particles, const char* filename) {
+	static LoggerPtr FileReaderLogger(Logger::getLogger("MolSim.FileReader"));
+
 	double x[] = {0,0,0};
 	double v[] = {1,1,1};
 	double m = 1;
@@ -34,18 +39,18 @@ void FileReader::readFile(std::list<Particle>& particles, const char* filename) 
     if (input_file.is_open()) {
 
     	getline(input_file, tmp_string);
-    	cout << "Read line: " << tmp_string << endl;
+    	LOG4CXX_TRACE(FileReaderLogger, "Read line: " << tmp_string);
 
     	while (tmp_string.size() == 0 || tmp_string[0] == '#') {
     		getline(input_file, tmp_string);
-    		cout << "Read line: " << tmp_string << endl;
+    		LOG4CXX_TRACE(FileReaderLogger, "Read line: " << tmp_string);
     	}
 
     	istringstream numstream(tmp_string);
     	numstream >> num_particles;
-    	cout << "Reading " << num_particles << "." << endl;
+    	LOG4CXX_DEBUG(FileReaderLogger, "Reading " << num_particles << ".");
     	getline(input_file, tmp_string);
-    	cout << "Read line: " << tmp_string << endl;
+    	LOG4CXX_TRACE(FileReaderLogger, "Read line: " << tmp_string);
 
     	for (int i = 0; i < num_particles; i++) {
     		istringstream datastream(tmp_string);
@@ -58,7 +63,7 @@ void FileReader::readFile(std::list<Particle>& particles, const char* filename) 
     			datastream >> v[j];
     		}
     		if (datastream.eof()) {
-    			cout << "Error reading file: eof reached unexpectedly reading from line " << i << endl;
+    			LOG4CXX_FATAL(FileReaderLogger, "Error reading file: eof reached unexpectedly reading from line " << i);
     			exit(-1);
     		}
     		datastream >> m;
@@ -66,10 +71,10 @@ void FileReader::readFile(std::list<Particle>& particles, const char* filename) 
     		particles.push_back(p);
 
     		getline(input_file, tmp_string);
-    		cout << "Read line: " << tmp_string << endl;
+    		LOG4CXX_TRACE(FileReaderLogger, "Read line: " << tmp_string);
     	}
     } else {
-    	std::cout << "Error: could not open file " << filename << std::endl;
+    	LOG4CXX_FATAL(FileReaderLogger, "Error: could not open file " << filename);
     	exit(-1);
     }
 

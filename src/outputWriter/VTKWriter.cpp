@@ -11,11 +11,16 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <log4cxx/logger.h>
 
 using namespace std;
+using namespace log4cxx;
 
 
 namespace outputWriter {
+
+LoggerPtr logger(Logger::getLogger("MolSim.VTKWriter"));
+
 
 VTKWriter::VTKWriter() {
 	// TODO Auto-generated constructor stub
@@ -69,9 +74,9 @@ void VTKWriter::writeFile(const std::string& filename, int iteration) {
 
 void VTKWriter::plotParticle(Particle& p) {
 	if (vtkFile->UnstructuredGrid().present()) {
-		cout << "UnstructuredGrid is present" << endl;
+		LOG4CXX_DEBUG(logger, "UnstructuredGrid is present");
 	} else {
-		cout << "ERROR: No UnstructuredGrid present" << endl;
+		LOG4CXX_ERROR(logger, "ERROR: No UnstructuredGrid present");
 	}
 
 	PointData::DataArray_sequence& pointDataSequence = vtkFile->UnstructuredGrid()->Piece().PointData().DataArray();
