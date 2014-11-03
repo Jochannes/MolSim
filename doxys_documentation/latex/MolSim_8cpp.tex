@@ -1,0 +1,195 @@
+\hypertarget{MolSim_8cpp}{\section{src/\-Mol\-Sim.cpp File Reference}
+\label{MolSim_8cpp}\index{src/\-Mol\-Sim.\-cpp@{src/\-Mol\-Sim.\-cpp}}
+}
+{\ttfamily \#include \char`\"{}Particle\-Container.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Particle\-Input\-\_\-\-File\-Reader.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}Particle\-Output\-\_\-\-V\-T\-K.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}handler/\-Position\-Calculator.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}handler/\-Velocity\-Calculator.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}handler/\-Force\-Calculator\-\_\-\-Gravity.\-h\char`\"{}}\\*
+{\ttfamily \#include $<$cstring$>$}\\*
+{\ttfamily \#include $<$cstdlib$>$}\\*
+{\ttfamily \#include $<$log4cxx/logger.\-h$>$}\\*
+{\ttfamily \#include $<$log4cxx/propertyconfigurator.\-h$>$}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{MolSim_8cpp_aca427dc7caace764ba8cef861bbf5deb}{parse\-Parameters} (int argc, char $\ast$argsv\mbox{[}$\,$\mbox{]})
+\begin{DoxyCompactList}\small\item\em Parse parameters. \end{DoxyCompactList}\item 
+void \hyperlink{MolSim_8cpp_a0fb73e818df59cf7c8817320cd59542f}{calculate\-F} ()
+\begin{DoxyCompactList}\small\item\em Calculate the force for all particles. \end{DoxyCompactList}\item 
+void \hyperlink{MolSim_8cpp_a6c59c4c130c452e82f3992fd17166bed}{calculate\-X} ()
+\begin{DoxyCompactList}\small\item\em Calculate the position for all particles. \end{DoxyCompactList}\item 
+void \hyperlink{MolSim_8cpp_a85d9ef8b7091f5cdaffa0c575eebf661}{calculate\-V} ()
+\begin{DoxyCompactList}\small\item\em Calculate the velocity for all particles. \end{DoxyCompactList}\item 
+void \hyperlink{MolSim_8cpp_af4d25832793b65abf538fab0474a8e51}{plot\-Particles} (int iteration)
+\begin{DoxyCompactList}\small\item\em Plot the particles. \end{DoxyCompactList}\item 
+Logger\-Ptr \hyperlink{MolSim_8cpp_a1998524739c005c9ecfea820244fe54b}{logger} (Logger\-::get\-Logger(\char`\"{}Mol\-Sim\char`\"{}))
+\begin{DoxyCompactList}\small\item\em Object for handling general logs. \end{DoxyCompactList}\item 
+int \hyperlink{MolSim_8cpp_a329c95e85f063f49b0daaed5c5b56335}{main} (int argc, char $\ast$argsv\mbox{[}$\,$\mbox{]})
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+double \hyperlink{MolSim_8cpp_a00b0c9b1c3ea8bb73a7fc8b53a3961fd}{start\-\_\-time} = 0
+\begin{DoxyCompactList}\small\item\em Starting time of the simulation. \end{DoxyCompactList}\item 
+double \hyperlink{MolSim_8cpp_a8c7ea5e69ce954c1d81db1732f9f426a}{end\-\_\-time} = 1000
+\begin{DoxyCompactList}\small\item\em End time of the simulation. \end{DoxyCompactList}\item 
+double \hyperlink{MolSim_8cpp_a4cfc079302fe9a34fe24637c4e44303a}{delta\-\_\-t} = 0.\-014
+\begin{DoxyCompactList}\small\item\em Time step size of the simulation. \end{DoxyCompactList}\item 
+\hyperlink{classParticleContainer}{Particle\-Container} \hyperlink{MolSim_8cpp_a6b352757b6951d85f71bd9cbc47cf619}{particles}
+\begin{DoxyCompactList}\small\item\em Container for encapsulating the particle list. \end{DoxyCompactList}\item 
+\hyperlink{classParticleInput}{Particle\-Input} $\ast$ \hyperlink{MolSim_8cpp_a491385a3180986a89d31cccb0907d29b}{particle\-In}
+\begin{DoxyCompactList}\small\item\em Object for defining the input method to be used. \end{DoxyCompactList}\item 
+\hyperlink{classParticleOutput}{Particle\-Output} $\ast$ \hyperlink{MolSim_8cpp_abc70ca433d8a5b202ef8de5d6bb5ef9e}{particle\-Out}
+\begin{DoxyCompactList}\small\item\em Object for defining the output method to be used. \end{DoxyCompactList}\item 
+\hyperlink{classPositionCalculator}{Position\-Calculator} $\ast$ \hyperlink{MolSim_8cpp_a170a5631048192473808816db58259c5}{xcalc}
+\begin{DoxyCompactList}\small\item\em Object for defining the coordinate calculator to be used in the simulation. \end{DoxyCompactList}\item 
+\hyperlink{classVelocityCalculator}{Velocity\-Calculator} $\ast$ \hyperlink{MolSim_8cpp_a3254c712a5ba56ddb8c7a748b09155db}{vcalc}
+\begin{DoxyCompactList}\small\item\em Object for defining the velocity calculator to be used in the simulation. \end{DoxyCompactList}\item 
+\hyperlink{classForceCalculator}{Force\-Calculator} $\ast$ \hyperlink{MolSim_8cpp_aa6b72f4dd01e450de487699fd76e7e6e}{fcalc}
+\begin{DoxyCompactList}\small\item\em Object for defining the force calculator to be used in the simulation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{MolSim_8cpp_a0fb73e818df59cf7c8817320cd59542f}{\index{Mol\-Sim.\-cpp@{Mol\-Sim.\-cpp}!calculate\-F@{calculate\-F}}
+\index{calculate\-F@{calculate\-F}!MolSim.cpp@{Mol\-Sim.\-cpp}}
+\subsubsection[{calculate\-F}]{\setlength{\rightskip}{0pt plus 5cm}void calculate\-F (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{MolSim_8cpp_a0fb73e818df59cf7c8817320cd59542f}
+
+
+Calculate the force for all particles. 
+
+The forces are calculated by first resetting them to 0 and then using the iteration function in \hyperlink{classParticleHandler}{Particle\-Handler} to call the force calculation method saved in {\ttfamily fcalc} for each particle. \hypertarget{MolSim_8cpp_a85d9ef8b7091f5cdaffa0c575eebf661}{\index{Mol\-Sim.\-cpp@{Mol\-Sim.\-cpp}!calculate\-V@{calculate\-V}}
+\index{calculate\-V@{calculate\-V}!MolSim.cpp@{Mol\-Sim.\-cpp}}
+\subsubsection[{calculate\-V}]{\setlength{\rightskip}{0pt plus 5cm}void calculate\-V (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{MolSim_8cpp_a85d9ef8b7091f5cdaffa0c575eebf661}
+
+
+Calculate the velocity for all particles. 
+
+The velocities are calculated by using the iteration function in \hyperlink{classParticleHandler}{Particle\-Handler} to call the velocity calculation method saved in {\ttfamily xcalc} for each particle. \hypertarget{MolSim_8cpp_a6c59c4c130c452e82f3992fd17166bed}{\index{Mol\-Sim.\-cpp@{Mol\-Sim.\-cpp}!calculate\-X@{calculate\-X}}
+\index{calculate\-X@{calculate\-X}!MolSim.cpp@{Mol\-Sim.\-cpp}}
+\subsubsection[{calculate\-X}]{\setlength{\rightskip}{0pt plus 5cm}void calculate\-X (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{MolSim_8cpp_a6c59c4c130c452e82f3992fd17166bed}
+
+
+Calculate the position for all particles. 
+
+The positions are calculated by using the iteration function in \hyperlink{classParticleHandler}{Particle\-Handler} to call the position calculation method saved in {\ttfamily xcalc} for each particle. \hypertarget{MolSim_8cpp_a1998524739c005c9ecfea820244fe54b}{\index{Mol\-Sim.\-cpp@{Mol\-Sim.\-cpp}!logger@{logger}}
+\index{logger@{logger}!MolSim.cpp@{Mol\-Sim.\-cpp}}
+\subsubsection[{logger}]{\setlength{\rightskip}{0pt plus 5cm}Logger\-Ptr logger (
+\begin{DoxyParamCaption}
+\item[{Logger\-::}]{get\-Logger\char`\"{}\-Mol\-Sim\char`\"{}}
+\end{DoxyParamCaption}
+)}}\label{MolSim_8cpp_a1998524739c005c9ecfea820244fe54b}
+
+
+Object for handling general logs. 
+
+\hypertarget{MolSim_8cpp_a329c95e85f063f49b0daaed5c5b56335}{\index{Mol\-Sim.\-cpp@{Mol\-Sim.\-cpp}!main@{main}}
+\index{main@{main}!MolSim.cpp@{Mol\-Sim.\-cpp}}
+\subsubsection[{main}]{\setlength{\rightskip}{0pt plus 5cm}int main (
+\begin{DoxyParamCaption}
+\item[{int}]{argc, }
+\item[{char $\ast$}]{argsv\mbox{[}$\,$\mbox{]}}
+\end{DoxyParamCaption}
+)}}\label{MolSim_8cpp_a329c95e85f063f49b0daaed5c5b56335}
+\hypertarget{MolSim_8cpp_aca427dc7caace764ba8cef861bbf5deb}{\index{Mol\-Sim.\-cpp@{Mol\-Sim.\-cpp}!parse\-Parameters@{parse\-Parameters}}
+\index{parse\-Parameters@{parse\-Parameters}!MolSim.cpp@{Mol\-Sim.\-cpp}}
+\subsubsection[{parse\-Parameters}]{\setlength{\rightskip}{0pt plus 5cm}void parse\-Parameters (
+\begin{DoxyParamCaption}
+\item[{int}]{argc, }
+\item[{char $\ast$}]{argsv\mbox{[}$\,$\mbox{]}}
+\end{DoxyParamCaption}
+)}}\label{MolSim_8cpp_aca427dc7caace764ba8cef861bbf5deb}
+
+
+Parse parameters. 
+
+Parses the parameters from the commandline and configures the program accordingly. \hypertarget{MolSim_8cpp_af4d25832793b65abf538fab0474a8e51}{\index{Mol\-Sim.\-cpp@{Mol\-Sim.\-cpp}!plot\-Particles@{plot\-Particles}}
+\index{plot\-Particles@{plot\-Particles}!MolSim.cpp@{Mol\-Sim.\-cpp}}
+\subsubsection[{plot\-Particles}]{\setlength{\rightskip}{0pt plus 5cm}void plot\-Particles (
+\begin{DoxyParamCaption}
+\item[{int}]{iteration}
+\end{DoxyParamCaption}
+)}}\label{MolSim_8cpp_af4d25832793b65abf538fab0474a8e51}
+
+
+Plot the particles. 
+
+The particles for this time step are saved using the function defined in the object particle\-Out. 
+
+\subsection{Variable Documentation}
+\hypertarget{MolSim_8cpp_a4cfc079302fe9a34fe24637c4e44303a}{\index{Mol\-Sim.\-cpp@{Mol\-Sim.\-cpp}!delta\-\_\-t@{delta\-\_\-t}}
+\index{delta\-\_\-t@{delta\-\_\-t}!MolSim.cpp@{Mol\-Sim.\-cpp}}
+\subsubsection[{delta\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}double delta\-\_\-t = 0.\-014}}\label{MolSim_8cpp_a4cfc079302fe9a34fe24637c4e44303a}
+
+
+Time step size of the simulation. 
+
+\hypertarget{MolSim_8cpp_a8c7ea5e69ce954c1d81db1732f9f426a}{\index{Mol\-Sim.\-cpp@{Mol\-Sim.\-cpp}!end\-\_\-time@{end\-\_\-time}}
+\index{end\-\_\-time@{end\-\_\-time}!MolSim.cpp@{Mol\-Sim.\-cpp}}
+\subsubsection[{end\-\_\-time}]{\setlength{\rightskip}{0pt plus 5cm}double end\-\_\-time = 1000}}\label{MolSim_8cpp_a8c7ea5e69ce954c1d81db1732f9f426a}
+
+
+End time of the simulation. 
+
+\hypertarget{MolSim_8cpp_aa6b72f4dd01e450de487699fd76e7e6e}{\index{Mol\-Sim.\-cpp@{Mol\-Sim.\-cpp}!fcalc@{fcalc}}
+\index{fcalc@{fcalc}!MolSim.cpp@{Mol\-Sim.\-cpp}}
+\subsubsection[{fcalc}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Force\-Calculator}$\ast$ fcalc}}\label{MolSim_8cpp_aa6b72f4dd01e450de487699fd76e7e6e}
+
+
+Object for defining the force calculator to be used in the simulation. 
+
+\hypertarget{MolSim_8cpp_a491385a3180986a89d31cccb0907d29b}{\index{Mol\-Sim.\-cpp@{Mol\-Sim.\-cpp}!particle\-In@{particle\-In}}
+\index{particle\-In@{particle\-In}!MolSim.cpp@{Mol\-Sim.\-cpp}}
+\subsubsection[{particle\-In}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Particle\-Input}$\ast$ particle\-In}}\label{MolSim_8cpp_a491385a3180986a89d31cccb0907d29b}
+
+
+Object for defining the input method to be used. 
+
+\hypertarget{MolSim_8cpp_abc70ca433d8a5b202ef8de5d6bb5ef9e}{\index{Mol\-Sim.\-cpp@{Mol\-Sim.\-cpp}!particle\-Out@{particle\-Out}}
+\index{particle\-Out@{particle\-Out}!MolSim.cpp@{Mol\-Sim.\-cpp}}
+\subsubsection[{particle\-Out}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Particle\-Output}$\ast$ particle\-Out}}\label{MolSim_8cpp_abc70ca433d8a5b202ef8de5d6bb5ef9e}
+
+
+Object for defining the output method to be used. 
+
+\hypertarget{MolSim_8cpp_a6b352757b6951d85f71bd9cbc47cf619}{\index{Mol\-Sim.\-cpp@{Mol\-Sim.\-cpp}!particles@{particles}}
+\index{particles@{particles}!MolSim.cpp@{Mol\-Sim.\-cpp}}
+\subsubsection[{particles}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Particle\-Container} particles}}\label{MolSim_8cpp_a6b352757b6951d85f71bd9cbc47cf619}
+
+
+Container for encapsulating the particle list. 
+
+\hypertarget{MolSim_8cpp_a00b0c9b1c3ea8bb73a7fc8b53a3961fd}{\index{Mol\-Sim.\-cpp@{Mol\-Sim.\-cpp}!start\-\_\-time@{start\-\_\-time}}
+\index{start\-\_\-time@{start\-\_\-time}!MolSim.cpp@{Mol\-Sim.\-cpp}}
+\subsubsection[{start\-\_\-time}]{\setlength{\rightskip}{0pt plus 5cm}double start\-\_\-time = 0}}\label{MolSim_8cpp_a00b0c9b1c3ea8bb73a7fc8b53a3961fd}
+
+
+Starting time of the simulation. 
+
+\hypertarget{MolSim_8cpp_a3254c712a5ba56ddb8c7a748b09155db}{\index{Mol\-Sim.\-cpp@{Mol\-Sim.\-cpp}!vcalc@{vcalc}}
+\index{vcalc@{vcalc}!MolSim.cpp@{Mol\-Sim.\-cpp}}
+\subsubsection[{vcalc}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Velocity\-Calculator}$\ast$ vcalc}}\label{MolSim_8cpp_a3254c712a5ba56ddb8c7a748b09155db}
+
+
+Object for defining the velocity calculator to be used in the simulation. 
+
+\hypertarget{MolSim_8cpp_a170a5631048192473808816db58259c5}{\index{Mol\-Sim.\-cpp@{Mol\-Sim.\-cpp}!xcalc@{xcalc}}
+\index{xcalc@{xcalc}!MolSim.cpp@{Mol\-Sim.\-cpp}}
+\subsubsection[{xcalc}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Position\-Calculator}$\ast$ xcalc}}\label{MolSim_8cpp_a170a5631048192473808816db58259c5}
+
+
+Object for defining the coordinate calculator to be used in the simulation. 
+

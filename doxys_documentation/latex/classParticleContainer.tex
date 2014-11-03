@@ -1,0 +1,133 @@
+\hypertarget{classParticleContainer}{\section{Particle\-Container Class Reference}
+\label{classParticleContainer}\index{Particle\-Container@{Particle\-Container}}
+}
+
+
+A container for encapsulating the particle list.  
+
+
+
+
+{\ttfamily \#include $<$Particle\-Container.\-h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classParticleContainer_a76d21bdb5141158cf664d65e2d8b1db7}{Particle\-Container} ()
+\item 
+\hyperlink{classParticleContainer_a9629a8d31a3aa8c2fe944307c1263b66}{$\sim$\-Particle\-Container} ()
+\item 
+void \hyperlink{classParticleContainer_adf9993d21144e346ad75239a16250b64}{prepare\-\_\-forces} ()
+\begin{DoxyCompactList}\small\item\em Function for preparing the forces saved in the particle list. \end{DoxyCompactList}\item 
+void \hyperlink{classParticleContainer_a10677cdeed54a9cdd96463c93699efe1}{iterate\-\_\-all} (\hyperlink{classParticleHandler}{Particle\-Handler} \&handler)
+\begin{DoxyCompactList}\small\item\em Function for iterating over all particles. \end{DoxyCompactList}\item 
+void \hyperlink{classParticleContainer_add37a28087b0fc1460fe8ddd23d391ce}{iterate\-\_\-pairs} (\hyperlink{classPairHandler}{Pair\-Handler} \&handler)
+\begin{DoxyCompactList}\small\item\em Function for iterating over all particle pairs. \end{DoxyCompactList}\item 
+void \hyperlink{classParticleContainer_acd8295ee8c34cc4d27d62288e6e24dfd}{iterate\-\_\-pairs\-\_\-half} (\hyperlink{classPairHandler}{Pair\-Handler} \&handler)
+\begin{DoxyCompactList}\small\item\em Function for iterating over unique particle pairs. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\-::list$<$ \hyperlink{classParticle}{Particle} $>$ \hyperlink{classParticleContainer_a037012a8f2e872258702209261d8f10e}{particle\-List}
+\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classParticleContainer_a7c0d8a2d97fdcd7711b15cc13e5b31c9}{Particle\-Input\-\_\-\-File\-Reader}
+\item 
+class \hyperlink{classParticleContainer_a90fad3b5eb61cdccf67f618b72f5a767}{Particle\-Output\-\_\-\-V\-T\-K}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A container for encapsulating the particle list. 
+
+This class contains a list of all particles and provides several functions for accessing them.
+
+Amongst others, it provides functions for iterating over all particles and particle pairs and processing them using a certain function. 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classParticleContainer_a76d21bdb5141158cf664d65e2d8b1db7}{\index{Particle\-Container@{Particle\-Container}!Particle\-Container@{Particle\-Container}}
+\index{Particle\-Container@{Particle\-Container}!ParticleContainer@{Particle\-Container}}
+\subsubsection[{Particle\-Container}]{\setlength{\rightskip}{0pt plus 5cm}Particle\-Container\-::\-Particle\-Container (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classParticleContainer_a76d21bdb5141158cf664d65e2d8b1db7}
+\hypertarget{classParticleContainer_a9629a8d31a3aa8c2fe944307c1263b66}{\index{Particle\-Container@{Particle\-Container}!$\sim$\-Particle\-Container@{$\sim$\-Particle\-Container}}
+\index{$\sim$\-Particle\-Container@{$\sim$\-Particle\-Container}!ParticleContainer@{Particle\-Container}}
+\subsubsection[{$\sim$\-Particle\-Container}]{\setlength{\rightskip}{0pt plus 5cm}Particle\-Container\-::$\sim$\-Particle\-Container (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classParticleContainer_a9629a8d31a3aa8c2fe944307c1263b66}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classParticleContainer_a10677cdeed54a9cdd96463c93699efe1}{\index{Particle\-Container@{Particle\-Container}!iterate\-\_\-all@{iterate\-\_\-all}}
+\index{iterate\-\_\-all@{iterate\-\_\-all}!ParticleContainer@{Particle\-Container}}
+\subsubsection[{iterate\-\_\-all}]{\setlength{\rightskip}{0pt plus 5cm}void Particle\-Container\-::iterate\-\_\-all (
+\begin{DoxyParamCaption}
+\item[{{\bf Particle\-Handler} \&}]{handler}
+\end{DoxyParamCaption}
+)}}\label{classParticleContainer_a10677cdeed54a9cdd96463c93699efe1}
+
+
+Function for iterating over all particles. 
+
+This function iterates over all particles and processes each by calling the provided function. \hypertarget{classParticleContainer_add37a28087b0fc1460fe8ddd23d391ce}{\index{Particle\-Container@{Particle\-Container}!iterate\-\_\-pairs@{iterate\-\_\-pairs}}
+\index{iterate\-\_\-pairs@{iterate\-\_\-pairs}!ParticleContainer@{Particle\-Container}}
+\subsubsection[{iterate\-\_\-pairs}]{\setlength{\rightskip}{0pt plus 5cm}void Particle\-Container\-::iterate\-\_\-pairs (
+\begin{DoxyParamCaption}
+\item[{{\bf Pair\-Handler} \&}]{handler}
+\end{DoxyParamCaption}
+)}}\label{classParticleContainer_add37a28087b0fc1460fe8ddd23d391ce}
+
+
+Function for iterating over all particle pairs. 
+
+This function iterates over all particle pairs and processes each by calling the provided function. \hypertarget{classParticleContainer_acd8295ee8c34cc4d27d62288e6e24dfd}{\index{Particle\-Container@{Particle\-Container}!iterate\-\_\-pairs\-\_\-half@{iterate\-\_\-pairs\-\_\-half}}
+\index{iterate\-\_\-pairs\-\_\-half@{iterate\-\_\-pairs\-\_\-half}!ParticleContainer@{Particle\-Container}}
+\subsubsection[{iterate\-\_\-pairs\-\_\-half}]{\setlength{\rightskip}{0pt plus 5cm}void Particle\-Container\-::iterate\-\_\-pairs\-\_\-half (
+\begin{DoxyParamCaption}
+\item[{{\bf Pair\-Handler} \&}]{handler}
+\end{DoxyParamCaption}
+)}}\label{classParticleContainer_acd8295ee8c34cc4d27d62288e6e24dfd}
+
+
+Function for iterating over unique particle pairs. 
+
+This function uniquely iterates over all particle pairs and processes each by calling the provided function. While {\ttfamily iterate\-\_\-pairs} would process both the particle pairs (a,b) and (b,a), this function only processes (a,b).
+
+This way the performance can be improved using Newton's third law. \hypertarget{classParticleContainer_adf9993d21144e346ad75239a16250b64}{\index{Particle\-Container@{Particle\-Container}!prepare\-\_\-forces@{prepare\-\_\-forces}}
+\index{prepare\-\_\-forces@{prepare\-\_\-forces}!ParticleContainer@{Particle\-Container}}
+\subsubsection[{prepare\-\_\-forces}]{\setlength{\rightskip}{0pt plus 5cm}void Particle\-Container\-::prepare\-\_\-forces (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classParticleContainer_adf9993d21144e346ad75239a16250b64}
+
+
+Function for preparing the forces saved in the particle list. 
+
+This function resets the forces calculated in the previous iteration step. This preparation step is necessary for the calculation of the new forces. 
+
+\subsection{Friends And Related Function Documentation}
+\hypertarget{classParticleContainer_a7c0d8a2d97fdcd7711b15cc13e5b31c9}{\index{Particle\-Container@{Particle\-Container}!Particle\-Input\-\_\-\-File\-Reader@{Particle\-Input\-\_\-\-File\-Reader}}
+\index{Particle\-Input\-\_\-\-File\-Reader@{Particle\-Input\-\_\-\-File\-Reader}!ParticleContainer@{Particle\-Container}}
+\subsubsection[{Particle\-Input\-\_\-\-File\-Reader}]{\setlength{\rightskip}{0pt plus 5cm}friend class {\bf Particle\-Input\-\_\-\-File\-Reader}\hspace{0.3cm}{\ttfamily [friend]}}}\label{classParticleContainer_a7c0d8a2d97fdcd7711b15cc13e5b31c9}
+\hypertarget{classParticleContainer_a90fad3b5eb61cdccf67f618b72f5a767}{\index{Particle\-Container@{Particle\-Container}!Particle\-Output\-\_\-\-V\-T\-K@{Particle\-Output\-\_\-\-V\-T\-K}}
+\index{Particle\-Output\-\_\-\-V\-T\-K@{Particle\-Output\-\_\-\-V\-T\-K}!ParticleContainer@{Particle\-Container}}
+\subsubsection[{Particle\-Output\-\_\-\-V\-T\-K}]{\setlength{\rightskip}{0pt plus 5cm}friend class {\bf Particle\-Output\-\_\-\-V\-T\-K}\hspace{0.3cm}{\ttfamily [friend]}}}\label{classParticleContainer_a90fad3b5eb61cdccf67f618b72f5a767}
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classParticleContainer_a037012a8f2e872258702209261d8f10e}{\index{Particle\-Container@{Particle\-Container}!particle\-List@{particle\-List}}
+\index{particle\-List@{particle\-List}!ParticleContainer@{Particle\-Container}}
+\subsubsection[{particle\-List}]{\setlength{\rightskip}{0pt plus 5cm}std\-::list$<${\bf Particle}$>$ Particle\-Container\-::particle\-List\hspace{0.3cm}{\ttfamily [private]}}}\label{classParticleContainer_a037012a8f2e872258702209261d8f10e}
+
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+src/\hyperlink{ParticleContainer_8h}{Particle\-Container.\-h}\item 
+src/\hyperlink{ParticleContainer_8cpp}{Particle\-Container.\-cpp}\end{DoxyCompactItemize}

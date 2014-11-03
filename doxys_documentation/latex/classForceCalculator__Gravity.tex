@@ -1,0 +1,74 @@
+\hypertarget{classForceCalculator__Gravity}{\section{Force\-Calculator\-\_\-\-Gravity Class Reference}
+\label{classForceCalculator__Gravity}\index{Force\-Calculator\-\_\-\-Gravity@{Force\-Calculator\-\_\-\-Gravity}}
+}
+
+
+Class for calculating the gravitational force between two particles.  
+
+
+
+
+{\ttfamily \#include $<$Force\-Calculator\-\_\-\-Gravity.\-h$>$}
+
+Inheritance diagram for Force\-Calculator\-\_\-\-Gravity\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classForceCalculator__Gravity}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classForceCalculator__Gravity_a3542faf8f36f9935f97c6a8b2ca266d0}{Force\-Calculator\-\_\-\-Gravity} ()
+\item 
+virtual \hyperlink{classForceCalculator__Gravity_a8eb0290da710176533a4b36ef58e0370}{$\sim$\-Force\-Calculator\-\_\-\-Gravity} ()
+\item 
+virtual void \hyperlink{classForceCalculator__Gravity_a8f79c8d0ef3621a646288a195bf2e75a}{compute} (\hyperlink{classParticle}{Particle} \&P1, \hyperlink{classParticle}{Particle} \&P2)
+\begin{DoxyCompactList}\small\item\em Function for computing the gravitational force between two particles. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Class for calculating the gravitational force between two particles. 
+
+This class implements the calculation of the gravitational force between two particles. This force is calculated using the following equation\-: \[ F_{ij} = \frac{m_i m_j}{\left( \left\lVert x_i - x_j \right\rVert_2 \right)^3} \cdot \left( x_j - x_i \right) \] 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classForceCalculator__Gravity_a3542faf8f36f9935f97c6a8b2ca266d0}{\index{Force\-Calculator\-\_\-\-Gravity@{Force\-Calculator\-\_\-\-Gravity}!Force\-Calculator\-\_\-\-Gravity@{Force\-Calculator\-\_\-\-Gravity}}
+\index{Force\-Calculator\-\_\-\-Gravity@{Force\-Calculator\-\_\-\-Gravity}!ForceCalculator_Gravity@{Force\-Calculator\-\_\-\-Gravity}}
+\subsubsection[{Force\-Calculator\-\_\-\-Gravity}]{\setlength{\rightskip}{0pt plus 5cm}Force\-Calculator\-\_\-\-Gravity\-::\-Force\-Calculator\-\_\-\-Gravity (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classForceCalculator__Gravity_a3542faf8f36f9935f97c6a8b2ca266d0}
+\hypertarget{classForceCalculator__Gravity_a8eb0290da710176533a4b36ef58e0370}{\index{Force\-Calculator\-\_\-\-Gravity@{Force\-Calculator\-\_\-\-Gravity}!$\sim$\-Force\-Calculator\-\_\-\-Gravity@{$\sim$\-Force\-Calculator\-\_\-\-Gravity}}
+\index{$\sim$\-Force\-Calculator\-\_\-\-Gravity@{$\sim$\-Force\-Calculator\-\_\-\-Gravity}!ForceCalculator_Gravity@{Force\-Calculator\-\_\-\-Gravity}}
+\subsubsection[{$\sim$\-Force\-Calculator\-\_\-\-Gravity}]{\setlength{\rightskip}{0pt plus 5cm}Force\-Calculator\-\_\-\-Gravity\-::$\sim$\-Force\-Calculator\-\_\-\-Gravity (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classForceCalculator__Gravity_a8eb0290da710176533a4b36ef58e0370}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classForceCalculator__Gravity_a8f79c8d0ef3621a646288a195bf2e75a}{\index{Force\-Calculator\-\_\-\-Gravity@{Force\-Calculator\-\_\-\-Gravity}!compute@{compute}}
+\index{compute@{compute}!ForceCalculator_Gravity@{Force\-Calculator\-\_\-\-Gravity}}
+\subsubsection[{compute}]{\setlength{\rightskip}{0pt plus 5cm}void Force\-Calculator\-\_\-\-Gravity\-::compute (
+\begin{DoxyParamCaption}
+\item[{{\bf Particle} \&}]{P1, }
+\item[{{\bf Particle} \&}]{P2}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classForceCalculator__Gravity_a8f79c8d0ef3621a646288a195bf2e75a}
+
+
+Function for computing the gravitational force between two particles. 
+
+Calculates the gravitational force between two particles and adds it to the force acting on the first particle. The force is calculated using the following equation\-: \[ F_{ij} = \frac{m_i m_j}{\left( \left\lVert x_i - x_j \right\rVert_2 \right)^3} \cdot \left( x_j - x_i \right) \] 
+
+Implements \hyperlink{classForceCalculator_a0469e873f4deb9145bc134fabdafe4de}{Force\-Calculator}.
+
+
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+src/handler/\hyperlink{ForceCalculator__Gravity_8h}{Force\-Calculator\-\_\-\-Gravity.\-h}\item 
+src/handler/\hyperlink{ForceCalculator__Gravity_8cpp}{Force\-Calculator\-\_\-\-Gravity.\-cpp}\end{DoxyCompactItemize}

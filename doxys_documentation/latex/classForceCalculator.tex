@@ -1,0 +1,73 @@
+\hypertarget{classForceCalculator}{\section{Force\-Calculator Class Reference}
+\label{classForceCalculator}\index{Force\-Calculator@{Force\-Calculator}}
+}
+
+
+Abstract class for defining the interface used for force calculation.  
+
+
+
+
+{\ttfamily \#include $<$Force\-Calculator.\-h$>$}
+
+Inheritance diagram for Force\-Calculator\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classForceCalculator}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classForceCalculator_ab25fcc538b65e081a4eecd9ed33552f7}{Force\-Calculator} ()
+\item 
+virtual \hyperlink{classForceCalculator_a4aaafe93cfe95084545ed7c4a7b27533}{$\sim$\-Force\-Calculator} ()
+\item 
+virtual void \hyperlink{classForceCalculator_a0469e873f4deb9145bc134fabdafe4de}{compute} (\hyperlink{classParticle}{Particle} \&P1, \hyperlink{classParticle}{Particle} \&P2)=0
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Abstract class for defining the interface used for force calculation. 
+
+This class defines the inteface used for force calculation and therefore enables the calculation method to be changed easily. 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classForceCalculator_ab25fcc538b65e081a4eecd9ed33552f7}{\index{Force\-Calculator@{Force\-Calculator}!Force\-Calculator@{Force\-Calculator}}
+\index{Force\-Calculator@{Force\-Calculator}!ForceCalculator@{Force\-Calculator}}
+\subsubsection[{Force\-Calculator}]{\setlength{\rightskip}{0pt plus 5cm}Force\-Calculator\-::\-Force\-Calculator (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classForceCalculator_ab25fcc538b65e081a4eecd9ed33552f7}
+\hypertarget{classForceCalculator_a4aaafe93cfe95084545ed7c4a7b27533}{\index{Force\-Calculator@{Force\-Calculator}!$\sim$\-Force\-Calculator@{$\sim$\-Force\-Calculator}}
+\index{$\sim$\-Force\-Calculator@{$\sim$\-Force\-Calculator}!ForceCalculator@{Force\-Calculator}}
+\subsubsection[{$\sim$\-Force\-Calculator}]{\setlength{\rightskip}{0pt plus 5cm}virtual Force\-Calculator\-::$\sim$\-Force\-Calculator (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}}\label{classForceCalculator_a4aaafe93cfe95084545ed7c4a7b27533}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classForceCalculator_a0469e873f4deb9145bc134fabdafe4de}{\index{Force\-Calculator@{Force\-Calculator}!compute@{compute}}
+\index{compute@{compute}!ForceCalculator@{Force\-Calculator}}
+\subsubsection[{compute}]{\setlength{\rightskip}{0pt plus 5cm}virtual void Force\-Calculator\-::compute (
+\begin{DoxyParamCaption}
+\item[{{\bf Particle} \&}]{P1, }
+\item[{{\bf Particle} \&}]{P2}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}}\label{classForceCalculator_a0469e873f4deb9145bc134fabdafe4de}
+
+
+Implements \hyperlink{classPairHandler_a2811e5957b516f41e1cb52c71af3f6e9}{Pair\-Handler}.
+
+
+
+Implemented in \hyperlink{classForceCalculator__Gravity_a8f79c8d0ef3621a646288a195bf2e75a}{Force\-Calculator\-\_\-\-Gravity}, and \hyperlink{classForceCalculator__LennardJones_a153d67ac2a42b1e237c103e5f63b4461}{Force\-Calculator\-\_\-\-Lennard\-Jones}.
+
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+src/handler/\hyperlink{ForceCalculator_8h}{Force\-Calculator.\-h}\end{DoxyCompactItemize}

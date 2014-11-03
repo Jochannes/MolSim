@@ -1,0 +1,71 @@
+\hypertarget{classForcePrepareHandler}{\section{Force\-Prepare\-Handler Class Reference}
+\label{classForcePrepareHandler}\index{Force\-Prepare\-Handler@{Force\-Prepare\-Handler}}
+}
+
+
+Class for resetting the calculated forces for a new iteration step.  
+
+
+
+
+{\ttfamily \#include $<$Force\-Prepare\-Handler.\-h$>$}
+
+Inheritance diagram for Force\-Prepare\-Handler\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classForcePrepareHandler}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classForcePrepareHandler_a430833a14abbe091569b200a7f4fc91a}{Force\-Prepare\-Handler} ()
+\item 
+virtual \hyperlink{classForcePrepareHandler_a680814e48b86a8cf369e6a1183508a76}{$\sim$\-Force\-Prepare\-Handler} ()
+\item 
+virtual void \hyperlink{classForcePrepareHandler_a06426453873836601e3addff521e00ca}{compute} (\hyperlink{classParticle}{Particle} \&p)
+\begin{DoxyCompactList}\small\item\em This method saves the force calculated for the particle in the previous step to Old\-F and resets the force to 0. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Class for resetting the calculated forces for a new iteration step. 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classForcePrepareHandler_a430833a14abbe091569b200a7f4fc91a}{\index{Force\-Prepare\-Handler@{Force\-Prepare\-Handler}!Force\-Prepare\-Handler@{Force\-Prepare\-Handler}}
+\index{Force\-Prepare\-Handler@{Force\-Prepare\-Handler}!ForcePrepareHandler@{Force\-Prepare\-Handler}}
+\subsubsection[{Force\-Prepare\-Handler}]{\setlength{\rightskip}{0pt plus 5cm}Force\-Prepare\-Handler\-::\-Force\-Prepare\-Handler (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classForcePrepareHandler_a430833a14abbe091569b200a7f4fc91a}
+\hypertarget{classForcePrepareHandler_a680814e48b86a8cf369e6a1183508a76}{\index{Force\-Prepare\-Handler@{Force\-Prepare\-Handler}!$\sim$\-Force\-Prepare\-Handler@{$\sim$\-Force\-Prepare\-Handler}}
+\index{$\sim$\-Force\-Prepare\-Handler@{$\sim$\-Force\-Prepare\-Handler}!ForcePrepareHandler@{Force\-Prepare\-Handler}}
+\subsubsection[{$\sim$\-Force\-Prepare\-Handler}]{\setlength{\rightskip}{0pt plus 5cm}Force\-Prepare\-Handler\-::$\sim$\-Force\-Prepare\-Handler (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classForcePrepareHandler_a680814e48b86a8cf369e6a1183508a76}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classForcePrepareHandler_a06426453873836601e3addff521e00ca}{\index{Force\-Prepare\-Handler@{Force\-Prepare\-Handler}!compute@{compute}}
+\index{compute@{compute}!ForcePrepareHandler@{Force\-Prepare\-Handler}}
+\subsubsection[{compute}]{\setlength{\rightskip}{0pt plus 5cm}void Force\-Prepare\-Handler\-::compute (
+\begin{DoxyParamCaption}
+\item[{{\bf Particle} \&}]{p}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classForcePrepareHandler_a06426453873836601e3addff521e00ca}
+
+
+This method saves the force calculated for the particle in the previous step to Old\-F and resets the force to 0. 
+
+
+
+Implements \hyperlink{classParticleHandler_a95783831b8077d447c95ec5e2627c1fa}{Particle\-Handler}.
+
+
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+src/handler/\hyperlink{ForcePrepareHandler_8h}{Force\-Prepare\-Handler.\-h}\item 
+src/handler/\hyperlink{ForcePrepareHandler_8cpp}{Force\-Prepare\-Handler.\-cpp}\end{DoxyCompactItemize}

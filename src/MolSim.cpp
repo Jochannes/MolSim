@@ -7,15 +7,21 @@
 #include "handler/VelocityCalculator.h"
 #include "handler/ForceCalculator_Gravity.h"
 
-#include <list>
 #include <cstring>
 #include <cstdlib>
-#include <cmath>
-#include <iostream>
+#include <log4cxx/logger.h>
+#include <log4cxx/propertyconfigurator.h>
 
 using namespace std;
+using namespace log4cxx;
+
 
 /**** forward declaration of the calculation functions ****/
+
+/**
+ * \brief Parse parameters.
+ */
+void parseParameters(int argc, char* argsv[]);
 
 /**
  * \brief Calculate the force for all particles.
@@ -39,57 +45,29 @@ void plotParticles(int iteration);
 
 
 // global variables
-double start_time = 0; //!< Starting time of the simulation.
-double end_time   = 1000; //!< End time of the simulation.
-double delta_t    = 0.014; //!< Time step size of the simulation.
+double start_time = 0;		//!< Starting time of the simulation.
+double end_time   = 1000;	//!< End time of the simulation.
+double delta_t    = 0.014;	//!< Time step size of the simulation.
 
-ParticleContainer	particles; //!< Container for encapsulating the particle list.
-ParticleInput* 		particleIn; //!< Object for defining the input method to be used.
-ParticleOutput*		particleOut; //!< Object for defining the output method to be used.
+ParticleContainer	particles;		//!< Container for encapsulating the particle list.
+ParticleInput* 		particleIn;		//!< Object for defining the input method to be used.
+ParticleOutput*		particleOut;	//!< Object for defining the output method to be used.
 
 PositionCalculator*	xcalc; //!< Object for defining the coordinate calculator to be used in the simulation.
-VelocityCalculator*		vcalc; //!< Object for defining the velocity calculator to be used in the simulation.
-ForceCalculator*		fcalc; //!< Object for defining the force calculator to be used in the simulation.
+VelocityCalculator*	vcalc; //!< Object for defining the velocity calculator to be used in the simulation.
+ForceCalculator*	fcalc; //!< Object for defining the force calculator to be used in the simulation.
+
+LoggerPtr logger(Logger::getLogger("MolSim"));	//!< Object for handling general logs.
 
 
 int main(int argc, char* argsv[]) {
 
-	cout << "Hello from MolSim for PSE!" << endl;
+	// configure logging
+	PropertyConfigurator::configure("./MolSim.logging.conf");
+
+	LOG4CXX_INFO(logger, "Hello from MolSim for PSE!");
 	
-	// parsing commandline parameters
-	switch (argc)
-	{
-	case 4:		// 3 parameters are given.
-		delta_t = atof(argsv[3]);
-
-		if (delta_t > 0.0) {
-			cout << "using parameter delta_t=" << delta_t << endl;
-		} else {
-			cout << "invalid parameter delta_t!" << endl;
-			return 1;
-		}
-		/* no break */
-
-	case 3:		// 2 parameters are given.
-		delta_t = atof(argsv[2]);
-
-		if (end_time > 0.0) {
-			cout << "using parameter end_time=" << end_time << endl;
-		} else {
-			cout << "invalid parameter end_time!" << endl;
-			return 1;
-		}
-		/* no break */
-
-	case 2:		// 1 parameter is given.
-		cout << "using parameter filename=\"" << argsv[1] << "\"" << endl;
-		break;
-
-	default:	// no or more than 3 parameters are given.
-		cout << "Erroneous program call! " << endl;
-		cout << "./MolSim filename [end_time [delta_t]]" << endl;
-		return 1;
-	};
+	parseParameters(argc, argsv);
 
 	// configure all handlers
 	particleIn  = new ParticleInput_FileReader(particles, argsv[1]);
@@ -119,13 +97,53 @@ int main(int argc, char* argsv[]) {
 		if (iteration % 10 == 0) {
 			plotParticles(iteration);
 		}
-		cout << "Iteration " << iteration << " finished." << endl;
+		LOG4CXX_DEBUG(logger, "Iteration " << iteration << " finished.");
 
 		current_time += delta_t;
 	}
 
-	cout << "output written. Terminating..." << endl;
+	LOG4CXX_INFO(logger, "output written. Terminating...");
 	return 0;
+}
+
+
+/**
+ * Parses the parameters from the commandline
+ * and configures the program accordingly.
+ */
+void parseParameters(int argc, char* argsv[])
+{
+	switch (argc)
+	{
+	case 4:		// 3 parameters are given.
+		delta_t = atof(argsv[3]);
+		if (delta_t > 0.0) {
+			LOG4CXX_DEBUG(logger, "using parameter delta_t=" << delta_t);
+		} else {
+			LOG4CXX_FATAL(logger, "invalid parameter delta_t!");
+			exit(1);
+		}
+		/* no break */
+
+	case 3:		// 2 parameters are given.
+		delta_t = atof(argsv[2]);
+		if (end_time > 0.0) {
+			LOG4CXX_DEBUG(logger, "using parameter end_time=" << end_time);
+		} else {
+			LOG4CXX_FATAL(logger, "invalid parameter end_time!");
+			exit(1);
+		}
+		/* no break */
+
+	case 2:		// 1 parameter is given.
+		LOG4CXX_DEBUG(logger, "using parameter filename=\"" << argsv[1] << "\"");
+		break;
+
+	default:	// no or more than 3 parameters are given.
+		LOG4CXX_FATAL(logger, "Erroneous program call!");
+		LOG4CXX_INFO(logger, "./MolSim filename [end_time [delta_t]]");
+		exit(1);;
+	};
 }
 
 
