@@ -42,6 +42,10 @@ public:
 	~ParticleContainer() {
 	}
 
+	bool empty() {
+		return particleList.empty();
+	}
+
 	void prepare_forces();
 
 	void iterate_all(ParticleHandler& handler);

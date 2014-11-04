@@ -5,10 +5,10 @@
 #include "handler/PositionCalculator.h"
 #include "handler/VelocityCalculator.h"
 #include "handler/ForceCalculator_Gravity.h"
+#include "handler/ForceCalculator_LennardJones.h"
 
 #include <cstring>
 #include <cstdlib>
-#include <cmath>
 #include <iostream>
 #include <log4cxx/logger.h>
 #include <log4cxx/propertyconfigurator.h>
@@ -17,15 +17,10 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <cppunit/ui/text/TestRunner.h>
 #include "UnitTests/UTest_ParticleContainer.h"
-#include <log4cxx/logger.h>
-#include <log4cxx/propertyconfigurator.h>
+
 using namespace std;
 using namespace log4cxx;
 
-/**
- *  \brief Parse parameters.
- */
-void parseParameters(int argc, char* argsv[]);
 
 /**** forward declaration of the calculation functions ****/
 
@@ -33,6 +28,11 @@ void parseParameters(int argc, char* argsv[]);
  * \brief Parse parameters.
  */
 void parseParameters(int argc, char* argsv[]);
+
+/**
+ * \brief Run a unit test.
+ */
+int runUnitTest(const char* test);
 
 /**
  * \brief Calculate the force for all particles.
@@ -55,19 +55,19 @@ void calculateV();
 void plotParticles(int iteration);
 
 // global variables
-double start_time = 0;		//!< Starting time of the simulation.
+double start_time = 0.0;	//!< Starting time of the simulation.
 double end_time = 1000; 	//!< End time of the simulation.
 double delta_t = 0.014; 	//!< Time step size of the simulation.
 
-ParticleContainer particles; 	//!< Container for encapsulating the particle list.
-ParticleInput* particleIn; 		//!< Object for defining the input method to be used.
-ParticleOutput* particleOut; 	//!< Object for defining the output method to be used.
-
-PositionCalculator* xcalc; 		//!< Object for defining the coordinate calculator to be used in the simulation.
-VelocityCalculator* vcalc; 		//!< Object for defining the velocity calculator to be used in the simulation.
-ForceCalculator* fcalc; 		//!< Object for defining the force calculator to be used in the simulation.
+ParticleContainer particles;			//!< Container for encapsulating the particle list.
+ParticleInput*    particleIn  = NULL; 	//!< Object for defining the input method to be used.
+ParticleOutput*   particleOut = NULL; 	//!< Object for defining the output method to be used.
+PositionCalculator* xcalc = NULL; 		//!< Object for defining the coordinate calculator to be used in the simulation.
+VelocityCalculator* vcalc = NULL; 		//!< Object for defining the velocity calculator to be used in the simulation.
+ForceCalculator*    fcalc = NULL; 		//!< Object for defining the force calculator to be used in the simulation.
 
 LoggerPtr logger(Logger::getLogger("MolSim"));//!< Object for handling general logs.
+
 
 int main(int argc, char* argsv[]) {
 
@@ -77,45 +77,6 @@ int main(int argc, char* argsv[]) {
 	LOG4CXX_INFO(logger, "Hello from MolSim for PSE!");
 
 	parseParameters(argc, argsv);
-
-	/********* UnitTests ********/
-	//Check if the '-test' argument has been passed and save the index of this argument
-	bool test = false;
-	int argTest = 0;
-	for (; argTest < argc; argTest++) {
-		if (strcmp(argsv[argTest], "-test") == 0) {
-			test = true;
-			break;
-		}
-	}
-	test = true;
-	//if the '-test' argument has been passed
-	if (test) {
-		CppUnit::TextUi::TestRunner runner;
-
-		//retrieve instance of TestFactoryRegistry
-		CppUnit::TestFactoryRegistry &registry =
-				CppUnit::TestFactoryRegistry::getRegistry();
-
-		//retrieve test suite created by the TestFactoryRegistry
-		runner.addTest(registry.makeTest());
-
-		//check if a single test or test suite has been chosen
-		if (argc > argTest + 1) {
-			return runner.run(argsv[argTest + 1]) ? 0 : 1;
-		}
-		return runner.run() ? 0 : 1;
-	}
-
-	// configure all handlers
-	particleIn = new ParticleInput_FileReader(particles, argsv[1]);
-	particleOut = new ParticleOutput_VTK(particles, "MD_vtk");
-	xcalc = new PositionCalculator();
-	vcalc = new VelocityCalculator();
-	fcalc = new ForceCalculator_Gravity();
-
-	// create particles using respective input method
-	particleIn->input();
 
 	// the forces are needed to calculate x, but are not given in the input file.
 	calculateF();
@@ -151,37 +112,176 @@ int main(int argc, char* argsv[]) {
  */
 void parseParameters(int argc, char* argsv[])
 {
-	switch (argc)
-	{
-	case 4:		// 3 parameters are given.
-		delta_t = atof(argsv[3]);
-		if (delta_t > 0.0) {
-			LOG4CXX_DEBUG(logger, "using parameter delta_t=" << delta_t);
-		} else {
-			LOG4CXX_FATAL(logger, "invalid parameter delta_t!");
-			exit(1);
+	// commandline must at least contain one parameter
+	if(argc < 2) {
+		LOG4CXX_FATAL(logger, "Invalid program call!");
+		exit(1);
+	}
+
+	// handle options
+	for(int i=1; i < argc; i++) {
+		if( argsv[i][0] == '-' ) {
+			const char* option = argsv[i] + 1;
+			const char* value  = NULL;
+
+			// if a value for the option is given, set the variable
+			// accordingly. Otherwise the variable is NULL.
+			if( (argc > i+1) && (argsv[i+1][0] != '-') ) {
+				value = argsv[i+1];
+				i++;
+			}
+
+			if( strcmp(option, "help") == 0 ) {
+				cout <<
+					"usage: MolSim [OPTIONS]\n"
+					"\n"
+					"Options:\n"
+					"  -delta_t VALUE	Sets the size of each time step in the simulation to VALUE.\n"
+					"			The default is 0.014.\n"
+					"  -end_time VALUE	Sets the time of the simulation's end to VALUE.\n"
+					"			The default is 1000.\n"
+					"  -force NAME		Specifies the method for force calculation between the particles.\n"
+					"			NAME can be \"grav\" for gravity or \"lj\" for Lennard-Jones potential.\n"
+					"			The default is \"lj\".\n"
+					"  -gencub FILENAME	Generates one or more cuboids of particles and adds brownian motion.\n"
+					"			All necessary parameters for generation are read from a file specified by FILENAME.\n"
+					"  -help			Prints this information.\n"
+					"  -read FILENAME	Directly reads a set of particles from a file specified by FILENAME\n"
+					"  -test [NAME]		Runs a unit test. Optionally the name of the test suite can be specified by NAME.\n"
+					"\n"
+					"Note:\n"
+					"  You must at least use -read or -gencub once, so the simulation has particles.\n"
+					"  These options can be used more than once."
+					"\n"
+				<< endl;
+				exit(0);
+			}
+			else if( strcmp(option, "delta_t") == 0 ) {
+				if(value == NULL) {
+					LOG4CXX_FATAL(logger, "Error! Missing value for option delta_t.");
+					exit(1);
+				}
+
+				delta_t = atof(value);
+				if(delta_t <= 0.0) {
+					LOG4CXX_FATAL(logger, "Error! Invalid value for option delta_t.");
+					exit(1);
+				}
+
+				LOG4CXX_DEBUG(logger, "using parameter delta_t=" << delta_t);
+			}
+
+			else if( strcmp(option, "end_time") == 0 ) {
+				if(value == NULL) {
+					LOG4CXX_FATAL(logger, "Error! Missing value for option end_time.");
+					exit(1);
+				}
+
+				end_time = atof(value);
+				if(end_time <= 0.0) {
+					LOG4CXX_FATAL(logger, "Error! Invalid value for option end_time.");
+					exit(1);
+				}
+
+				LOG4CXX_DEBUG(logger, "using parameter end_time=" << end_time);
+			}
+
+			else if( strcmp(option, "force") == 0 ) {
+				if(value == NULL) {
+					LOG4CXX_FATAL(logger, "Error! Missing value for option force.");
+					exit(1);
+				}
+
+				if( strcmp(value, "grav") == 0 ) {
+					fcalc = new ForceCalculator_Gravity();
+					LOG4CXX_DEBUG(logger, "using gravity force calculator.");
+				}
+				else if( strcmp(value, "lj") == 0 ) {
+					fcalc = new ForceCalculator_LennardJones();
+					LOG4CXX_DEBUG(logger, "using Lennard-Jones force calculator.");
+				}
+				else {
+					LOG4CXX_FATAL(logger, "Error! Invalid value for option force.");
+					exit(1);
+				}
+			}
+
+			else if( strcmp(option, "gencub") == 0 ) {
+				if(value == NULL) {
+					LOG4CXX_FATAL(logger, "Error! Missing value for option gencube.");
+					exit(1);
+				}
+
+				LOG4CXX_DEBUG(logger, "generating cuboid from file " << value << ".");
+				//ParticleInput_... in(particles, value);
+				//in.input();
+			}
+
+			else if( strcmp(option, "read") == 0 ) {
+				if(value == NULL) {
+					LOG4CXX_FATAL(logger, "Error! Missing value for option read.");
+					exit(1);
+				}
+
+				LOG4CXX_DEBUG(logger, "reading particles from file " << value << ".");
+				ParticleInput_FileReader in(particles, value);
+				in.input();
+			}
+
+			else if( strcmp(option, "test") == 0 ) {
+				LOG4CXX_DEBUG(logger, "starting unit test.");
+
+				int ret_val = runUnitTest(value);
+				exit(ret_val);
+			}
 		}
-		/* no break */
-
-	case 3:		// 2 parameters are given.
-		delta_t = atof(argsv[2]);
-		if (end_time > 0.0) {
-			LOG4CXX_DEBUG(logger, "using parameter end_time=" << end_time);
-		} else {
-			LOG4CXX_FATAL(logger, "invalid parameter end_time!");
-			exit(1);
+		else {
+			LOG4CXX_INFO(logger, "Ignored parameter: " << argsv[i]);
 		}
-		/* no break */
+	}	// end for
 
-	case 2:		// 1 parameter is given.
-		LOG4CXX_DEBUG(logger, "using parameter filename=\"" << argsv[1] << "\"");
-		break;
+	// check if there are particles
+	if(particles.empty()) {
+		LOG4CXX_FATAL(logger, "Error! No particles given.");
+		exit(1);
+	}
 
-	default:	// no or more than 3 parameters are given.
-		LOG4CXX_FATAL(logger, "Erroneous program call!");
-		LOG4CXX_INFO(logger, "./MolSim filename [end_time [delta_t]]");
-		exit(1);;
-	};
+	// set default values for particle handlers if no value was specified.
+	if(fcalc == NULL) {
+		fcalc = new ForceCalculator_LennardJones();
+		LOG4CXX_DEBUG(logger, "using Lennard-Jones force calculator.");
+	}
+
+	if(particleOut == NULL) {
+		particleOut = new ParticleOutput_VTK(particles, "MD_vtk");
+		LOG4CXX_DEBUG(logger, "using VTKWriter for output.");
+	}
+
+	xcalc = new PositionCalculator();
+	vcalc = new VelocityCalculator();
+}
+
+
+/**
+ * Runs a CppUnit unit test specified by parameter `test`.
+ */
+int runUnitTest(const char* test)
+{
+	CppUnit::TextUi::TestRunner runner;
+
+	//retrieve instance of TestFactoryRegistry
+	CppUnit::TestFactoryRegistry &registry =
+		CppUnit::TestFactoryRegistry::getRegistry();
+
+	//retrieve test suite created by the TestFactoryRegistry
+	runner.addTest(registry.makeTest());
+
+	//check if a single test or test suite has been chosen
+	if (test != NULL) {
+		return runner.run(test) ? 0 : 1;
+	} else {
+		return runner.run() ? 0 : 1;
+	}
 }
 
 
