@@ -14,7 +14,7 @@
 #include "../global.h"
 
 /**
- * \brief Abstract class for defining the interface used for position calculation.
+ * \brief Class for defining the interface used for position calculation.
  *
  * This class defines the inteface used for position calculation and therefore
  * enables the calculation method to be changed easily.

@@ -8,10 +8,14 @@
 #include "ParticleInput_FileReader.h"
 #include "FileReader.h"
 
-
+/*
+ * \brief Method for reading in a particle file using FileReader.
+ */
 void ParticleInput_FileReader::input()
 {
 	FileReader filereader;
 
-	filereader.readFile(container.particleList, filename.c_str());
+	std::list<Particle> initialParticles;
+	filereader.readFile(initialParticles, filename.c_str());
+	container = ParticleContainer(&initialParticles);
 }

@@ -27,17 +27,13 @@
  */
 class ParticleContainer
 {
-	friend class ParticleInput_FileReader;
-	friend class ParticleOutput_VTK;
-	friend class UTest_ParticleContainer;
-
-
 private:
 	std::list<Particle> particleList;
 
 public:
-	ParticleContainer() {
+	ParticleContainer(){
 	}
+	ParticleContainer(const std::list<Particle> *initialParticleList);
 
 	~ParticleContainer() {
 	}
@@ -46,12 +42,14 @@ public:
 		return particleList.empty();
 	}
 
+	int size() {
+		return particleList.size();
+	}
+
 	void prepare_forces();
 
 	void iterate_all(ParticleHandler& handler);
-
 	void iterate_pairs(PairHandler& handler);
-
 	void iterate_pairs_half(PairHandler& handler);
 };
 

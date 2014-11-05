@@ -6,7 +6,6 @@
  */
 
 #include "ParticleOutput_VTK.h"
-#include "outputWriter/VTKWriter.h"
 
 #include <list>
 
@@ -14,16 +13,12 @@
 void ParticleOutput_VTK::output(int iteration)
 {
 	outputWriter::VTKWriter writer;
-	writer.initializeOutput(container.particleList.size());
+	writer.initializeOutput(container.size());
 
 	// plot each particle
-	std::list<Particle>::iterator iterator = container.particleList.begin();
+	plotHandler_VTK plotHandler = plotHandler_VTK(writer);
+	container.iterate_all(plotHandler);
 
-	while (iterator != container.particleList.end()) {
-		writer.plotParticle(*iterator);
-		++iterator;
-	}
 
 	writer.writeFile(out_name, iteration);
 }
-

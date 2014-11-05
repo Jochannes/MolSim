@@ -18,6 +18,9 @@
  */
 class ForceCalculator_LennardJones: public ForceCalculator {
 public:
+	static const double sigma = 1;
+	static const double epsilon = 5;
+
 	ForceCalculator_LennardJones();
 	virtual ~ForceCalculator_LennardJones();
 

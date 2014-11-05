@@ -12,6 +12,7 @@
 #include <iostream>
 #include <log4cxx/logger.h>
 #include <log4cxx/propertyconfigurator.h>
+#include <log4cxx/stream.h>
 
 //UnitTests
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -271,10 +272,12 @@ int runUnitTest(const char* test)
 
 	//retrieve instance of TestFactoryRegistry
 	CppUnit::TestFactoryRegistry &registry =
-		CppUnit::TestFactoryRegistry::getRegistry();
+			CppUnit::TestFactoryRegistry::getRegistry();
 
 	//retrieve test suite created by the TestFactoryRegistry
 	runner.addTest(registry.makeTest());
+
+	// TODO: Redirect output to log4cxx?
 
 	//check if a single test or test suite has been chosen
 	if (test != NULL) {
@@ -295,7 +298,7 @@ void calculateF() {
 	particles.prepare_forces();
 
 	// calculate forces
-	particles.iterate_pairs(*fcalc);
+	particles.iterate_pairs_half(*fcalc);
 }
 
 /**

@@ -8,11 +8,11 @@
 #ifndef UTEST_PARTICLECONTAINER_H_
 #define UTEST_PARTICLECONTAINER_H_
 
+#include <list>
 #include <cppunit/TestCase.h>
 #include <cppunit/TestSuite.h>
 #include <cppunit/TestCaller.h>
 #include <cppunit/TestRunner.h>
-#include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 #include "ParticleContainer.h"
 #include "countParticles.h"
@@ -27,6 +27,7 @@ class UTest_ParticleContainer : public CppUnit::TestFixture  {
 	CPPUNIT_TEST_SUITE( UTest_ParticleContainer );
 	CPPUNIT_TEST( testIterateCount );
 	CPPUNIT_TEST( testIteratePairCount );
+	CPPUNIT_TEST( testIteratePairHalfCount );
 	CPPUNIT_TEST_SUITE_END();
 
 private:
@@ -37,6 +38,7 @@ public:
 	void tearDown();
 	void testIterateCount();
 	void testIteratePairCount();
+	void testIteratePairHalfCount();
 };
 
 #endif /* UTEST_PARTICLECONTAINER_H_ */

@@ -7,7 +7,14 @@
 
 #include "ParticleContainer.h"
 
-#include <list>
+
+/**
+ * \brief Constructor for setting an initial particle list.
+ */
+ParticleContainer::ParticleContainer(const std::list<Particle> *initialParticleList)
+	: particleList(std::list<Particle>(initialParticleList->begin(), initialParticleList->end()))
+{
+}
 
 /**
  * \brief Function for iterating over all particles.
@@ -30,10 +37,14 @@ void ParticleContainer::iterate_all(ParticleHandler& handler)
 
 /**
  * \brief Function for iterating over all particle pairs.
+ *
  * \param handler Object providing the compute function, which is called for every particle pair.
  *
  * This function iterates over all particle pairs and processes
  * each by calling the provided function.
+ *
+ * Force calculators use Newton's third law and therefore give
+ * wrong outputs with this method. Use ParticleContainer::iterate_pairs_half instead.
  */
 void ParticleContainer::iterate_pairs(PairHandler& handler)
 {
@@ -67,7 +78,19 @@ void ParticleContainer::iterate_pairs(PairHandler& handler)
  */
 void ParticleContainer::iterate_pairs_half(PairHandler& handler)
 {
-	// TODO: implement cost saving iteration method for force calculation (use Newton's third law)
+	std::list<Particle>::iterator it_outer = particleList.begin();
+
+	while(it_outer != particleList.end()) {
+		std::list<Particle>::iterator it_inner = it_outer;
+		it_inner++;
+
+		while(it_inner != particleList.end()) {
+			handler.compute(*it_outer, *it_inner);
+			it_inner++;
+		}
+
+		it_outer++;
+	}
 }
 
 

@@ -12,7 +12,7 @@
 
 
 /**
- * \brief Abstract class for defining the interface used for velocity calculation.
+ * \brief Class for defining the interface used for velocity calculation.
  *
  * This class defines the inteface used for velocity calculation and therefore
  * enables the calculation method to be changed easily.

@@ -27,9 +27,6 @@ ForceCalculator_LennardJones::~ForceCalculator_LennardJones() {
  */
 void ForceCalculator_LennardJones::compute(Particle& P1, Particle& P2)
 {
-	double sigma = 1;
-	double epsilon = 1;
-
 	double recDistance = 1 / (P1.getX() - P2.getX()).L2Norm();
 
 	utils::Vector<double, 3> force = P2.getX() - P1.getX(); //directional vector
@@ -37,6 +34,6 @@ void ForceCalculator_LennardJones::compute(Particle& P1, Particle& P2)
 	force = 24 * epsilon * recDistance * recDistance * force; //prefactor
 
 	P1.getF() = P1.getF() + force;
-	//P2.getF() = P1.getF() - force;		// according to Newton's third law: F_P1 = -F_P2, use alternative iteration method
+	P2.getF() = P2.getF() - force;		// according to Newton's third law: F_P1 = -F_P2
 }
 

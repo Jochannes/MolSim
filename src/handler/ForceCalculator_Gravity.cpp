@@ -35,6 +35,6 @@ void ForceCalculator_Gravity::compute(Particle& P1, Particle& P2)
 	utils::Vector<double, 3> force = P1.getM() * P2.getM() / pow(distance, 3) * (P2.getX() - P1.getX());
 
 	P1.getF() = P1.getF() + force;
-	//P2.getF() = P1.getF() - force;		// according to Newton's third law: F_P1 = -F_P2, use alternative iteration method
+	P2.getF() = P2.getF() - force;		// according to Newton's third law: F_P1 = -F_P2
 }
 

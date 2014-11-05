@@ -9,6 +9,8 @@
 #define PARTICLEOUTPUT_VTK_H_
 
 #include "ParticleOutput.h"
+#include "outputWriter/VTKWriter.h"
+#include "handler/plotHandler_VTK.h"
 
 #include <string>
 
