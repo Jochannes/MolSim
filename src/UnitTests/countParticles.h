@@ -11,11 +11,12 @@
 #include "Particle.h"
 #include "ParticleHandler.h"
 
+namespace unitTest {
+
 /**
  * \brief Class for counting the number of iterated particles for test purposes.
  */
-class countParticles : public ParticleHandler
-{
+class countParticles: public ParticleHandler {
 public:
 	int cnt;
 	countParticles();
@@ -23,5 +24,7 @@ public:
 
 	virtual void compute(Particle& P);
 };
+
+}
 
 #endif /* COUNTPARTICLES_H_ */

@@ -17,18 +17,20 @@
 #include "ParticleContainer.h"
 #include "handler/ForceCalculator_LennardJones.h"
 
+namespace unitTest {
+
 /**
  * \brief Class for testing the force calculator for the Lennard-Jones potential.
  *
  * This class tests if the potential well is set right and attractive and repulsive regions are right.
  */
-class UTest_ForceCalculator_LennardJones : public CppUnit::TestFixture  {
-	CPPUNIT_TEST_SUITE( UTest_ForceCalculator_LennardJones );
-	CPPUNIT_TEST( testPotentialWell );
-	CPPUNIT_TEST( testAttraction );
-	CPPUNIT_TEST( testRepulsion );
-	CPPUNIT_TEST( testNewton );
-	CPPUNIT_TEST_SUITE_END();
+class UTest_ForceCalculator_LennardJones: public CppUnit::TestFixture {
+CPPUNIT_TEST_SUITE( UTest_ForceCalculator_LennardJones );
+	CPPUNIT_TEST(testPotentialWell);
+	CPPUNIT_TEST(testAttraction);
+	CPPUNIT_TEST(testRepulsion);
+	CPPUNIT_TEST(testNewton);CPPUNIT_TEST_SUITE_END()
+	;
 
 private:
 	double r_well;
@@ -43,5 +45,7 @@ public:
 	void testRepulsion();
 	void testNewton();
 };
+
+}
 
 #endif /* UTEST_FORCECALCULATOR_LENNARDJONES_H_ */

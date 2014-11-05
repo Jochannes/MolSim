@@ -8,8 +8,8 @@
 #ifndef PLOTHANDLER_VTK_H_
 #define PLOTHANDLER_VTK_H_
 
-#include "../outputWriter/VTKWriter.h"
-#include "../ParticleHandler.h"
+#include "outputWriter/VTKWriter.h"
+#include "ParticleHandler.h"
 
 
 /**

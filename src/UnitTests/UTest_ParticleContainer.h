@@ -19,19 +19,24 @@
 #include "countPairs.h"
 
 /**
+ * \brief Namespace for all UnitTests and associated helper classes.
+ */
+namespace unitTest {
+
+/**
  * \brief Class for testing the particle container.
  *
  * This class tests if the iterate methods iterate over the right number of particles and particle pairs.
  */
-class UTest_ParticleContainer : public CppUnit::TestFixture  {
-	CPPUNIT_TEST_SUITE( UTest_ParticleContainer );
-	CPPUNIT_TEST( testIterateCount );
-	CPPUNIT_TEST( testIteratePairCount );
-	CPPUNIT_TEST( testIteratePairHalfCount );
-	CPPUNIT_TEST_SUITE_END();
+class UTest_ParticleContainer: public CppUnit::TestFixture {
+CPPUNIT_TEST_SUITE( UTest_ParticleContainer );
+	CPPUNIT_TEST(testIterateCount);
+	CPPUNIT_TEST(testIteratePairCount);
+	CPPUNIT_TEST(testIteratePairHalfCount);CPPUNIT_TEST_SUITE_END()
+	;
 
 private:
-	ParticleContainer	partContainer; //!< Particle container for testing.
+	ParticleContainer partContainer; //!< Particle container for testing.
 
 public:
 	void setUp();
@@ -40,5 +45,7 @@ public:
 	void testIteratePairCount();
 	void testIteratePairHalfCount();
 };
+
+}
 
 #endif /* UTEST_PARTICLECONTAINER_H_ */

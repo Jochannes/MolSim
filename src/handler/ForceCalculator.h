@@ -8,7 +8,7 @@
 #ifndef FORCECALCULATOR_H_
 #define FORCECALCULATOR_H_
 
-#include "../PairHandler.h"
+#include "PairHandler.h"
 
 
 /**

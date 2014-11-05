@@ -8,7 +8,7 @@
 #ifndef VELOCITYCALCULATOR_H_
 #define VELOCITYCALCULATOR_H_
 
-#include "../ParticleHandler.h"
+#include "ParticleHandler.h"
 
 
 /**

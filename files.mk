@@ -13,6 +13,8 @@ src/handler/ForceCalculator_LennardJones.cpp\
 src/handler/plotHandler_VTK.cpp\
 src/ParticleInput_FileReader.cpp\
 src/UnitTests/countParticles.cpp\
+src/UnitTests/UTest_CuboidGenerator.cpp\
+src/UnitTests/cuboidLengthHandler.cpp\
 src/UnitTests/UTest_ParticleContainer.cpp\
 src/UnitTests/countPairs.cpp\
 src/UnitTests/UTest_ForceCalculator_LennardJones.cpp\

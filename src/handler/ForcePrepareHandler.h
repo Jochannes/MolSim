@@ -8,10 +8,10 @@
 #ifndef FORCEPREPAREHANDLER_H_
 #define FORCEPREPAREHANDLER_H_
 
-#include "../ParticleHandler.h"
-#include "../Particle.h"
-#include "../utils/Vector.h"
-#include "../global.h"
+#include "ParticleHandler.h"
+#include "Particle.h"
+#include "utils/Vector.h"
+#include "global.h"
 
 
 

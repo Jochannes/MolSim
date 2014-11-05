@@ -15,7 +15,7 @@
  * The current build simulates the collision of two bodies using the Lennard-Jones-Potential.
  * The result is saved in a VTK-file, which can be visualized using ParaView.
  *
- *
+ * For an explanation on how to use MolSim, run MolSim using the option "-help".
  *
  * \file
  * \brief Declaration of all relevant global variables.

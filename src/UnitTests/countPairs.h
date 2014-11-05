@@ -11,11 +11,12 @@
 #include "Particle.h"
 #include "PairHandler.h"
 
+namespace unitTest {
+
 /**
  * \brief Class for counting the number of iterated particle pairs for test purposes.
  */
-class countPairs: public PairHandler
-{
+class countPairs: public PairHandler {
 public:
 	int cnt;
 	countPairs();
@@ -24,4 +25,5 @@ public:
 	virtual void compute(Particle& P1, Particle& P2);
 };
 
+}
 #endif /* COUNTPAIRS_H_ */

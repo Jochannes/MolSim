@@ -13,34 +13,33 @@
 #include <iostream>
 #include <cppunit/extensions/HelperMacros.h>
 
+namespace unitTest {
+
 // Registration of the test suite
-CPPUNIT_TEST_SUITE_REGISTRATION( UTest_ParticleContainer );
+CPPUNIT_TEST_SUITE_REGISTRATION(UTest_ParticleContainer);
 
 /**
  * Set up a particle container with 20 particles.
  */
-void UTest_ParticleContainer::setUp()
-{
-	double x[] = {0,0,0};
-	double v[] = {1,1,1};
+void UTest_ParticleContainer::setUp() {
+	double x[] = { 0, 0, 0 };
+	double v[] = { 1, 1, 1 };
 	double m = 1;
 	std::list<Particle> initialParticleList;
-    for(int i = 0; i < 20;i++)
-    {
+	for (int i = 0; i < 20; i++) {
 		Particle p(x, v, m);
 		initialParticleList.push_back(p);
-    }
-    partContainer = ParticleContainer(initialParticleList);
+	}
+	partContainer = ParticleContainer(initialParticleList);
 }
 
-void UTest_ParticleContainer::tearDown()
-{
+void UTest_ParticleContainer::tearDown() {
 }
 
 /**
  * \brief Method for testing if ParticleContainer::iterate_all iterates over the correct number of particles.
  */
-void UTest_ParticleContainer::testIterateCount(){
+void UTest_ParticleContainer::testIterateCount() {
 	countParticles cntPart = countParticles();
 	partContainer.iterate_all(cntPart);
 	CPPUNIT_ASSERT(cntPart.cnt == partContainer.size());
@@ -49,17 +48,22 @@ void UTest_ParticleContainer::testIterateCount(){
 /**
  * \brief Method for testing if ParticleContainer::iterate_pairs iterates over the correct number of particle pairs.
  */
-void UTest_ParticleContainer::testIteratePairCount(){
+void UTest_ParticleContainer::testIteratePairCount() {
 	countPairs cntPairs = countPairs();
 	partContainer.iterate_pairs(cntPairs);
-	CPPUNIT_ASSERT(cntPairs.cnt == partContainer.size() * (partContainer.size() - 1));
+	CPPUNIT_ASSERT(
+			cntPairs.cnt == partContainer.size() * (partContainer.size() - 1));
 }
 
 /**
  * \brief Method for testing if ParticleContainer::iterate_pairs_half iterates over the correct number of particle pairs.
  */
-void UTest_ParticleContainer::testIteratePairHalfCount(){
+void UTest_ParticleContainer::testIteratePairHalfCount() {
 	countPairs cntPairs = countPairs();
 	partContainer.iterate_pairs_half(cntPairs);
-	CPPUNIT_ASSERT(cntPairs.cnt == partContainer.size() * (partContainer.size() - 1) * 0.5);
+	CPPUNIT_ASSERT(
+			cntPairs.cnt
+					== partContainer.size() * (partContainer.size() - 1) * 0.5);
+}
+
 }

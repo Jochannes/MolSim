@@ -10,9 +10,9 @@
 
 
 #include "ForceCalculator.h"
-#include "../Particle.h"
-#include "../utils/Vector.h"
-#include "../global.h"
+#include "Particle.h"
+#include "utils/Vector.h"
+#include "global.h"
 
 
 /**

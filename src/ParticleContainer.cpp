@@ -10,6 +10,7 @@
 
 /**
  * \brief Constructor for setting an initial particle list.
+ * @initialParticleList ParticleList which is copied into the ParticleContainer.
  */
 ParticleContainer::ParticleContainer(const std::list<Particle>& initialParticleList)
 	: particleList(std::list<Particle>(initialParticleList.begin(), initialParticleList.end()))
@@ -19,7 +20,7 @@ ParticleContainer::ParticleContainer(const std::list<Particle>& initialParticleL
 
 /**
  * \brief Adds a particle to the particle container.
- * \param P Particle to add
+ * @P Particle to add.
  */
 void ParticleContainer::add(Particle& P) {
 	particleList.push_back(P);
@@ -28,7 +29,7 @@ void ParticleContainer::add(Particle& P) {
 
 /**
  * \brief Adds particles from a list to the particle container.
- * \param list List of the particles to add
+ * @list List of the particles to add.
  */
 void ParticleContainer::add(std::list<Particle>& list)
 {
@@ -38,7 +39,7 @@ void ParticleContainer::add(std::list<Particle>& list)
 
 /**
  * \brief Function for iterating over all particles.
- * \param handler Object providing the compute function, which is called for every particle.
+ * @handler Object providing the compute function, which is called for every particle.
  *
  * This function iterates over all particles and processes
  * each by calling the provided function.
@@ -58,7 +59,7 @@ void ParticleContainer::iterate_all(ParticleHandler& handler)
 /**
  * \brief Function for iterating over all particle pairs.
  *
- * \param handler Object providing the compute function, which is called for every particle pair.
+ * @handler Object providing the compute function, which is called for every particle pair.
  *
  * This function iterates over all particle pairs and processes
  * each by calling the provided function.
@@ -88,7 +89,7 @@ void ParticleContainer::iterate_pairs(PairHandler& handler)
 
 /**
  * \brief Function for iterating over unique particle pairs.
- * \param handler Object providing the compute function, which is called for every particle pair.
+ * @handler Object providing the compute function, which is called for every particle pair.
  *
  * This function uniquely iterates over all particle pairs and processes
  * each by calling the provided function. While `iterate_pairs` would process

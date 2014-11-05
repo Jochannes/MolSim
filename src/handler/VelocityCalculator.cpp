@@ -6,8 +6,8 @@
  */
 
 #include "VelocityCalculator.h"
-#include "../Particle.h"
-#include "../global.h"
+#include "Particle.h"
+#include "global.h"
 
 
 VelocityCalculator::VelocityCalculator() {

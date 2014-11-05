@@ -8,10 +8,10 @@
 #ifndef COORDINATECALCULATOR_H_
 #define COORDINATECALCULATOR_H_
 
-#include "../ParticleHandler.h"
-#include "../Particle.h"
-#include "../utils/Vector.h"
-#include "../global.h"
+#include "ParticleHandler.h"
+#include "Particle.h"
+#include "utils/Vector.h"
+#include "global.h"
 
 /**
  * \brief Class for defining the interface used for position calculation.
