@@ -33,18 +33,21 @@ private:
 public:
 	ParticleContainer(){
 	}
-	ParticleContainer(const std::list<Particle> *initialParticleList);
+	ParticleContainer(const std::list<Particle>& initialParticleList);
 
 	~ParticleContainer() {
 	}
 
-	bool empty() {
+	bool empty() const {
 		return particleList.empty();
 	}
 
-	int size() {
+	int size() const {
 		return particleList.size();
 	}
+
+	void add(Particle& P);
+	void add(std::list<Particle>& list);
 
 	void prepare_forces();
 

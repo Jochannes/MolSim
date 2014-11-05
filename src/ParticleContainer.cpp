@@ -11,10 +11,30 @@
 /**
  * \brief Constructor for setting an initial particle list.
  */
-ParticleContainer::ParticleContainer(const std::list<Particle> *initialParticleList)
-	: particleList(std::list<Particle>(initialParticleList->begin(), initialParticleList->end()))
+ParticleContainer::ParticleContainer(const std::list<Particle>& initialParticleList)
+	: particleList(std::list<Particle>(initialParticleList.begin(), initialParticleList.end()))
 {
 }
+
+
+/**
+ * \brief Adds a particle to the particle container.
+ * \param P Particle to add
+ */
+void ParticleContainer::add(Particle& P) {
+	particleList.push_back(P);
+}
+
+
+/**
+ * \brief Adds particles from a list to the particle container.
+ * \param list List of the particles to add
+ */
+void ParticleContainer::add(std::list<Particle>& list)
+{
+	particleList.splice(particleList.end(), list);
+}
+
 
 /**
  * \brief Function for iterating over all particles.

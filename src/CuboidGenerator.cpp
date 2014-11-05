@@ -66,6 +66,8 @@ void generateCuboid(list<Particle>& particleList,
 
 void CuboidGenerator::input()
 {
+	std::list<Particle> genParticles;	// temporary list to store the generated particles
+
 	int    num_cuboids = 0;
 	double corner_position[3] = {0.0, 0.0, 0.0};
 	int    num_particles[3] = {0, 0, 0};
@@ -116,7 +118,7 @@ void CuboidGenerator::input()
 	   	    	exit(-1);
 	   	    }
 
-	   	    generateCuboid(container.particleList, corner_position, num_particles, distance, mass, velocity);
+	   	    generateCuboid(genParticles, corner_position, num_particles, distance, mass, velocity);
 
 	   	    getline(input_file, tmp_string);
 	   	    LOG4CXX_TRACE(CGLogger, "Read line: " << tmp_string);
@@ -126,5 +128,7 @@ void CuboidGenerator::input()
 		LOG4CXX_FATAL(CGLogger, "Error: could not open file " << filename);
 		exit(-1);
 	}
+
+	container.add(genParticles);
 }
 

@@ -30,7 +30,7 @@ void UTest_ParticleContainer::setUp()
 		Particle p(x, v, m);
 		initialParticleList.push_back(p);
     }
-    partContainer = ParticleContainer(&initialParticleList);
+    partContainer = ParticleContainer(initialParticleList);
 }
 
 void UTest_ParticleContainer::tearDown()
