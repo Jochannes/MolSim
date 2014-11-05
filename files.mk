@@ -1,8 +1,10 @@
 SOURCES=\
+src/CuboidGenerator.cpp\
 src/Particle.cpp\
 src/FileReader.cpp\
 src/outputWriter/VTKWriter.cpp\
 src/outputWriter/vtk-unstructured.cpp\
+src/MaxwellBoltzmannDistribution.cpp\
 src/handler/PositionCalculator.cpp\
 src/handler/VelocityCalculator.cpp\
 src/handler/ForceCalculator_Gravity.cpp\

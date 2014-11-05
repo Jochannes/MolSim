@@ -1,6 +1,7 @@
 
 #include "ParticleContainer.h"
 #include "ParticleInput_FileReader.h"
+#include "CuboidGenerator.h"
 #include "ParticleOutput_VTK.h"
 #include "handler/PositionCalculator.h"
 #include "handler/VelocityCalculator.h"
@@ -214,8 +215,8 @@ void parseParameters(int argc, char* argsv[])
 				}
 
 				LOG4CXX_DEBUG(logger, "generating cuboid from file " << value << ".");
-				//ParticleInput_... in(particles, value);
-				//in.input();
+				CuboidGenerator in(particles, value);
+				in.input();
 			}
 
 			else if( strcmp(option, "read") == 0 ) {
