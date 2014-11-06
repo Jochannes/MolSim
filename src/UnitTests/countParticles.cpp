@@ -9,8 +9,11 @@
 
 namespace unitTest {
 
-countParticles::countParticles() {
-	cnt = 0;
+/**
+ * \brief Sets up the handler by setting cnt to 0.
+ */
+countParticles::countParticles() :
+		cnt(0) {
 }
 
 countParticles::~countParticles() {

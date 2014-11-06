@@ -18,7 +18,7 @@ namespace unitTest {
  */
 class countParticles: public ParticleHandler {
 public:
-	int cnt;
+	int cnt;	//!< Number of counted particles
 	countParticles();
 	virtual ~countParticles();
 

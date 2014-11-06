@@ -19,12 +19,18 @@ cuboidLengthHandler::~cuboidLengthHandler() {
  * \brief This method checks if the particle defines a new border and sets the cuboid length accordingly.
  */
 void cuboidLengthHandler::compute(Particle& P) {
+
+	//per dimension
 	for (int i = 0; i < 3; i++) {
+
+		//have the borders been initialized?
 		if (!initialized) {
 			lowerBorder[i] = P.getX()[i];
 			upperBorder[i] = P.getX()[i];
 			length[i] = 0;
 		} else {
+
+			//set new borders if particles is outside of the old borders.
 			if (lowerBorder[i] > P.getX()[i]) {
 				lowerBorder[i] = P.getX()[i];
 				length[i] = upperBorder[i] - lowerBorder[i];

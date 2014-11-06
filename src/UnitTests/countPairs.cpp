@@ -9,8 +9,11 @@
 
 namespace unitTest {
 
-countPairs::countPairs() {
-	cnt = 0;
+/**
+ * \brief Sets up the handler by setting cnt to 0.
+ */
+countPairs::countPairs() :
+		cnt(0) {
 }
 
 countPairs::~countPairs() {
