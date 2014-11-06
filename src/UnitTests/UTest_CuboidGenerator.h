@@ -31,7 +31,9 @@ namespace unitTest {
  *
  * This TestFixture tests if the ParticleContainer generated
  * by CuboidGenerator has the right number of particles
- * and the right size in all dimensions.
+ * and the right size in all dimensions. It does so by
+ * creating a test file and then reading it in with the
+ * CuboidGenerator.
  *
  */
 class UTest_CuboidGenerator: public CppUnit::TestFixture {
@@ -41,12 +43,13 @@ CPPUNIT_TEST_SUITE( UTest_CuboidGenerator );
 	;
 
 private:
-	ParticleContainer partContainer; //!< Particle container for testing.
-	char filename[15] = "cuboidTest.txt";
-	double corner_position[3];
-	int num_particles[3];
-	double distance, mass;
-	double velocity[3];
+	ParticleContainer partContainer; 		//!< Particle container for testing.
+	char filename[15] = "cuboidTest.txt";	//!< File in which the test input is saved
+	double corner_position[3];				//!< Position of the lower left front-side corner of the cuboid
+	int num_particles[3];					//!< Number of particles per dimension
+	double distance;						//!< Distance between particles
+	double mass;							//!< Mass of the particles
+	double velocity[3];						//!< Velocity of the particles
 
 public:
 	void setUp();

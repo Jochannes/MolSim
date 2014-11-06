@@ -33,9 +33,10 @@ CPPUNIT_TEST_SUITE( UTest_ForceCalculator_LennardJones );
 	;
 
 private:
-	double r_well;
-	Particle p1, p2;
-	ForceCalculator_LennardJones fLennard;
+	double r_well;							//!< Distance of the potential well
+	Particle p1;							//!< First Particle used for force calculations
+	Particle p2;							//!< Second Particle used for force calculations
+	ForceCalculator_LennardJones fLennard;	//!< ForceCalculator used for force calculation tests
 
 public:
 	void setUp();

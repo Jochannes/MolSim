@@ -51,6 +51,9 @@ void UTest_CuboidGenerator::setUp() {
 	cubGen.input();
 }
 
+/**
+ * \brief Free the used resources.
+ */
 void UTest_CuboidGenerator::tearDown() {
 	remove(filename);
 }
@@ -68,8 +71,12 @@ void UTest_CuboidGenerator::testCount() {
  * \brief Method for testing if the generated cuboid has the right length in all three dimensions.
  */
 void UTest_CuboidGenerator::testLength() {
+
+	//Calculate the length
 	cuboidLengthHandler calcLength;
 	partContainer.iterate_all(calcLength);
+
+	//Test the length in all 3 dimensions
 	for (int i = 0; i < 3; i++) {
 		CPPUNIT_ASSERT(
 				calcLength.length[i] - (num_particles[i] - 1) * distance

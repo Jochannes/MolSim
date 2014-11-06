@@ -21,6 +21,9 @@ void UTest_ForceCalculator_LennardJones::setUp() {
 	r_well = ForceCalculator_LennardJones::sigma * pow(2.0, 1.0 / 6); //potential well distance
 }
 
+/**
+ * \brief Free the used resources.
+ */
 void UTest_ForceCalculator_LennardJones::tearDown() {
 }
 

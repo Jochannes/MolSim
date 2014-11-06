@@ -18,7 +18,7 @@ namespace unitTest {
  */
 class countPairs: public PairHandler {
 public:
-	int cnt;
+	int cnt;	//!< Number of counted particle pairs
 	countPairs();
 	virtual ~countPairs();
 
