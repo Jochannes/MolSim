@@ -6,6 +6,8 @@
  */
 
 #include "ParticleOutput_VTK.h"
+#include "outputWriter/VTKWriter.h"
+#include "handler/plotHandler_VTK.h"
 
 #include <list>
 

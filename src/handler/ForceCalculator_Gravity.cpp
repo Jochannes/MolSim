@@ -6,6 +6,7 @@
  */
 
 #include "ForceCalculator_Gravity.h"
+#include "utils/Vector.h"
 
 #include <cmath>
 

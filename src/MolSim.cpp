@@ -28,11 +28,14 @@ using namespace log4cxx;
 
 /**
  * \brief Parse parameters.
+ * @argc number of parameters
+ * @argsv array containing the parameter c-strings
  */
 void parseParameters(int argc, char* argsv[]);
 
 /**
  * \brief Run a unit test.
+ * @test name of the test to run
  */
 int runUnitTest(const char* test);
 

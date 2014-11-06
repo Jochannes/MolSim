@@ -6,6 +6,7 @@
  */
 
 #include "PositionCalculator.h"
+#include "global.h"
 
 
 PositionCalculator::PositionCalculator() {
@@ -16,9 +17,6 @@ PositionCalculator::~PositionCalculator() {
 }
 
 
-/**
- * \brief Standard method for calculating the particle position.
- */
 void PositionCalculator::compute(Particle& P)
 {
 	double a = 0.5 * delta_t * delta_t / P.getM();

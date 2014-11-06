@@ -6,6 +6,14 @@
  */
 
 #include "CuboidGenerator.h"
+#include "MaxwellBoltzmannDistribution.h"
+#include "utils/Vector.h"
+
+#include <cstdlib>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <log4cxx/logger.h>
 
 using namespace std;
 using namespace log4cxx;
@@ -14,7 +22,7 @@ using namespace log4cxx;
 LoggerPtr CGLogger(Logger::getLogger("MolSim.ParticleInput.CuboidGenerator"));
 
 /**
- * \brief Private function for generating a cuboid.
+ * \brief Auxiliary function for generating a cuboid.
  *
  * @particleList List in which the generated particles are saved.
  * @corner_position Position of lower left front-side corner.
@@ -24,7 +32,7 @@ LoggerPtr CGLogger(Logger::getLogger("MolSim.ParticleInput.CuboidGenerator"));
  * @velocity Main velocity of all particles. The velocity will be superposed by Brownian motion.
  * @brown_factor Mean velocity of the Brownian motion.
  */
-void CuboidGenerator::generateCuboid(list<Particle>& particleList,
+static void generateCuboid(list<Particle>& particleList,
 					utils::Vector<double, 3> corner_position,
 					int num_particles[3],
 					double distance,
@@ -64,12 +72,7 @@ void CuboidGenerator::generateCuboid(list<Particle>& particleList,
 	}
 }
 
-/**
- * \brief Read input from a file.
- *
- * Reads all lines from the file specified in the constructor
- * and saves them in the ParticleContainer specified in the constructor.
- */
+
 void CuboidGenerator::input()
 {
 	std::list<Particle> genParticles;	// temporary list to store the generated particles
@@ -80,6 +83,7 @@ void CuboidGenerator::input()
 	double distance = 0.0;
 	double mass = 0.0;
 	double velocity[3] = {0.0, 0.0, 0.0};
+	double brown_factor = 0.1;
 
 	ifstream input_file(filename);
 	string tmp_string;
@@ -99,7 +103,7 @@ void CuboidGenerator::input()
 	   	LOG4CXX_DEBUG(CGLogger, "Reading " << num_cuboids << ".");
 
 	   	//read in the cuboids
-	   	for (int i = 1; i <= num_cuboids; i++) {
+	   	for (int i = 0; i < num_cuboids; i++) {
 
 		   	getline(input_file, tmp_string);
 		   	LOG4CXX_TRACE(CGLogger, "Read line: " << tmp_string);
@@ -121,12 +125,12 @@ void CuboidGenerator::input()
 	   	    }
 
 	   	    //unexpected end?
-	   	    if (i != num_cuboids && datastream.eof()) {
-	   	    	LOG4CXX_FATAL(CGLogger, "Error reading file: eof reached unexpectedly reading from line " << i);
+	   	    if (datastream.eof()) {
+	   	    	LOG4CXX_FATAL(CGLogger, "Error reading file: eof reached unexpectedly reading from line " << i+1);
 	   	    	exit(-1);
 	   	    }
 
-	   	    generateCuboid(genParticles, corner_position, num_particles, distance, mass, velocity);
+	   	    generateCuboid(genParticles, corner_position, num_particles, distance, mass, velocity, brown_factor);
 	   	}
 	}
 	else {

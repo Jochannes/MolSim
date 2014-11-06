@@ -12,11 +12,12 @@
 
 
 /**
- * \brief Abstract class for defining an interface for the input of particle lists.
+ * \brief Abstract class for defining an interface for the input of particle containers.
  */
 class ParticleInput
 {
 protected:
+	/* particle container to which the particles are read. */
 	ParticleContainer& container;
 
 public:
@@ -27,7 +28,7 @@ public:
 	virtual ~ParticleInput() {
 	}
 
-	/** Fills the ParticleContainer with respective input.
+	/** Fills the particle container with respective input.
 	 *
 	 */
 	virtual void input() = 0;

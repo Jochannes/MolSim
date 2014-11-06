@@ -6,6 +6,10 @@
  */
 
 #include "ForceCalculator_LennardJones.h"
+#include "utils/Vector.h"
+
+#include <cmath>
+
 
 ForceCalculator_LennardJones::ForceCalculator_LennardJones() {
 }

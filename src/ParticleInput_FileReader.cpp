@@ -8,9 +8,7 @@
 #include "ParticleInput_FileReader.h"
 #include "FileReader.h"
 
-/*
- * \brief Method for reading in a particle file using FileReader.
- */
+
 void ParticleInput_FileReader::input()
 {
 	FileReader filereader;

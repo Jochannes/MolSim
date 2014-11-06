@@ -9,6 +9,7 @@
 #define FORCECALCULATOR_H_
 
 #include "PairHandler.h"
+#include "Particle.h"
 
 
 /**
@@ -26,6 +27,9 @@ public:
 	virtual ~ForceCalculator() {
 	}
 
+	/**
+	 * /brief Abstract function for calculating the force between to particles.
+	 */
 	virtual void compute(Particle& P1, Particle& P2) = 0;
 };
 

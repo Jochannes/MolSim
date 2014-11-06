@@ -17,9 +17,7 @@ plotHandler_VTK::plotHandler_VTK(outputWriter::VTKWriter& writer)
 plotHandler_VTK::~plotHandler_VTK() {
 }
 
-/**
- * \brief Method for plotting a particle.
- */
+
 void plotHandler_VTK::compute(Particle& P)
 {
 	vtkWriter->plotParticle(P);

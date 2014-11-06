@@ -4,7 +4,7 @@
 # This is neccessary for the Makefile to work correctly.
 # 
 
-echo "starting generation files.mk... "
+echo "starting generation of files.mk... "
 
 
 find src -name *.cpp -printf '%p\\\n' > files.mk.tmp

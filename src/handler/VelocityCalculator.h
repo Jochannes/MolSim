@@ -9,6 +9,7 @@
 #define VELOCITYCALCULATOR_H_
 
 #include "ParticleHandler.h"
+#include "Particle.h"
 
 
 /**
@@ -23,6 +24,10 @@ public:
 	VelocityCalculator();
 	virtual ~VelocityCalculator();
 
+	/**
+	 * \brief Standard method for calculating the particle velocity.
+	 * @P particle for which a new velocity is calulated
+	 */
 	virtual void compute(Particle& P);
 };
 

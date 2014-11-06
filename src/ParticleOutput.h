@@ -12,11 +12,12 @@
 
 
 /**
- * \brief Abstract class for defining an interface for the output of particle lists.
+ * \brief Abstract class for defining an interface for the output of particle containers.
  */
 class ParticleOutput
 {
 protected:
+	/* particle container from which the particles are exported. */
 	ParticleContainer& container;
 
 public:
@@ -27,6 +28,9 @@ public:
 	virtual ~ParticleOutput() {
 	}
 
+	/** Exports the particle container using respective output method.
+	 *
+	 */
 	virtual void output(int iteration) = 0;
 
 };

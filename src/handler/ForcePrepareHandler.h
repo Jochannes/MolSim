@@ -10,9 +10,6 @@
 
 #include "ParticleHandler.h"
 #include "Particle.h"
-#include "utils/Vector.h"
-#include "global.h"
-
 
 
 /**
@@ -25,6 +22,11 @@ public:
 	ForcePrepareHandler();
 	virtual ~ForcePrepareHandler();
 
+	/**
+	 * \brief This method saves the force calculated for the particle
+	 *        in the previous step to OldF and resets the force to 0.
+	 * @P particle to prepare
+	 */
 	virtual void compute(Particle& p);
 };
 

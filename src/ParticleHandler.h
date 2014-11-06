@@ -12,7 +12,9 @@
 
 
 /**
- * \brief Abstract class for defining the interface of processing a single particle.
+ * \brief Abstract class for defining an interface
+ *        for processing a particle when iterating
+ *        over a particle container
  */
 class ParticleHandler
 {
@@ -23,6 +25,11 @@ public:
 	virtual ~ParticleHandler() {
 	}
 
+	/*
+	 * function to execute for each particle.
+	 *
+	 * @P The particle to process
+	 */
 	virtual void compute(Particle& P) = 0;
 
 };

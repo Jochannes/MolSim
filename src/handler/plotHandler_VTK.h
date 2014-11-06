@@ -23,6 +23,10 @@ public:
 	plotHandler_VTK(outputWriter::VTKWriter& writer);
 	virtual ~plotHandler_VTK();
 
+	/**
+	 * \brief Method for plotting a particle.
+	 * @P particle to plot
+	 */
 	virtual void compute(Particle& P);
 };
 

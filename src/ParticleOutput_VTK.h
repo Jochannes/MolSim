@@ -9,8 +9,6 @@
 #define PARTICLEOUTPUT_VTK_H_
 
 #include "ParticleOutput.h"
-#include "outputWriter/VTKWriter.h"
-#include "handler/plotHandler_VTK.h"
 
 #include <string>
 
@@ -21,6 +19,7 @@
 class ParticleOutput_VTK : public ParticleOutput
 {
 protected:
+	/** name of the file(s) where the particles are written. */
 	std::string out_name;
 
 public:
@@ -31,6 +30,8 @@ public:
 	virtual ~ParticleOutput_VTK() {
 	}
 
+	/**  Writes the particles from the particle container to a VTK-file specified by 'out_name'.
+	*/
 	virtual void output(int iteration);
 
 };

@@ -8,15 +8,8 @@
 #ifndef CUBOIDGENERATOR_H_
 #define CUBOIDGENERATOR_H_
 
-#include <cstdlib>
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <log4cxx/logger.h>
-
-#include "MaxwellBoltzmannDistribution.h"
-#include "utils/Vector.h"
 #include "ParticleInput.h"
+#include "ParticleContainer.h"
 
 
 /**
@@ -29,13 +22,6 @@ class CuboidGenerator : public ParticleInput
 {
 private:
 	const char* filename;
-	void generateCuboid(std::list<Particle>& particleList,
-						utils::Vector<double, 3> corner_position,
-						int num_particles[3],
-						double distance,
-						double mass,
-						utils::Vector<double, 3> velocity,
-						double brown_factor = 0.1);
 
 public:
 	/**
@@ -51,6 +37,12 @@ public:
 	virtual ~CuboidGenerator() {
 	}
 
+	/**
+	 * \brief Read input from a file.
+	 *
+	 * Reads all lines from the file specified in the constructor
+	 * and saves them in the ParticleContainer specified in the constructor.
+	 */
 	virtual void input();
 };
 

@@ -10,8 +10,7 @@
 
 #include "ParticleHandler.h"
 #include "Particle.h"
-#include "utils/Vector.h"
-#include "global.h"
+
 
 /**
  * \brief Class for defining the interface used for position calculation.
@@ -25,6 +24,10 @@ public:
 	PositionCalculator();
 	virtual ~PositionCalculator();
 
+	/**
+	 * \brief Standard method for calculating the particle position.
+	 * @P particle for which a new position is calculated.
+	 */
 	virtual void compute(Particle& P);
 };
 

@@ -10,10 +10,12 @@
  * \mainpage Molecular Dynamics Simulation
  *
  * MolSim is a simulation program for molecular dynamics.
- * It offers implementations for several different methods for force calculation, input and output.
- *
- * The current build simulates the collision of two bodies using the Lennard-Jones-Potential.
- * The result is saved in a VTK-file, which can be visualized using ParaView.
+ * It simulates a set particles over a specified span of time.
+ * Force calculation between particles can be done using Lennard-Jones-potential
+ * or using gravity-potential.
+ * It is possible to read the particles from a file and to generate a cuboid of
+ * particles with brownian motion.
+ * The results can be saved in a VTK-file, which can be visualized e.g by ParaView.
  *
  * For an explanation on how to use MolSim, run MolSim using the option "-help".
  *

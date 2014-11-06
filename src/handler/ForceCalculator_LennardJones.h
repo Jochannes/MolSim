@@ -10,8 +10,7 @@
 
 #include "ForceCalculator.h"
 #include "Particle.h"
-#include "utils/Vector.h"
-#include "global.h"
+
 
 /**
  * \brief Class for calculating the force between two particles caused by the Lennard-Jones potential.
