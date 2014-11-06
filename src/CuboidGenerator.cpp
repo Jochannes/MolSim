@@ -93,7 +93,7 @@ void CuboidGenerator::input() {
 		LOG4CXX_DEBUG(CGLogger, "Reading " << num_cuboids << ".");
 
 		//read in the cuboids
-		for (int i = 0; i < num_cuboids; i++) {
+		for (int i = 1; i <= num_cuboids; i++) {
 
 			getline(input_file, tmp_string);
 			LOG4CXX_TRACE(CGLogger, "Read line: " << tmp_string);
@@ -115,7 +115,7 @@ void CuboidGenerator::input() {
 			}
 
 			//unexpected end?
-			if (datastream.eof()) {
+			if (i != num_cuboids && datastream.eof()) {
 				LOG4CXX_FATAL(CGLogger,
 						"Error reading file: eof reached unexpectedly reading from line " << i+1);
 				exit(-1);
