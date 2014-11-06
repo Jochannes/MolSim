@@ -16,11 +16,9 @@
 using namespace std;
 using namespace log4cxx;
 
-
 namespace outputWriter {
 
 LoggerPtr logger(Logger::getLogger("MolSim.VTKWriter"));
-
 
 VTKWriter::VTKWriter() {
 	// TODO Auto-generated constructor stub
@@ -43,8 +41,8 @@ void VTKWriter::initializeOutput(int numParticles) {
 	DataArray_t type(type::Int32, "type", 1);
 	pointData.DataArray().push_back(mass);
 	pointData.DataArray().push_back(velocity);
-    pointData.DataArray().push_back(forces);
-    pointData.DataArray().push_back(type);
+	pointData.DataArray().push_back(forces);
+	pointData.DataArray().push_back(type);
 
 	CellData cellData; // we don't have cell data => leave it empty
 
@@ -58,17 +56,22 @@ void VTKWriter::initializeOutput(int numParticles) {
 	DataArray_t cells_data(type::Float32, "types", 0);
 	cells.DataArray().push_back(cells_data);
 
-	PieceUnstructuredGrid_t piece(pointData, cellData, points, cells, numParticles, 0);
+	PieceUnstructuredGrid_t piece(pointData, cellData, points, cells,
+			numParticles, 0);
 	UnstructuredGrid_t unstructuredGrid(piece);
 	vtkFile->UnstructuredGrid(unstructuredGrid);
 }
 
 void VTKWriter::writeFile(const std::string& filename, int iteration) {
 	stringstream strstr;
-	strstr << filename << "_" << (iteration < 10 ? "000" : (iteration < 100 ? "00" : ( iteration < 1000 ? "0" : "") )) << iteration << ".vtu";
+	strstr << filename << "_"
+			<< (iteration < 10 ?
+					"000" :
+					(iteration < 100 ? "00" : (iteration < 1000 ? "0" : "")))
+			<< iteration << ".vtu";
 
 	std::ofstream file(strstr.str().c_str());
-	VTKFile (file, *vtkFile);
+	VTKFile(file, *vtkFile);
 	delete vtkFile;
 }
 
@@ -79,7 +82,8 @@ void VTKWriter::plotParticle(Particle& p) {
 		LOG4CXX_ERROR(logger, "ERROR: No UnstructuredGrid present");
 	}
 
-	PointData::DataArray_sequence& pointDataSequence = vtkFile->UnstructuredGrid()->Piece().PointData().DataArray();
+	PointData::DataArray_sequence& pointDataSequence =
+			vtkFile->UnstructuredGrid()->Piece().PointData().DataArray();
 	PointData::DataArray_iterator dataIterator = pointDataSequence.begin();
 
 	dataIterator->push_back(p.getM());
@@ -100,7 +104,8 @@ void VTKWriter::plotParticle(Particle& p) {
 	dataIterator++;
 	dataIterator->push_back(p.getType());
 
-	Points::DataArray_sequence& pointsSequence = vtkFile->UnstructuredGrid()->Piece().Points().DataArray();
+	Points::DataArray_sequence& pointsSequence =
+			vtkFile->UnstructuredGrid()->Piece().Points().DataArray();
 	Points::DataArray_iterator pointsIterator = pointsSequence.begin();
 	pointsIterator->push_back(p.getX()[0]);
 	pointsIterator->push_back(p.getX()[1]);

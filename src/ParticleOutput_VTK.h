@@ -12,29 +12,27 @@
 
 #include <string>
 
-
 /**
  * \brief Class implementing particle output to a VTK-file using the class outputWriter.VTKWriter.
  */
-class ParticleOutput_VTK : public ParticleOutput
-{
+class ParticleOutput_VTK: public ParticleOutput {
 protected:
 	/** name of the file(s) where the particles are written. */
 	std::string out_name;
 
 public:
-	ParticleOutput_VTK(ParticleContainer& param_container, std::string param_out_name = "MD_vtk")
-		: ParticleOutput(param_container), out_name(param_out_name) {
+	ParticleOutput_VTK(ParticleContainer& param_container,
+			std::string param_out_name = "MD_vtk") :
+			ParticleOutput(param_container), out_name(param_out_name) {
 	}
 
 	virtual ~ParticleOutput_VTK() {
 	}
 
 	/**  Writes the particles from the particle container to a VTK-file specified by 'out_name'.
-	*/
+	 */
 	virtual void output(int iteration);
 
 };
-
 
 #endif /* PARTICLEOUTPUT_VTK_H_ */

@@ -11,15 +11,13 @@
 #include "PairHandler.h"
 #include "Particle.h"
 
-
 /**
  * \brief Abstract class for defining the interface used for force calculation.
  *
  * This class defines the inteface used for force calculation and therefore
  * enables the calculation method to be changed easily.
  */
-class ForceCalculator : public PairHandler
-{
+class ForceCalculator: public PairHandler {
 public:
 	ForceCalculator() {
 	}
@@ -32,6 +30,5 @@ public:
 	 */
 	virtual void compute(Particle& p1, Particle& p2) = 0;
 };
-
 
 #endif /* FORCECALCULATOR_H_ */

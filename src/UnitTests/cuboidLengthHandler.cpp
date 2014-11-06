@@ -17,7 +17,7 @@ cuboidLengthHandler::~cuboidLengthHandler() {
 
 /**
  * \brief This method checks if the particle defines a new border and sets the cuboid length accordingly.
-* @param p Particle to check
+ * @param p Particle to check
  */
 void cuboidLengthHandler::compute(Particle& p) {
 

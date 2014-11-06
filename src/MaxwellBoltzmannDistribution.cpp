@@ -1,8 +1,8 @@
 /*
  * MaxwellBoltzmannDistribution.cpp
  *
-* @param Date: 01.10.2010
-* @param Author: eckhardw
+ * @Date: 01.10.2010
+ * @Author: eckhardw
  */
 #include "MaxwellBoltzmannDistribution.h"
 #include <cstdlib>
@@ -13,7 +13,8 @@
  */
 static double GaussDeviate();
 
-void MaxwellBoltzmannDistribution(Particle& p, double meanVelocity, int dimensions) {
+void MaxwellBoltzmannDistribution(Particle& p, double meanVelocity,
+		int dimensions) {
 	utils::Vector<double, 3>& v = p.getV();
 	for (int i = 0; i < dimensions; i++) {
 		v[i] = v[i] + meanVelocity * GaussDeviate();

@@ -29,15 +29,16 @@ namespace unitTest {
  * This class tests if the iterate methods iterate over the right number of particles and particle pairs.
  */
 class UTest_ParticleContainer: public CppUnit::TestFixture {
-	CPPUNIT_TEST_SUITE( UTest_ParticleContainer );
+CPPUNIT_TEST_SUITE( UTest_ParticleContainer );
 	CPPUNIT_TEST(testSize);
 	CPPUNIT_TEST(testAddSize);
 	CPPUNIT_TEST(testIterateCount);
 	CPPUNIT_TEST(testIteratePairCount);
-	CPPUNIT_TEST(testIteratePairHalfCount);CPPUNIT_TEST_SUITE_END();
+	CPPUNIT_TEST(testIteratePairHalfCount);CPPUNIT_TEST_SUITE_END()
+	;
 
 private:
-	int numParticles = 20; 					//!< Number of particles with which the container will be initialized.
+	int numParticles = 20; 				//!< Number of particles with which the container will be initialized.
 	ParticleContainer partContainer; 	//!< ParticleContainer for testing.
 
 public:

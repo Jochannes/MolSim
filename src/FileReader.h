@@ -24,5 +24,4 @@ public:
 
 };
 
-
 #endif /* FILE_READER_H_ */

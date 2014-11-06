@@ -49,11 +49,8 @@ public:
 	Particle(
 			// for visualization, we need always 3 coordinates
 			// -> in case of 2d, we use only the first and the second
-			utils::Vector<double, 3> x_arg,
-	        utils::Vector<double, 3> v_arg,
-	        double m_arg,
-	        int type = 0
-	);
+			utils::Vector<double, 3> x_arg, utils::Vector<double, 3> v_arg,
+			double m_arg, int type = 0);
 
 	virtual ~Particle();
 
@@ -75,6 +72,5 @@ public:
 };
 
 std::ostream& operator<<(std::ostream& stream, Particle& p);
-
 
 #endif /* PARTICLE_H_ */

@@ -7,59 +7,53 @@
 
 #include "ParticleContainer.h"
 
-
 /**
  * \brief Constructor for setting an initial particle list.
-* @param initialParticleList ParticleList which is copied into the ParticleContainer.
+ * @param initialParticleList ParticleList which is copied into the ParticleContainer.
  */
-ParticleContainer::ParticleContainer(const std::list<Particle>& initialParticleList)
-	: particleList(std::list<Particle>(initialParticleList.begin(), initialParticleList.end()))
-{
+ParticleContainer::ParticleContainer(
+		const std::list<Particle>& initialParticleList) :
+		particleList(
+				std::list<Particle>(initialParticleList.begin(),
+						initialParticleList.end())) {
 }
-
 
 /**
  * \brief Adds a particle to the particle container.
-* @param P Particle to add.
+ * @param p Particle to add.
  */
-void ParticleContainer::add(Particle& P) {
-	particleList.push_back(P);
+void ParticleContainer::add(Particle& p) {
+	particleList.push_back(p);
 }
-
 
 /**
  * \brief Adds particles from a list to the particle container.
-* @param list List of the particles to add.
+ * @param list List of the particles to add.
  */
-void ParticleContainer::add(std::list<Particle>& list)
-{
+void ParticleContainer::add(std::list<Particle>& list) {
 	particleList.splice(particleList.end(), list);
 }
 
-
 /**
  * \brief Function for iterating over all particles.
-* @param handler Object providing the compute function, which is called for every particle.
+ * @param handler Object providing the compute function, which is called for every particle.
  *
  * This function iterates over all particles and processes
  * each by calling the provided function.
  */
-void ParticleContainer::iterate_all(ParticleHandler& handler)
-{
+void ParticleContainer::iterate_all(ParticleHandler& handler) {
 	std::list<Particle>::iterator it = particleList.begin();
 
-	while(it != particleList.end()) {
+	while (it != particleList.end()) {
 		handler.compute(*it);
 		it++;
 	}
 }
 
-
-
 /**
  * \brief Function for iterating over all particle pairs.
  *
-* @param handler Object providing the compute function, which is called for every particle pair.
+ * @param handler Object providing the compute function, which is called for every particle pair.
  *
  * This function iterates over all particle pairs and processes
  * each by calling the provided function.
@@ -67,15 +61,14 @@ void ParticleContainer::iterate_all(ParticleHandler& handler)
  * Force calculators use Newton's third law and therefore give
  * wrong outputs with this method. Use ParticleContainer::iterate_pairs_half instead.
  */
-void ParticleContainer::iterate_pairs(PairHandler& handler)
-{
+void ParticleContainer::iterate_pairs(PairHandler& handler) {
 	std::list<Particle>::iterator it_outer = particleList.begin();
 
-	while(it_outer != particleList.end()) {
+	while (it_outer != particleList.end()) {
 		std::list<Particle>::iterator it_inner = particleList.begin();
 
-		while(it_inner != particleList.end()) {
-			if( it_outer != it_inner )
+		while (it_inner != particleList.end()) {
+			if (it_outer != it_inner)
 				handler.compute(*it_outer, *it_inner);
 
 			it_inner++;
@@ -85,11 +78,9 @@ void ParticleContainer::iterate_pairs(PairHandler& handler)
 	}
 }
 
-
-
 /**
  * \brief Function for iterating over unique particle pairs.
-* @param handler Object providing the compute function, which is called for every particle pair.
+ * @param handler Object providing the compute function, which is called for every particle pair.
  *
  * This function uniquely iterates over all particle pairs and processes
  * each by calling the provided function. While `iterate_pairs` would process
@@ -97,15 +88,14 @@ void ParticleContainer::iterate_pairs(PairHandler& handler)
  *
  * This way the performance can be improved using Newton's third law.
  */
-void ParticleContainer::iterate_pairs_half(PairHandler& handler)
-{
+void ParticleContainer::iterate_pairs_half(PairHandler& handler) {
 	std::list<Particle>::iterator it_outer = particleList.begin();
 
-	while(it_outer != particleList.end()) {
+	while (it_outer != particleList.end()) {
 		std::list<Particle>::iterator it_inner = it_outer;
 		it_inner++;
 
-		while(it_inner != particleList.end()) {
+		while (it_inner != particleList.end()) {
 			handler.compute(*it_outer, *it_inner);
 			it_inner++;
 		}
@@ -114,15 +104,13 @@ void ParticleContainer::iterate_pairs_half(PairHandler& handler)
 	}
 }
 
-
 /**
  * \brief Function for preparing the forces saved in the particle list.
  *
  * This function resets the forces calculated in the previous iteration step.
  * This preparation step is necessary for the calculation of the new forces.
  */
-void ParticleContainer::prepare_forces()
-{
-	iterate_all( *new ForcePrepareHandler() );
+void ParticleContainer::prepare_forces() {
+	iterate_all(*new ForcePrepareHandler());
 }
 

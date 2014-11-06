@@ -11,15 +11,13 @@
 #include "ParticleInput.h"
 #include "ParticleContainer.h"
 
-
 /**
  * \brief Particle generator for a 3D rectangular grid of particles.
  *
  * The class has to be constructed with a targeted ParticleContainer
  * and input file name.
  */
-class CuboidGenerator : public ParticleInput
-{
+class CuboidGenerator: public ParticleInput {
 private:
 	const char* filename;
 
@@ -27,11 +25,12 @@ public:
 	/**
 	 * \brief Initialize the CuboidGenerator with a targeted ParticleContainer and an input file.
 	 *
-* @param param_particles Targeted ParticleContainer in which the particles will be saved.
-* @param param_filename Input file from which the cuboid definitions are taken.
+	 * @param param_particles Targeted ParticleContainer in which the particles will be saved.
+	 * @param param_filename Input file from which the cuboid definitions are taken.
 	 */
-	CuboidGenerator(ParticleContainer& param_particles, const char* param_filename)
-		: ParticleInput(param_particles), filename(param_filename) {
+	CuboidGenerator(ParticleContainer& param_particles,
+			const char* param_filename) :
+			ParticleInput(param_particles), filename(param_filename) {
 	}
 
 	virtual ~CuboidGenerator() {
@@ -45,6 +44,5 @@ public:
 	 */
 	virtual void input();
 };
-
 
 #endif /* CUBOIDGENERATOR_H_ */

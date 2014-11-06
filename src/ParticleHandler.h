@@ -10,14 +10,12 @@
 
 #include "Particle.h"
 
-
 /**
  * \brief Abstract class for defining an interface
  *        for processing a particle when iterating
  *        over a particle container
  */
-class ParticleHandler
-{
+class ParticleHandler {
 public:
 	ParticleHandler() {
 	}
@@ -28,11 +26,10 @@ public:
 	/*
 	 * function to execute for each particle.
 	 *
-* @param P The particle to process
+	 * @param p The particle to process
 	 */
-	virtual void compute(Particle& P) = 0;
+	virtual void compute(Particle& p) = 0;
 
 };
-
 
 #endif /* PARTICLEHANDLER_H_ */

@@ -13,8 +13,7 @@ ForcePrepareHandler::ForcePrepareHandler() {
 ForcePrepareHandler::~ForcePrepareHandler() {
 }
 
-
 void ForcePrepareHandler::compute(Particle& p) {
 	p.getOldF() = p.getF();
-	p.getF()    = 0.0;
+	p.getF() = 0.0;
 }

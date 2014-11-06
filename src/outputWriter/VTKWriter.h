@@ -38,15 +38,15 @@ public:
 	/**
 	 * plot type, mass, position, velocity and force of a particle.
 	 *
-* @param note: initializeOutput() must have been called before.
+	 * @note: initializeOutput() must have been called before.
 	 */
 	void plotParticle(Particle& p);
 
 	/**
 	 * writes the final output file.
 	 *
-* @param param filename the base name of the file to be written.
-* @param param iteration the number of the current iteration,
+	 * @param filename the base name of the file to be written.
+	 * @param iteration the number of the current iteration,
 	 *        which is used to generate an unique filename
 	 */
 	void writeFile(const std::string& filename, int iteration);

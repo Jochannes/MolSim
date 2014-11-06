@@ -11,14 +11,13 @@
 #include "ForceCalculator.h"
 #include "Particle.h"
 
-
 /**
  * \brief Class for calculating the force between two particles caused by the Lennard-Jones potential.
  */
 class ForceCalculator_LennardJones: public ForceCalculator {
 public:
-	static const double sigma = 1;		//!< Sigma value used for the potential (see equation)
-	static const double epsilon = 5;	//!< Epsilon value used for the potential (see equation)
+	static const double sigma = 1;//!< Sigma value used for the potential (see equation)
+	static const double epsilon = 5;//!< Epsilon value used for the potential (see equation)
 
 	ForceCalculator_LennardJones();
 	virtual ~ForceCalculator_LennardJones();

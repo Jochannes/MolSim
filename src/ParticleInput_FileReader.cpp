@@ -8,9 +8,7 @@
 #include "ParticleInput_FileReader.h"
 #include "FileReader.h"
 
-
-void ParticleInput_FileReader::input()
-{
+void ParticleInput_FileReader::input() {
 	FileReader filereader;
 	std::list<Particle> readParticles;
 

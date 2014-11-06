@@ -13,19 +13,18 @@
 
 #include <string>
 
-
 /**
  * \brief Class implementing particle input using the input method provided by the class FileReader.
  */
-class ParticleInput_FileReader : public ParticleInput
-{
+class ParticleInput_FileReader: public ParticleInput {
 protected:
 	/** name of the file where the particles are read. */
 	std::string filename;
 
 public:
-	ParticleInput_FileReader(ParticleContainer& param_container, std::string param_filename)
-		: ParticleInput(param_container), filename(param_filename) {
+	ParticleInput_FileReader(ParticleContainer& param_container,
+			std::string param_filename) :
+			ParticleInput(param_container), filename(param_filename) {
 	}
 
 	virtual ~ParticleInput_FileReader() {
@@ -36,6 +35,5 @@ public:
 	virtual void input();
 
 };
-
 
 #endif /* PARTICLEINPUT_FILEREADER_H_ */

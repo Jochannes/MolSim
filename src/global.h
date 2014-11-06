@@ -26,10 +26,8 @@
 #ifndef GLOBAL_H_
 #define GLOBAL_H_
 
-
 extern double start_time;
 extern double end_time;
 extern double delta_t;
-
 
 #endif /* GLOBAL_H_ */

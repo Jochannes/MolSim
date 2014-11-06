@@ -10,19 +10,17 @@
 
 #include "ParticleContainer.h"
 
-
 /**
  * \brief Abstract class for defining an interface for the output of particle containers.
  */
-class ParticleOutput
-{
+class ParticleOutput {
 protected:
 	/* particle container from which the particles are exported. */
 	ParticleContainer& container;
 
 public:
-	ParticleOutput(ParticleContainer& param_container)
-		: container(param_container) {
+	ParticleOutput(ParticleContainer& param_container) :
+			container(param_container) {
 	}
 
 	virtual ~ParticleOutput() {
@@ -34,6 +32,5 @@ public:
 	virtual void output(int iteration) = 0;
 
 };
-
 
 #endif /* PARTICLEOUTPUT_H_ */

@@ -10,14 +10,12 @@
 
 #include "Particle.h"
 
-
 /**
  * \brief Abstract class for defining an interface
  *        for processing a pair particles when iterating
  *        over a particle container
  */
-class PairHandler
-{
+class PairHandler {
 public:
 	PairHandler() {
 	}
@@ -28,12 +26,11 @@ public:
 	/*
 	 * function to execute for each pair of particles.
 	 *
-* @param p1 First particle of the pair
-* @param p2 Second particle of the pair
+	 * @param p1 First particle of the pair
+	 * @param p2 Second particle of the pair
 	 */
 	virtual void compute(Particle& p1, Particle& p2) = 0;
 
 };
-
 
 #endif /* PAIRHANDLER_H_ */

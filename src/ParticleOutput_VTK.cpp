@@ -11,16 +11,13 @@
 
 #include <list>
 
-
-void ParticleOutput_VTK::output(int iteration)
-{
+void ParticleOutput_VTK::output(int iteration) {
 	outputWriter::VTKWriter writer;
 	writer.initializeOutput(container.size());
 
 	// plot each particle
 	plotHandler_VTK plotHandler = plotHandler_VTK(writer);
 	container.iterate_all(plotHandler);
-
 
 	writer.writeFile(out_name, iteration);
 }

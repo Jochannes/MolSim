@@ -11,11 +11,10 @@
 #include "outputWriter/VTKWriter.h"
 #include "ParticleHandler.h"
 
-
 /**
  * \brief Class for plotting all particles when writing a VTK-file.
  */
-class plotHandler_VTK : public ParticleHandler {
+class plotHandler_VTK: public ParticleHandler {
 private:
 	outputWriter::VTKWriter *vtkWriter;
 
@@ -25,7 +24,7 @@ public:
 
 	/**
 	 * \brief Method for plotting a particle.
-* @param p Particle to plot.
+	 * @param p Particle to plot.
 	 */
 	virtual void compute(Particle& p);
 };

@@ -7,18 +7,13 @@
 
 #include "plotHandler_VTK.h"
 
-
-plotHandler_VTK::plotHandler_VTK(outputWriter::VTKWriter& writer)
-	: vtkWriter(&writer)
-{
+plotHandler_VTK::plotHandler_VTK(outputWriter::VTKWriter& writer) :
+		vtkWriter(&writer) {
 }
-
 
 plotHandler_VTK::~plotHandler_VTK() {
 }
 
-
-void plotHandler_VTK::compute(Particle& p)
-{
+void plotHandler_VTK::compute(Particle& p) {
 	vtkWriter->plotParticle(p);
 }

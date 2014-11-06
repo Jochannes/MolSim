@@ -11,13 +11,11 @@
 #include "ParticleHandler.h"
 #include "Particle.h"
 
-
 /**
  * \brief Class for resetting the calculated forces for a new iteration step.
  *
  */
-class ForcePrepareHandler : public ParticleHandler
-{
+class ForcePrepareHandler: public ParticleHandler {
 public:
 	ForcePrepareHandler();
 	virtual ~ForcePrepareHandler();
@@ -25,7 +23,7 @@ public:
 	/**
 	 * \brief This method saves the force calculated for the particle
 	 *        in the previous step to OldF and resets the force to 0.
-* @param p particle to prepare
+	 * @param p particle to prepare
 	 */
 	virtual void compute(Particle& p);
 };

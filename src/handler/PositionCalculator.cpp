@@ -8,20 +8,15 @@
 #include "PositionCalculator.h"
 #include "global.h"
 
-
 PositionCalculator::PositionCalculator() {
 }
-
 
 PositionCalculator::~PositionCalculator() {
 }
 
-
-void PositionCalculator::compute(Particle& p)
-{
+void PositionCalculator::compute(Particle& p) {
 	double a = 0.5 * delta_t * delta_t / p.getM();
 
-	p.getX() = p.getX() + delta_t*p.getV() + a*p.getF();
+	p.getX() = p.getX() + delta_t * p.getV() + a * p.getF();
 }
-
 
