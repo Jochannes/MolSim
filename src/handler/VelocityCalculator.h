@@ -26,9 +26,9 @@ public:
 
 	/**
 	 * \brief Standard method for calculating the particle velocity.
-	 * @P particle for which a new velocity is calulated
+* @param p particle for which a new velocity is calulated
 	 */
-	virtual void compute(Particle& P);
+	virtual void compute(Particle& p);
 };
 
 

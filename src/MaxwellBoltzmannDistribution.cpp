@@ -1,8 +1,8 @@
 /*
  * MaxwellBoltzmannDistribution.cpp
  *
- * @Date: 01.10.2010
- * @Author: eckhardw
+* @param Date: 01.10.2010
+* @param Author: eckhardw
  */
 #include "MaxwellBoltzmannDistribution.h"
 #include <cstdlib>

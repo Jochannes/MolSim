@@ -28,7 +28,7 @@ public:
 	/*
 	 * function to execute for each particle.
 	 *
-	 * @P The particle to process
+* @param P The particle to process
 	 */
 	virtual void compute(Particle& P) = 0;
 

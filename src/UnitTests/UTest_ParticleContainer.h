@@ -19,7 +19,7 @@
 #include "countPairs.h"
 
 /**
- * \brief Namespace for all UnitTests and associated helper classes.
+ * \brief Namespace for all UnitTests and associated auxiliary classes.
  */
 namespace unitTest {
 

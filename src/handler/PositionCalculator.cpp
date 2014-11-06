@@ -17,11 +17,11 @@ PositionCalculator::~PositionCalculator() {
 }
 
 
-void PositionCalculator::compute(Particle& P)
+void PositionCalculator::compute(Particle& p)
 {
-	double a = 0.5 * delta_t * delta_t / P.getM();
+	double a = 0.5 * delta_t * delta_t / p.getM();
 
-	P.getX() = P.getX() + delta_t*P.getV() + a*P.getF();
+	p.getX() = p.getX() + delta_t*p.getV() + a*p.getF();
 }
 
 

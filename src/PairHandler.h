@@ -28,10 +28,10 @@ public:
 	/*
 	 * function to execute for each pair of particles.
 	 *
-	 * @P1 First particle of the pair
-	 * @P2 Second particle of the pair
+* @param p1 First particle of the pair
+* @param p2 Second particle of the pair
 	 */
-	virtual void compute(Particle& P1, Particle& P2) = 0;
+	virtual void compute(Particle& p1, Particle& p2) = 0;
 
 };
 

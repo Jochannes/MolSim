@@ -22,7 +22,7 @@ public:
 	countParticles();
 	virtual ~countParticles();
 
-	virtual void compute(Particle& P);
+	virtual void compute(Particle& p);
 };
 
 }

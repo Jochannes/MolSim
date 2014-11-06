@@ -21,8 +21,10 @@ countPairs::~countPairs() {
 
 /**
  * \brief This method increments cnt by 1, thereby counting the number of particle pairs.
+* @param p1 First Particle in the counted pair
+* @param p2 Second Particle in the counted pair
  */
-void countPairs::compute(Particle& P1, Particle& P2) {
+void countPairs::compute(Particle& p1, Particle& p2) {
 	cnt++;
 }
 

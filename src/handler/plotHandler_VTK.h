@@ -25,9 +25,9 @@ public:
 
 	/**
 	 * \brief Method for plotting a particle.
-	 * @P particle to plot
+* @param p Particle to plot.
 	 */
-	virtual void compute(Particle& P);
+	virtual void compute(Particle& p);
 };
 
 #endif /* PLOTHANDLER_VTK_H_ */

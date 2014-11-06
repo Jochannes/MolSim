@@ -24,13 +24,13 @@ LoggerPtr CGLogger(Logger::getLogger("MolSim.ParticleInput.CuboidGenerator"));
 /**
  * \brief Auxiliary function for generating a cuboid.
  *
- * @particleList List in which the generated particles are saved.
- * @corner_position Position of lower left front-side corner.
- * @num_particles Number of particles in all three dimensions.
- * @distance Distance between two particles (lattice constant).
- * @mass Mass of a single particle.
- * @velocity Main velocity of all particles. The velocity will be superposed by Brownian motion.
- * @brown_factor Mean velocity of the Brownian motion.
+* @param particleList List in which the generated particles are saved.
+* @param corner_position Position of lower left front-side corner.
+* @param num_particles Number of particles in all three dimensions.
+* @param distance Distance between two particles (lattice constant).
+* @param mass Mass of a single particle.
+* @param velocity Main velocity of all particles. The velocity will be superposed by Brownian motion.
+* @param brown_factor Mean velocity of the Brownian motion.
  */
 static void generateCuboid(list<Particle>& particleList,
 					utils::Vector<double, 3> corner_position,

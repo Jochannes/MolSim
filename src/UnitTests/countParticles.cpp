@@ -21,8 +21,9 @@ countParticles::~countParticles() {
 
 /**
  * \brief This method increments cnt by 1, thereby counting the number of particle.
+* @param p Particle to count
  */
-void countParticles::compute(Particle& P) {
+void countParticles::compute(Particle& p) {
 	cnt++;
 }
 

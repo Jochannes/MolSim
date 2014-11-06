@@ -17,9 +17,9 @@ VelocityCalculator::VelocityCalculator() {
 VelocityCalculator::~VelocityCalculator() {
 }
 
-void VelocityCalculator::compute(Particle& P)
+void VelocityCalculator::compute(Particle& p)
 {
-	double a = 0.5 * delta_t / P.getM();
+	double a = 0.5 * delta_t / p.getM();
 
-	P.getV() = P.getV() + a * (P.getF() + P.getOldF());
+	p.getV() = p.getV() + a * (p.getF() + p.getOldF());
 }

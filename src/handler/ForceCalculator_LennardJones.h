@@ -17,13 +17,13 @@
  */
 class ForceCalculator_LennardJones: public ForceCalculator {
 public:
-	static const double sigma = 1;
-	static const double epsilon = 5;
+	static const double sigma = 1;		//!< Sigma value used for the potential (see equation)
+	static const double epsilon = 5;	//!< Epsilon value used for the potential (see equation)
 
 	ForceCalculator_LennardJones();
 	virtual ~ForceCalculator_LennardJones();
 
-	virtual void compute(Particle& P1, Particle& P2);
+	virtual void compute(Particle& p1, Particle& p2);
 };
 
 #endif /* FORCECALCULATORLENNARDJONES_H_ */

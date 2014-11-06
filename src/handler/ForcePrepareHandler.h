@@ -25,7 +25,7 @@ public:
 	/**
 	 * \brief This method saves the force calculated for the particle
 	 *        in the previous step to OldF and resets the force to 0.
-	 * @P particle to prepare
+* @param p particle to prepare
 	 */
 	virtual void compute(Particle& p);
 };

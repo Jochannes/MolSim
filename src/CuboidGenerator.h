@@ -27,8 +27,8 @@ public:
 	/**
 	 * \brief Initialize the CuboidGenerator with a targeted ParticleContainer and an input file.
 	 *
-	 * @param_particles Targeted ParticleContainer in which the particles will be saved.
-	 * @param_filename Input file from which the cuboid definitions are taken.
+* @param param_particles Targeted ParticleContainer in which the particles will be saved.
+* @param param_filename Input file from which the cuboid definitions are taken.
 	 */
 	CuboidGenerator(ParticleContainer& param_particles, const char* param_filename)
 		: ParticleInput(param_particles), filename(param_filename) {

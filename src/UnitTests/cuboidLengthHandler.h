@@ -27,7 +27,7 @@ public:
 	cuboidLengthHandler();
 	virtual ~cuboidLengthHandler();
 
-	virtual void compute(Particle& P);
+	virtual void compute(Particle& p);
 };
 
 }

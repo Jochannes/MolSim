@@ -18,7 +18,7 @@ plotHandler_VTK::~plotHandler_VTK() {
 }
 
 
-void plotHandler_VTK::compute(Particle& P)
+void plotHandler_VTK::compute(Particle& p)
 {
-	vtkWriter->plotParticle(P);
+	vtkWriter->plotParticle(p);
 }

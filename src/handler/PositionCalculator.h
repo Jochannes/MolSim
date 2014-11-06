@@ -26,9 +26,9 @@ public:
 
 	/**
 	 * \brief Standard method for calculating the particle position.
-	 * @P particle for which a new position is calculated.
+* @param p particle for which a new position is calculated.
 	 */
-	virtual void compute(Particle& P);
+	virtual void compute(Particle& p);
 };
 
 

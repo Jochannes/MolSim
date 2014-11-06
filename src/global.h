@@ -15,7 +15,7 @@
  * or using gravity-potential.
  * It is possible to read the particles from a file and to generate a cuboid of
  * particles with brownian motion.
- * The results can be saved in a VTK-file, which can be visualized e.g by ParaView.
+ * The results can be saved in a VTK-file, which can be visualized e.g. by ParaView.
  *
  * For an explanation on how to use MolSim, run MolSim using the option "-help".
  *

@@ -19,6 +19,8 @@ ForceCalculator_LennardJones::~ForceCalculator_LennardJones() {
 
 /**
  * \brief Function for computing the forces caused by the Lennard-Jones potential.
+* @param p1 First interacting particle (at \f$ x_i \f$ )
+* @param p2 Second interacting particle (at \f$ x_j \f$ )
  *
  * Calculates the forces between two particles caused by the Lennard-Jones potential
  * and adds it to the force acting on the first particle.
@@ -29,15 +31,15 @@ ForceCalculator_LennardJones::~ForceCalculator_LennardJones() {
  * \cdot \left( x_j - x_i \right)
  * \f]
  */
-void ForceCalculator_LennardJones::compute(Particle& P1, Particle& P2)
+void ForceCalculator_LennardJones::compute(Particle& p1, Particle& p2)
 {
-	double recDistance = 1 / (P1.getX() - P2.getX()).L2Norm();
+	double recDistance = 1 / (p1.getX() - p2.getX()).L2Norm();
 
-	utils::Vector<double, 3> force = P2.getX() - P1.getX(); //directional vector
+	utils::Vector<double, 3> force = p2.getX() - p1.getX(); //directional vector
 	force = (pow(sigma*recDistance,6) - 2 * pow(sigma*recDistance,12)) * force; //bracket
 	force = 24 * epsilon * recDistance * recDistance * force; //prefactor
 
-	P1.getF() = P1.getF() + force;
-	P2.getF() = P2.getF() - force;		// according to Newton's third law: F_P1 = -F_P2
+	p1.getF() = p1.getF() + force;
+	p2.getF() = p2.getF() - force;		// according to Newton's third law: F_P1 = -F_P2
 }
 

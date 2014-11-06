@@ -30,7 +30,7 @@ public:
 	/**
 	 * /brief Abstract function for calculating the force between to particles.
 	 */
-	virtual void compute(Particle& P1, Particle& P2) = 0;
+	virtual void compute(Particle& p1, Particle& p2) = 0;
 };
 
 

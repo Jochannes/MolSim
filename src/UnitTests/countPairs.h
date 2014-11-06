@@ -22,7 +22,7 @@ public:
 	countPairs();
 	virtual ~countPairs();
 
-	virtual void compute(Particle& P1, Particle& P2);
+	virtual void compute(Particle& p1, Particle& p2);
 };
 
 }

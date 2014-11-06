@@ -22,7 +22,7 @@ public:
 	ForceCalculator_Gravity();
 	virtual ~ForceCalculator_Gravity();
 
-	virtual void compute(Particle& P1, Particle& P2);
+	virtual void compute(Particle& p1, Particle& p2);
 };
 
 
