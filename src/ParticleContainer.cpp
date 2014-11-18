@@ -6,6 +6,7 @@
  */
 
 #include "ParticleContainer.h"
+#include "handler/PairHandlerConverter.h"
 
 /**
  * \brief Constructor for setting an initial particle list.
@@ -32,6 +33,31 @@ void ParticleContainer::add(Particle& p) {
  */
 void ParticleContainer::add(std::list<Particle>& list) {
 	particleList.splice(particleList.end(), list);
+}
+
+/**
+ * \brief Removes the particle from the particle container.
+ * @param p Particle to remove.
+ *
+ * This function removes all particles that match the
+ * properties of the specified particle from the container.
+ */
+void ParticleContainer::remove(Particle& p) {
+	std::list<Particle>::iterator it = particleList.begin();
+
+	while (it != particleList.end()) {
+		if(*it == p){
+			particleList.erase(it);
+		}
+		it++;
+	}
+}
+
+/**
+ * \brief Removes all particles from the particle container.
+ */
+void ParticleContainer::remove_all() {
+	particleList.clear();
 }
 
 /**
@@ -101,6 +127,28 @@ void ParticleContainer::iterate_pairs_half(PairHandler& handler) {
 		}
 
 		it_outer++;
+	}
+}
+
+/**
+ * \brief Function for iterating over particle pairs from two particle containers.
+ * @param handler Object providing the compute function, which is called for every particle pair.
+ * @param partner Partner particle container.
+ *
+ * This function iterates over all particle pairs (a,b)
+ * with particle a coming from this particle container
+ * and particle b from the partner particle container.
+ * It does so by using the pairHandlerConverter handler,
+ * which converts a PairHandler into a ParticleHandler.
+ */
+void ParticleContainer::iterate_partner(PairHandler& handler, ParticleContainer *partner) {
+	std::list<Particle>::iterator it = particleList.begin();
+	PairHandlerConverter convHandler = PairHandlerConverter(&handler);
+
+	while (it != particleList.end()) {
+		convHandler.setPartner(&(*it));
+		partner->iterate_all(convHandler);
+		it++;
 	}
 }
 

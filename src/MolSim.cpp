@@ -1,4 +1,5 @@
 #include "ParticleContainer.h"
+#include "CellContainer.h"
 #include "ParticleInput_FileReader.h"
 #include "CuboidGenerator.h"
 #include "ParticleOutput_VTK.h"
@@ -62,7 +63,7 @@ double start_time = 0.0;	//!< Starting time of the simulation.
 double end_time = 1000; 	//!< End time of the simulation.
 double delta_t = 0.014; 	//!< Time step size of the simulation.
 
-ParticleContainer particles;		//!< Container for encapsulating the particle list.
+ParticleContainer* particles;		//!< Container for encapsulating the particle list.
 ParticleInput* particleIn = NULL; 	//!< Object for defining the input method to be used.
 ParticleOutput* particleOut = NULL; //!< Object for defining the output method to be used.
 PositionCalculator* xcalc = NULL; 	//!< Object for defining the coordinate calculator to be used in the simulation.
@@ -141,6 +142,9 @@ void parseParameters(int argc, char* argsv[]) {
 								"			The default is 0.014.\n"
 								"  -end_time VALUE	Sets the time of the simulation's end to VALUE.\n"
 								"			The default is 1000.\n"
+								"  -cont VALUE	Specifies the container method for storage and force calculation.\n"
+								"			NAME can be \"cells\" for the linked-cell algorithm or \"simple\" for a simple particle container.\n"
+								"			The default is \"cells\".\n"
 								"  -force NAME		Specifies the method for force calculation between the particles.\n"
 								"			NAME can be \"grav\" for gravity or \"lj\" for Lennard-Jones potential.\n"
 								"			The default is \"lj\".\n"
@@ -189,6 +193,27 @@ void parseParameters(int argc, char* argsv[]) {
 				LOG4CXX_DEBUG(logger, "using parameter end_time=" << end_time);
 			}
 
+			else if (strcmp(option, "cont") == 0) {
+				if (value == NULL) {
+					LOG4CXX_FATAL(logger,
+							"Error! Missing value for option cont.");
+					exit(1);
+				}
+
+				if (strcmp(value, "cells") == 0) {
+					//TODO Set particles as CellContainer -> xml
+					LOG4CXX_DEBUG(logger, "using linked-cell algorithm.");
+				} else if (strcmp(value, "simple") == 0) {
+					//TODO Set particles as ParticleContainer -> xml
+					LOG4CXX_DEBUG(logger,
+							"using simple particle container.");
+				} else {
+					LOG4CXX_FATAL(logger,
+							"Error! Invalid value for option cont.");
+					exit(1);
+				}
+			}
+
 			else if (strcmp(option, "force") == 0) {
 				if (value == NULL) {
 					LOG4CXX_FATAL(logger,
@@ -219,7 +244,7 @@ void parseParameters(int argc, char* argsv[]) {
 
 				LOG4CXX_DEBUG(logger,
 						"generating cuboid from file " << value << ".");
-				CuboidGenerator in(particles, value);
+				CuboidGenerator in(*particles, value);
 				in.input();
 			}
 
@@ -232,7 +257,7 @@ void parseParameters(int argc, char* argsv[]) {
 
 				LOG4CXX_DEBUG(logger,
 						"reading particles from file " << value << ".");
-				ParticleInput_FileReader in(particles, value);
+				ParticleInput_FileReader in(*particles, value);
 				in.input();
 			}
 
@@ -248,7 +273,7 @@ void parseParameters(int argc, char* argsv[]) {
 	}	// end for
 
 	// check if there are particles
-	if (particles.empty()) {
+	if (particles->empty()) {
 		LOG4CXX_FATAL(logger, "Error! No particles given.");
 		exit(1);
 	}
@@ -260,7 +285,7 @@ void parseParameters(int argc, char* argsv[]) {
 	}
 
 	if (particleOut == NULL) {
-		particleOut = new ParticleOutput_VTK(particles, "MD_vtk");
+		particleOut = new ParticleOutput_VTK(*particles, "MD_vtk");
 		LOG4CXX_DEBUG(logger, "using VTKWriter for output.");
 	}
 
@@ -298,10 +323,10 @@ int runUnitTest(const char* test) {
  */
 void calculateF() {
 	// update OldF and set F to 0.0
-	particles.prepare_forces();
+	particles->prepare_forces();
 
 	// calculate forces
-	particles.iterate_pairs_half(*fcalc);
+	particles->iterate_pairs_half(*fcalc);
 }
 
 /**
@@ -309,7 +334,10 @@ void calculateF() {
  * to call the position calculation method saved in `xcalc` for each particle.
  */
 void calculateX() {
-	particles.iterate_all(*xcalc);
+	particles->iterate_all(*xcalc);
+	if (typeid(*particles) == typeid(CellContainer)){
+		((CellContainer*)particles)->update_cells();
+	}
 }
 
 /**
@@ -317,7 +345,7 @@ void calculateX() {
  * to call the velocity calculation method saved in `xcalc` for each particle.
  */
 void calculateV() {
-	particles.iterate_all(*vcalc);
+	particles->iterate_all(*vcalc);
 }
 
 /**

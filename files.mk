@@ -5,6 +5,8 @@ src/FileReader.cpp\
 src/outputWriter/VTKWriter.cpp\
 src/outputWriter/vtk-unstructured.cpp\
 src/MaxwellBoltzmannDistribution.cpp\
+src/handler/CellUpdater.cpp\
+src/handler/PairHandlerConverter.cpp\
 src/handler/PositionCalculator.cpp\
 src/handler/VelocityCalculator.cpp\
 src/handler/ForceCalculator_Gravity.cpp\
@@ -20,4 +22,5 @@ src/UnitTests/countPairs.cpp\
 src/UnitTests/UTest_ForceCalculator_LennardJones.cpp\
 src/ParticleContainer.cpp\
 src/MolSim.cpp\
+src/CellContainer.cpp\
 src/ParticleOutput_VTK.cpp\

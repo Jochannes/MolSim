@@ -25,18 +25,20 @@
  * all particles and particle pairs and processing them using
  * a certain function.
  */
-class ParticleContainer
-{
+class ParticleContainer {
 private:
 	std::list<Particle> particleList;
 
 public:
-	ParticleContainer(){
+	ParticleContainer() :
+			halo(false) {
 	}
 	ParticleContainer(const std::list<Particle>& initialParticleList);
 
 	~ParticleContainer() {
 	}
+
+	bool halo; //!< Sets this ParticleContainer as halo region (for the linked-cell algorithm).
 
 	bool empty() const {
 		return particleList.empty();
@@ -49,12 +51,15 @@ public:
 	void add(Particle& P);
 	void add(std::list<Particle>& list);
 
+	void remove(Particle& P);
+	void remove_all();
+
 	void prepare_forces();
 
 	void iterate_all(ParticleHandler& handler);
 	void iterate_pairs(PairHandler& handler);
 	void iterate_pairs_half(PairHandler& handler);
+	void iterate_partner(PairHandler& handler, ParticleContainer *partner);
 };
-
 
 #endif /* PARTICLECONTAINER_H_ */
