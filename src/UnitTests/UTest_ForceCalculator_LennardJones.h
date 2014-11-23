@@ -29,8 +29,8 @@ CPPUNIT_TEST_SUITE( UTest_ForceCalculator_LennardJones );
 	CPPUNIT_TEST(testPotentialWell);
 	CPPUNIT_TEST(testAttraction);
 	CPPUNIT_TEST(testRepulsion);
-	CPPUNIT_TEST(testNewton);CPPUNIT_TEST_SUITE_END()
-	;
+	CPPUNIT_TEST(testNewton);
+	CPPUNIT_TEST_SUITE_END();
 
 private:
 	double r_well;							//!< Distance of the potential well

@@ -15,8 +15,6 @@
 #include <cppunit/TestRunner.h>
 #include <cppunit/extensions/HelperMacros.h>
 #include "ParticleContainer.h"
-#include "countParticles.h"
-#include "countPairs.h"
 
 /**
  * \brief Namespace for all UnitTests and associated auxiliary classes.
@@ -28,14 +26,15 @@ namespace unitTest {
  *
  * This class tests if the iterate methods iterate over the right number of particles and particle pairs.
  */
-class UTest_ParticleContainer: public CppUnit::TestFixture {
-CPPUNIT_TEST_SUITE( UTest_ParticleContainer );
+class UTest_ParticleContainer : public CppUnit::TestFixture {
+	CPPUNIT_TEST_SUITE( UTest_ParticleContainer );
 	CPPUNIT_TEST(testSize);
 	CPPUNIT_TEST(testAddSize);
+	CPPUNIT_TEST(testIterateAll);
 	CPPUNIT_TEST(testIterateCount);
 	CPPUNIT_TEST(testIteratePairCount);
-	CPPUNIT_TEST(testIteratePairHalfCount);CPPUNIT_TEST_SUITE_END()
-	;
+	CPPUNIT_TEST(testIteratePairHalfCount);
+	CPPUNIT_TEST_SUITE_END();
 
 private:
 	int numParticles = 20; 				//!< Number of particles with which the container will be initialized.
@@ -46,6 +45,7 @@ public:
 	void tearDown();
 	void testSize();
 	void testAddSize();
+	void testIterateAll();
 	void testIterateCount();
 	void testIteratePairCount();
 	void testIteratePairHalfCount();

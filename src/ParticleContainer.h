@@ -15,6 +15,11 @@
 
 #include <list>
 
+//Forward declaration of unit test class
+namespace unitTest {
+	class UTest_ParticleContainer;
+}
+
 /**
  * \brief A container for encapsulating the particle list.
  *
@@ -26,6 +31,9 @@
  * a certain function.
  */
 class ParticleContainer {
+
+	friend class unitTest::UTest_ParticleContainer;
+
 private:
 	std::list<Particle> particleList;
 

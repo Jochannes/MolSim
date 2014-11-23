@@ -39,8 +39,8 @@ namespace unitTest {
 class UTest_CuboidGenerator: public CppUnit::TestFixture {
 CPPUNIT_TEST_SUITE( UTest_CuboidGenerator );
 	CPPUNIT_TEST(testCount);
-	CPPUNIT_TEST(testLength);CPPUNIT_TEST_SUITE_END()
-	;
+	CPPUNIT_TEST(testLength);
+	CPPUNIT_TEST_SUITE_END();
 
 private:
 	ParticleContainer partContainer; 		//!< Particle container for testing.

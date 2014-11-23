@@ -19,16 +19,31 @@
 using namespace std;
 using namespace utils;
 
+//Forward declaration of unit test class
+namespace unitTest {
+	class UTest_CellContainer;
+}
+
 /**
  * \brief Particle container for the linked-cell algorithm
  *
  */
 class CellContainer : ParticleContainer {
+	friend unitTest::UTest_CellContainer;
+
 private:
 	ParticleContainer* cells; 		//!< Array with one ParticleContainer per cell, including the halo region.
 	Vector<double, 3> domainSize; 	//!< Domain size in each dimension.
 	Vector<int, 3> cellCount; 		//!< Number of cells in each dimension \f$ N_i \f$.
+	int cellTotal;					//!< Total number of cells \f$ N \f$.
 	double cutoff;					//!< Cutoff radius.
+	int* haloInds;					//!< Indices of all halo cells for fast and simple iteration.
+	int* boundInds;					//!< Indices of all boundary cells for fast and simple iteration.
+	int haloSize;					//!< Number of halo cells.
+	int boundSize;					//!< Number of boundary cells.
+	bool dim3;						//!< Stores if the domain is three dimensional.
+
+	void setHaloBoundary();
 
 public:
 	CellContainer(const Vector<double, 3> domainSize,
@@ -36,16 +51,12 @@ public:
 	CellContainer(const Vector<double, 3> domainSize,
 			const double cutoff, list<Particle>& initialParticleList);
 
-	~CellContainer() {
-		delete(cells);
-	}
-
 	Vector<int, 3> calc3Ind(int n);
 	int calcInd(Vector<int, 3> n);
 	int calcCell(Vector<double, 3> x);
 
 	bool empty();
-	int count();
+	int size();
 
 	void add(Particle& p);
 	void add(list<Particle>& list);

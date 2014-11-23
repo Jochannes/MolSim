@@ -12,6 +12,9 @@
 #include <cmath>
 #include <iostream>
 #include <cppunit/extensions/HelperMacros.h>
+#include "marker_handler.h"
+#include "countParticles.h"
+#include "countPairs.h"
 
 namespace unitTest {
 
@@ -70,9 +73,19 @@ void UTest_ParticleContainer::testAddSize() {
 	}
 	partContainer.add(lsPart);
 	CPPUNIT_ASSERT(2 * numParticles + 1 == partContainer.size());
+}
 
-	//Reset container
-	setUp();
+/**
+ * \brief Method for testing if ParticleContainer::iterate_all reaches all particles.
+ */
+void UTest_ParticleContainer::testIterateAll() {
+	marker_handler marker = marker_handler();
+	partContainer.iterate_all(marker);
+	std::list<Particle>::iterator it = partContainer.particleList.begin();
+	while (it != partContainer.particleList.end()) {
+		CPPUNIT_ASSERT((*it).getV() == 1000);
+		it++;
+	}
 }
 
 /**

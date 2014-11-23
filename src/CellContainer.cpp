@@ -8,6 +8,193 @@
 #include "CellContainer.h"
 #include "handler/CellUpdater.h"
 
+#include <log4cxx/logger.h>
+using namespace log4cxx;
+
+LoggerPtr CellLogger(Logger::getLogger("MolSim.CellContainer"));
+
+/**
+ * \brief Auxiliary function for setting halo cells and generating the haloInds and boundInds lists.
+ *
+ * This methods iterates over the cube surface for reaching all halo cells and over the
+ * inner cube surface for reaching all boundary cells.
+ */
+void CellContainer::setHaloBoundary() {
+	//set halo cells
+	//iterate over cube surface
+	Vector<int, 3> n;
+	int cellNr = 0;
+	if (dim3) {
+		//calculate overall size of the haloInds array
+		haloSize = 2
+				* ((cellCount[0] - 1) * (cellCount[1] - 1)
+						+ (cellCount[0] - 1) * (cellCount[2] - 1)
+						+ (cellCount[1] - 1) * (cellCount[2] - 1) + 1);
+		haloInds = new int[haloSize];
+
+		//iterate over top and bottom
+		for (int side = 0; side < 2; side++) { //iterate over both sides
+			for (int y = 0; y < cellCount[1]; y++) { //iterate over area
+				for (int z = 0; z < cellCount[2]; z++) { //iterate over area
+
+					//calculate indices
+					n[0] = side * (cellCount[0] - 1);
+					n[1] = y;
+					n[2] = z;
+
+					//set cell as halo cell and store index in haloInds
+					cells[calcInd(n)].halo = true;
+					haloInds[cellNr] = calcInd(n);
+					cellNr++;
+				}
+			}
+		}
+		//iterate over surrounding sides (front, left, right and back)
+		for (int x = 1; x < cellCount[0] - 1; x++) { //iterate over the whole height
+			for (int side = 0; side < 2; side++) { //iterate over both sides
+				for (int y = 0; y < cellCount[1]; y++) { //iterate over front/back line
+
+					//calculate indices
+					n[0] = x;
+					n[1] = y;
+					n[2] = side * (cellCount[2] - 1);
+
+					//set cell as halo cell and store index in haloInds
+					cells[calcInd(n)].halo = true;
+					haloInds[cellNr] = calcInd(n);
+					cellNr++;
+				}
+				for (int z = 1; z < cellCount[2] - 1; z++) { //iterate over left/right line
+
+					//calculate indices
+					n[0] = x;
+					n[1] = side * (cellCount[2] - 1);
+					n[2] = z;
+
+					//set cell as halo cell and store index in haloInds
+					cells[calcInd(n)].halo = true;
+					haloInds[cellNr] = calcInd(n);
+					cellNr++;
+				}
+			}
+		}
+	} else {
+		//calculate overall size of the haloInds array
+		haloSize = 2 * (cellCount[0] + cellCount[1] - 2);
+		haloInds = new int[haloSize];
+		n[2] = 0;
+
+		for (int side = 0; side < 2; side++) { //iterate over both sides
+			for (int x = 0; x < cellCount[0]; x++) { //iterate over front/back line
+
+				//calculate indices
+				n[0] = x;
+				n[1] = side * (cellCount[1] - 1);
+
+				//set cell as halo cell and store index in haloInds
+				cells[calcInd(n)].halo = true;
+				haloInds[cellNr] = calcInd(n);
+				cellNr++;
+			}
+			for (int y = 1; y < cellCount[1] - 1; y++) { //iterate over left/right line
+
+				//calculate indices
+				n[0] = side * (cellCount[0] - 1);
+				n[1] = y;
+
+				//set cell as halo cell and store index in haloInds
+				cells[calcInd(n)].halo = true;
+				haloInds[cellNr] = calcInd(n);
+				cellNr++;
+			}
+		}
+	}
+
+	//set boundary cells
+	//iterate over inner cube surface
+	cellNr = 0;
+	if (dim3) {
+		//calculate overall size of the boundInds array
+		boundSize = 2
+				* ((cellCount[0] - 3) * (cellCount[1] - 3)
+						+ (cellCount[0] - 3) * (cellCount[2] - 3)
+						+ (cellCount[1] - 3) * (cellCount[2] - 3) + 1);
+		boundInds = new int[boundSize];
+
+		//iterate over top and bottom
+		for (int side = 0; side < 2; side++) { //iterate over both sides
+			for (int y = 1; y < cellCount[1] - 1; y++) { //iterate over area
+				for (int z = 1; z < cellCount[2] - 1; z++) { //iterate over area
+
+					//calculate indices
+					n[0] = 1 + side * (cellCount[0] - 3);
+					n[1] = y;
+					n[2] = z;
+
+					//store cell index in boundInds
+					boundInds[cellNr] = calcInd(n);
+					cellNr++;
+				}
+			}
+		}
+		//iterate over surrounding sides (front, left, right and back)
+		for (int x = 2; x < cellCount[0] - 2; x++) { //iterate over the whole height
+			for (int side = 0; side < 2; side++) { //iterate over both sides
+				for (int y = 1; y < cellCount[1] - 1; y++) { //iterate over front/back line
+
+					//calculate indices
+					n[0] = x;
+					n[1] = y;
+					n[2] = 1 + side * (cellCount[2] - 3);
+
+					//store cell index in boundInds
+					boundInds[cellNr] = calcInd(n);
+					cellNr++;
+				}
+				for (int z = 2; z < cellCount[2] - 2; z++) { //iterate over left/right line
+
+					//calculate indices
+					n[0] = x;
+					n[1] = 1 + side * (cellCount[2] - 3);
+					n[2] = z;
+
+					//store cell index in boundInds
+					boundInds[cellNr] = calcInd(n);
+					cellNr++;
+				}
+			}
+		}
+	} else {
+		//calculate overall size of the boundInds array
+		boundSize = 2 * (cellCount[0] + cellCount[1] - 6);
+		boundInds = new int[boundSize];
+		n[2] = 0;
+
+		for (int side = 0; side < 2; side++) { //iterate over both sides
+			for (int x = 1; x < cellCount[0] - 1; x++) { //iterate over front/back line
+
+				//calculate indices
+				n[0] = x;
+				n[1] = 1 + side * (cellCount[1] - 3);
+
+				//store cell index in boundInds
+				boundInds[cellNr] = calcInd(n);
+				cellNr++;
+			}
+			for (int y = 2; y < cellCount[1] - 2; y++) { //iterate over left/right line
+
+				//calculate indices
+				n[0] = 1 + side * (cellCount[0] - 3);
+				n[1] = y;
+
+				//store cell index in boundInds
+				boundInds[cellNr] = calcInd(n);
+				cellNr++;
+			}
+		}
+	}
+}
+
 /**
  * \brief Constructor for setting up an empty master container.
  * @param domainSize Size of the domain in 3 dimensions.
@@ -17,31 +204,25 @@ CellContainer::CellContainer(const Vector<double, 3> domainSize,
 		const double cutoff) :
 		domainSize(domainSize), cutoff(cutoff) {
 
-	//Calculate cell count in each dimension (including halo)
+	//Calculate cell count in each dimension (including halo cells)
 	cellCount[0] = domainSize[0] / cutoff + 3;
 	cellCount[1] = domainSize[1] / cutoff + 3;
 	cellCount[2] = domainSize[2] / cutoff + 3;
+	if (domainSize[2] == 0) {
+		dim3 = false;
+		cellCount[2] = 0;
+	} else {
+		dim3 = true;
+		cellCount[2] = domainSize[2] / cutoff + 3;
+	}
 
 	//initialize cell list
 	int N = cellCount[0] * cellCount[1] * cellCount[2];
 	cells = new ParticleContainer[N];
+	cellTotal = N;
 
-	//set halo cells
-	//iterate over cube surface
-	Vector<int, 3> n;
-	for (int dim = 0; dim < 3; dim++) { 	//iterate the fixed dimension
-		for (int side = 0; side < 2; side++) { //iterate over the two sides of the cube (e.g. front/back)
-			for (int i = 0; i < cellCount[(dim + 1) % 3]; i++) { //iterate over first free dimension
-				for (int j = 0; j < cellCount[(dim + 2) % 3]; j++) { //iterate over second free dimension
-					n[dim] = side * (cellCount[dim] - 1); //fixed dimension
-					n[(dim + 1) % 3] = i;			//first free dimension
-					n[(dim + 2) % 3] = j;			//second free dimension
-
-					cells[calcInd(n)].halo = true;
-				}
-			}
-		}
-	}
+	//set halo and boundary cells
+	setHaloBoundary();
 }
 
 /**
@@ -54,31 +235,32 @@ CellContainer::CellContainer(const Vector<double, 3> domainSize,
 		const double cutoff, list<Particle>& initialParticleList) :
 		domainSize(domainSize), cutoff(cutoff) {
 
+	LOG4CXX_DEBUG(CellLogger,
+			"Generating cell container: domain size = " << domainSize.toString() << ", cutoff radius = " << cutoff);
+
 	//Calculate cell count in each dimension (including halo)
 	cellCount[0] = domainSize[0] / cutoff + 3;
 	cellCount[1] = domainSize[1] / cutoff + 3;
-	cellCount[2] = domainSize[2] / cutoff + 3;
+	if (domainSize[2] == 0) {
+		dim3 = false;
+		cellCount[2] = 0;
+	} else {
+		dim3 = true;
+		cellCount[2] = domainSize[2] / cutoff + 3;
+	}
 
 	//initialize cell list
-	int N = cellCount[0] * cellCount[1] * cellCount[2];
-	cells = new ParticleContainer[N];
-
-	//Set halo region
-	//iterate over cube surface
-	Vector<int, 3> n;
-	for (int dim = 0; dim < 3; dim++) { 	//iterate the fixed dimension
-		for (int side = 0; side < 2; side++) { //iterate over the two sides of the cube (e.g. front/back)
-			for (int i = 0; i < cellCount[(dim + 1) % 3]; i++) { //iterate over first free dimension
-				for (int j = 0; j < cellCount[(dim + 2) % 3]; j++) { //iterate over second free dimension
-					n[dim] = side * (cellCount[dim] - 1); //fixed dimension
-					n[(dim + 1) % 3] = i;			//first free dimension
-					n[(dim + 2) % 3] = j;			//second free dimension
-
-					cells[calcInd(n)].halo = true;
-				}
-			}
-		}
+	int N;
+	if (dim3) {
+		N = cellCount[0] * cellCount[1] * cellCount[2];
+	} else {
+		N = cellCount[0] * cellCount[1];
 	}
+	cells = new ParticleContainer[N];
+	cellTotal = N;
+
+	//Set halo and boundary cells
+	setHaloBoundary();
 
 	//copy particles into the right cells
 	add(initialParticleList);
@@ -148,7 +330,20 @@ int CellContainer::calcCell(Vector<double, 3> x) {
 	Vector<int, 3> n;
 	n[0] = floor(inds[0]) + 1;
 	n[1] = floor(inds[1]) + 1;
-	n[2] = floor(inds[2]) + 1;
+	n[2] = floor(inds[2]) + 1 * dim3;
+
+	if (dim3) {
+		if ((n[0] < 0 || n[0] >= cellCount[0])
+				|| (n[1] < 0 || n[1] >= cellCount[1])
+				|| (n[2] < 0 || n[2] >= cellCount[2])) {
+			LOG4CXX_FATAL(CellLogger,
+					"Error calculating cell index: Particle out of domain (x = " << x.toString() << ")");
+		}
+	} else if ((n[0] < 0 || n[0] >= cellCount[0])
+			|| (n[1] < 0 || n[1] >= cellCount[1])) {
+		LOG4CXX_FATAL(CellLogger,
+				"Error calculating cell index: Particle out of domain (x = " << x.toString() << ")");
+	}
 
 	//calculate cell index
 	return calcInd(n);
@@ -159,10 +354,23 @@ int CellContainer::calcCell(Vector<double, 3> x) {
  */
 bool CellContainer::empty() {
 	bool empty = true;
-	for (int i = 0; i < sizeof(*cells) / sizeof(*cells); i++) {
+	for (int i = 0; i < cellTotal; i++) {
 		empty &= cells[i].empty();
 	}
 	return empty;
+}
+
+/**
+ * \brief Returns how many particles the container stores (not including the halo region).
+ */
+int CellContainer::size() {
+	int cnt = 0;
+	for (int i = 0; i < cellTotal; i++) {
+		if (!cells[i].halo) {
+			cnt += cells[i].size();
+		}
+	}
+	return cnt;
 }
 
 /**
@@ -193,7 +401,7 @@ void CellContainer::add(list<Particle>& addList) {
  * properties of the specified particle from all containers.
  */
 void CellContainer::remove(Particle& p) {
-	for (int i = 0; i < sizeof(*cells) / sizeof(*cells); i++) {
+	for (int i = 0; i < cellTotal; i++) {
 		cells[i].remove(p);
 	}
 }
@@ -217,20 +425,9 @@ void CellContainer::remove(Particle& p, int contInd) {
  * \brief Removes all particles from the halo cells.
  */
 void CellContainer::remove_halo() {
-//iterate over cube surface
-	Vector<int, 3> n;
-	for (int dim = 0; dim < 3; dim++) { 	//iterate the fixed dimension
-		for (int side = 0; side < 2; side++) { //iterate over the two sides of the cube (e.g. front/back)
-			for (int i = 0; i < cellCount[(dim + 1) % 3]; i++) { //iterate over first free dimension
-				for (int j = 0; j < cellCount[(dim + 2) % 3]; j++) { //iterate over second free dimension
-					n[dim] = side * (cellCount[dim] - 1); //fixed dimension
-					n[(dim + 1) % 3] = i;			//first free dimension
-					n[(dim + 2) % 3] = j;			//second free dimension
-
-					cells[calcInd(n)].remove_all();
-				}
-			}
-		}
+	//iterate over all halo cells
+	for (int i = 0; i < haloSize; i++) {
+		cells[haloInds[i]].remove_all();
 	}
 }
 
@@ -244,7 +441,7 @@ void CellContainer::update_cells() {
 	CellUpdater updater = CellUpdater(this);
 
 //iterate over all cells
-	for (int i = 0; i < sizeof(*cells) / sizeof(*cells); i++) {
+	for (int i = 0; i < cellTotal; i++) {
 		if (!cells[i].halo) { //test if this cell is not in the halo region
 			updater.oldContainerIndex = i;
 			cells[i].iterate_all(updater);
@@ -260,21 +457,9 @@ void CellContainer::update_cells() {
  * and processes each by calling the provided function.
  */
 void CellContainer::iterate_halo(ParticleHandler& handler) {
-
-//iterate over cube surface
-	Vector<int, 3> n;
-	for (int dim = 0; dim < 3; dim++) { 	//iterate the fixed dimension
-		for (int side = 0; side < 2; side++) { //iterate over the two sides of the cube (e.g. front/back)
-			for (int i = 0; i < cellCount[(dim + 1) % 3]; i++) { //iterate over first free dimension
-				for (int j = 0; j < cellCount[(dim + 2) % 3]; j++) { //iterate over second free dimension
-					n[dim] = side * (cellCount[dim] - 1); //fixed dimension
-					n[(dim + 1) % 3] = i;			//first free dimension
-					n[(dim + 2) % 3] = j;			//second free dimension
-
-					cells[calcInd(n)].iterate_all(handler);
-				}
-			}
-		}
+	//iterate over all halo cells
+	for (int i = 0; i < haloSize; i++) {
+		cells[haloInds[i]].iterate_all(handler);
 	}
 }
 
@@ -284,41 +469,11 @@ void CellContainer::iterate_halo(ParticleHandler& handler) {
  *
  * This function iterates over all particles inside the boundary cells
  * and processes each by calling the provided function.
- *
- * If the number of cells in the third dimension is 3
- * including the halo cells, the simulation is two-dimensional
- * and the boundary cells are chosen accordingly.
  */
 void CellContainer::iterate_boundary(ParticleHandler& handler) {
-
-//iterate over cube surface
-	if (cellCount[2] == 3) {
-		Vector<int, 3> n;
-		for (int dim = 0; dim < 2; dim++) { 	//iterate the fixed dimension
-			for (int side = 0; side < 2; side++) { //iterate over the two sides of the square (e.g. front/back)
-				for (int i = 1; i < cellCount[(dim + 1) % 2] - 2; i++) { //iterate over free dimension
-					n[dim] = 1 + side * (cellCount[dim] - 3); //fixed dimension
-					n[(dim + 1) % 2] = i;			//free dimension
-
-					cells[calcInd(n)].iterate_all(handler);
-				}
-			}
-		}
-	} else {
-		Vector<int, 3> n;
-		for (int dim = 0; dim < 3; dim++) { 	//iterate the fixed dimension
-			for (int side = 0; side < 2; side++) { //iterate over the two sides of the cube (e.g. front/back)
-				for (int i = 1; i < cellCount[(dim + 1) % 3] - 2; i++) { //iterate over first free dimension
-					for (int j = 1; j < cellCount[(dim + 2) % 3] - 2; j++) { //iterate over second free dimension
-						n[dim] = 1 + side * (cellCount[dim] - 3); //fixed dimension
-						n[(dim + 1) % 3] = i; 			//first free dimension
-						n[(dim + 2) % 3] = j; 			//second free dimension
-
-						cells[calcInd(n)].iterate_all(handler);
-					}
-				}
-			}
-		}
+	//iterate over all boundary cells
+	for (int i = 0; i < boundSize; i++) {
+		cells[boundInds[i]].iterate_all(handler);
 	}
 }
 
@@ -332,7 +487,7 @@ void CellContainer::iterate_boundary(ParticleHandler& handler) {
 void CellContainer::iterate_all(ParticleHandler& handler) {
 
 //iterate over all cells
-	for (int i = 0; i < sizeof(*cells) / sizeof(*cells); i++) {
+	for (int i = 0; i < cellTotal; i++) {
 		if (!cells[i].halo) { //test if this cell is not in the halo region
 			cells[i].iterate_all(handler);
 		}
@@ -352,7 +507,7 @@ void CellContainer::iterate_all(ParticleHandler& handler) {
  */
 void CellContainer::iterate_pairs(PairHandler& handler) {
 //iterate over all cells
-	for (int i = 0; i < sizeof(*cells) / sizeof(*cells); i++) {
+	for (int i = 0; i < cellTotal; i++) {
 		if (!cells[i].halo) { //test if this cell is not in the halo region.
 			//iterate inside of cell
 			cells[i].iterate_pairs(handler);
@@ -362,12 +517,23 @@ void CellContainer::iterate_pairs(PairHandler& handler) {
 			//iterate over surrounding non-halo cells
 			for (int x = -1; x <= 1; x++) {
 				for (int y = -1; y <= 1; y++) {
-					for (int z = -1; z <= 1; z++) {
+					if (dim3) {
+						for (int z = -1; z <= 1; z++) {
+							tempN[0] = n[0] + x;
+							tempN[1] = n[1] + y;
+							tempN[2] = n[2] + z;
+							if (!cells[calcInd(tempN)].halo //test if not a halo cell
+							&& !(x == 0 && y == 0 && z == 0)) { //do not iterate over the cell itself
+								cells[calcInd(n)].iterate_partner(handler,
+										&cells[calcInd(tempN)]);
+							}
+						}
+					} else {
 						tempN[0] = n[0] + x;
 						tempN[1] = n[1] + y;
-						tempN[2] = n[2] + z;
+						tempN[2] = n[2];
 						if (!cells[calcInd(tempN)].halo //test if not a halo cell
-						&& !(x == 0 && y == 0 && z == 0)) { //do not iterate over the cell itself
+						&& !(x == 0 && y == 0)) { //do not iterate over the cell itself
 							cells[calcInd(n)].iterate_partner(handler,
 									&cells[calcInd(tempN)]);
 						}
@@ -390,7 +556,7 @@ void CellContainer::iterate_pairs(PairHandler& handler) {
  */
 void CellContainer::iterate_pairs_half(PairHandler& handler) {
 //iterate over all cells
-	for (int i = 0; i < sizeof(*cells) / sizeof(*cells); i++) {
+	for (int i = 0; i < cellTotal; i++) {
 		if (!cells[i].halo) { //test if this cell is not in the halo region.
 			//iterate inside of cell
 			cells[i].iterate_pairs_half(handler);
@@ -400,12 +566,23 @@ void CellContainer::iterate_pairs_half(PairHandler& handler) {
 			//iterate over surrounding non-halo cells
 			for (int x = 0; x <= 1; x++) {
 				for (int y = 0; y <= 1; y++) {
-					for (int z = 0; z <= 1; z++) {
+					if (dim3) {
+						for (int z = 0; z <= 1; z++) {
+							tempN[0] = n[0] + x;
+							tempN[1] = n[1] + y;
+							tempN[2] = n[2] + z;
+							if (!cells[calcInd(tempN)].halo //test if not a halo cell
+							&& !(x == 0 && y == 0 && z == 0)) { //do not iterate over the cell itself
+								cells[calcInd(n)].iterate_partner(handler,
+										&cells[calcInd(tempN)]);
+							}
+						}
+					} else {
 						tempN[0] = n[0] + x;
 						tempN[1] = n[1] + y;
-						tempN[2] = n[2] + z;
+						tempN[2] = n[2];
 						if (!cells[calcInd(tempN)].halo //test if not a halo cell
-						&& !(x == 0 && y == 0 && z == 0)) { //do not iterate over the cell itself
+						&& !(x == 0 && y == 0)) { //do not iterate over the cell itself
 							cells[calcInd(n)].iterate_partner(handler,
 									&cells[calcInd(tempN)]);
 						}

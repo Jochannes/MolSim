@@ -16,7 +16,7 @@ ParticleContainer::ParticleContainer(
 		const std::list<Particle>& initialParticleList) :
 		particleList(
 				std::list<Particle>(initialParticleList.begin(),
-						initialParticleList.end())) {
+						initialParticleList.end())), halo(false) {
 }
 
 /**
@@ -46,10 +46,11 @@ void ParticleContainer::remove(Particle& p) {
 	std::list<Particle>::iterator it = particleList.begin();
 
 	while (it != particleList.end()) {
-		if(*it == p){
-			particleList.erase(it);
+		if (*it == p) {
+			it = particleList.erase(it);
+		} else {
+			it++;
 		}
-		it++;
 	}
 }
 
@@ -141,7 +142,8 @@ void ParticleContainer::iterate_pairs_half(PairHandler& handler) {
  * It does so by using the pairHandlerConverter handler,
  * which converts a PairHandler into a ParticleHandler.
  */
-void ParticleContainer::iterate_partner(PairHandler& handler, ParticleContainer *partner) {
+void ParticleContainer::iterate_partner(PairHandler& handler,
+		ParticleContainer *partner) {
 	std::list<Particle>::iterator it = particleList.begin();
 	PairHandlerConverter convHandler = PairHandlerConverter(&handler);
 
