@@ -31,14 +31,14 @@ ForceCalculator_LennardJones::~ForceCalculator_LennardJones() {
  * \f]
  */
 void ForceCalculator_LennardJones::compute(Particle& p1, Particle& p2) {
-	double recDistance = 1 / (p1.getX() - p2.getX()).L2Norm();
+	double invDistance = 1.0 / (p1.getX() - p2.getX()).L2Norm();
 
-	utils::Vector<double, 3> force = p2.getX() - p1.getX(); //directional vector
-	force = (pow(sigma * recDistance, 6) - 2 * pow(sigma * recDistance, 12))
-			* force; //bracket
-	force = 24 * epsilon * recDistance * recDistance * force; //prefactor
+	double factor = 24 * epsilon * invDistance * invDistance *
+				(pow(sigma * invDistance, 6) - 2 * pow(sigma * invDistance, 12));
+
+	utils::Vector<double, 3> force = factor * (p2.getX() - p1.getX());
 
 	p1.getF() = p1.getF() + force;
-	p2.getF() = p2.getF() - force;// according to Newton's third law: F_P1 = -F_P2
+	p2.getF() = p2.getF() - force;	// according to Newton's third law: F_P1 = -F_P2
 }
 
