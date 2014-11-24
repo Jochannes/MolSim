@@ -7,6 +7,9 @@
 
 #include "UTest_CuboidGenerator.h"
 
+#include <list>
+
+
 namespace unitTest {
 
 // Registration of the test suite
@@ -47,8 +50,10 @@ void UTest_CuboidGenerator::setUp() {
 	myfile.close();
 
 	//read in file using a CuboidGenerator
-	CuboidGenerator cubGen = CuboidGenerator(partContainer, filename);
+	std::list<Particle> partList;
+	CuboidGenerator cubGen = CuboidGenerator(partList, filename);
 	cubGen.input();
+	partContainer.add(partList);
 }
 
 /**

@@ -9,7 +9,6 @@
 #define PARTICLEINPUT_FILEREADER_H_
 
 #include "ParticleInput.h"
-#include "ParticleContainer.h"
 
 #include <string>
 
@@ -19,12 +18,12 @@
 class ParticleInput_FileReader: public ParticleInput {
 protected:
 	/** name of the file where the particles are read. */
-	std::string filename;
+	const char* filename;
 
 public:
-	ParticleInput_FileReader(ParticleContainer& param_container,
-			std::string param_filename) :
-			ParticleInput(param_container), filename(param_filename) {
+	ParticleInput_FileReader(std::list<Particle>& param_particleList,
+			const char* param_filename) :
+			ParticleInput(param_particleList), filename(param_filename) {
 	}
 
 	virtual ~ParticleInput_FileReader() {

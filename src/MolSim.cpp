@@ -1,12 +1,10 @@
 #include "ParticleContainer.h"
 #include "CellContainer.h"
-#include "ParticleInput_FileReader.h"
-#include "CuboidGenerator.h"
-#include "ParticleOutput_VTK.h"
+#include "XMLInput/XMLInput.h"
+#include "ParticleOutput.h"
 #include "handler/PositionCalculator.h"
 #include "handler/VelocityCalculator.h"
-#include "handler/ForceCalculator_Gravity.h"
-#include "handler/ForceCalculator_LennardJones.h"
+#include "handler/ForceCalculator.h"
 
 #include <cstring>
 #include <cstdlib>
@@ -62,9 +60,9 @@ void plotParticles(int iteration);
 double start_time = 0.0;	//!< Starting time of the simulation.
 double end_time = 1000; 	//!< End time of the simulation.
 double delta_t = 0.014; 	//!< Time step size of the simulation.
+int    output_freq = 10;	//!< Output frequency of the simulation.
 
 ParticleContainer* particles;		//!< Container for encapsulating the particle list.
-ParticleInput* particleIn = NULL; 	//!< Object for defining the input method to be used.
 ParticleOutput* particleOut = NULL; //!< Object for defining the output method to be used.
 PositionCalculator* xcalc = NULL; 	//!< Object for defining the coordinate calculator to be used in the simulation.
 VelocityCalculator* vcalc = NULL; 	//!< Object for defining the velocity calculator to be used in the simulation.
@@ -96,7 +94,7 @@ int main(int argc, char* argsv[]) {
 		calculateV(); // calculate new velocities
 
 		iteration++;
-		if (iteration % 10 == 0) {
+		if (iteration % output_freq == 0) {
 			plotParticles(iteration);
 		}
 		LOG4CXX_DEBUG(logger, "Iteration " << iteration << " finished.");
@@ -114,6 +112,8 @@ int main(int argc, char* argsv[]) {
  * and configures the program accordingly.
  */
 void parseParameters(int argc, char* argsv[]) {
+	bool input_given = false;	// determines whether a XML file was read.
+
 	// commandline must at least contain one parameter
 	if (argc < 2) {
 		LOG4CXX_FATAL(logger, "Invalid program call!");
@@ -134,163 +134,54 @@ void parseParameters(int argc, char* argsv[]) {
 			}
 
 			if (strcmp(option, "help") == 0) {
-				cout
-						<< "usage: MolSim [OPTIONS]\n"
-								"\n"
-								"Options:\n"
-								"  -delta_t VALUE	Sets the size of each time step in the simulation to VALUE.\n"
-								"			The default is 0.014.\n"
-								"  -end_time VALUE	Sets the time of the simulation's end to VALUE.\n"
-								"			The default is 1000.\n"
-								"  -cont VALUE	Specifies the container method for storage and force calculation.\n"
-								"			NAME can be \"cells\" for the linked-cell algorithm or \"simple\" for a simple particle container.\n"
-								"			The default is \"cells\".\n"
-								"  -force NAME		Specifies the method for force calculation between the particles.\n"
-								"			NAME can be \"grav\" for gravity or \"lj\" for Lennard-Jones potential.\n"
-								"			The default is \"lj\".\n"
-								"  -gencub FILENAME	Generates one or more cuboids of particles and adds brownian motion.\n"
-								"			All necessary parameters for generation are read from a file specified by FILENAME.\n"
-								"  -help			Prints this information.\n"
-								"  -read FILENAME	Directly reads a set of particles from a file specified by FILENAME\n"
-								"  -test [NAME]		Runs a unit test. Optionally the name of the test suite can be specified by NAME.\n"
-								"\n"
-								"Note:\n"
-								"  You must at least use -read or -gencub once, so the simulation has particles.\n"
-								"  These options can be used more than once."
-								"\n" << endl;
-				exit(0);
-			} else if (strcmp(option, "delta_t") == 0) {
-				if (value == NULL) {
-					LOG4CXX_FATAL(logger,
-							"Error! Missing value for option delta_t.");
-					exit(1);
-				}
-
-				delta_t = atof(value);
-				if (delta_t <= 0.0) {
-					LOG4CXX_FATAL(logger,
-							"Error! Invalid value for option delta_t.");
-					exit(1);
-				}
-
-				LOG4CXX_DEBUG(logger, "using parameter delta_t=" << delta_t);
+				cout << "usage: MolSim OPTIONS...\n"
+						"\n"
+						"Options:\n"
+						"  -help			Prints this information.\n"
+						"  -sim XMLFILE		Starts a simulation with parameters read from XMLFILE.\n"
+						"  -test [NAME]		Runs a unit test. Optionally the name of the test suite can be specified by NAME.\n"
+						"\n" << endl;
 			}
-
-			else if (strcmp(option, "end_time") == 0) {
-				if (value == NULL) {
-					LOG4CXX_FATAL(logger,
-							"Error! Missing value for option end_time.");
-					exit(1);
-				}
-
-				end_time = atof(value);
-				if (end_time <= 0.0) {
-					LOG4CXX_FATAL(logger,
-							"Error! Invalid value for option end_time.");
-					exit(1);
-				}
-
-				LOG4CXX_DEBUG(logger, "using parameter end_time=" << end_time);
-			}
-
-			else if (strcmp(option, "cont") == 0) {
-				if (value == NULL) {
-					LOG4CXX_FATAL(logger,
-							"Error! Missing value for option cont.");
-					exit(1);
-				}
-
-				if (strcmp(value, "cells") == 0) {
-					//TODO Set particles as CellContainer -> xml
-					LOG4CXX_DEBUG(logger, "using linked-cell algorithm.");
-				} else if (strcmp(value, "simple") == 0) {
-					//TODO Set particles as ParticleContainer -> xml
-					LOG4CXX_DEBUG(logger,
-							"using simple particle container.");
-				} else {
-					LOG4CXX_FATAL(logger,
-							"Error! Invalid value for option cont.");
-					exit(1);
-				}
-			}
-
-			else if (strcmp(option, "force") == 0) {
-				if (value == NULL) {
-					LOG4CXX_FATAL(logger,
-							"Error! Missing value for option force.");
-					exit(1);
-				}
-
-				if (strcmp(value, "grav") == 0) {
-					fcalc = new ForceCalculator_Gravity();
-					LOG4CXX_DEBUG(logger, "using gravity force calculator.");
-				} else if (strcmp(value, "lj") == 0) {
-					fcalc = new ForceCalculator_LennardJones();
-					LOG4CXX_DEBUG(logger,
-							"using Lennard-Jones force calculator.");
-				} else {
-					LOG4CXX_FATAL(logger,
-							"Error! Invalid value for option force.");
-					exit(1);
-				}
-			}
-
-			else if (strcmp(option, "gencub") == 0) {
-				if (value == NULL) {
-					LOG4CXX_FATAL(logger,
-							"Error! Missing value for option gencube.");
-					exit(1);
-				}
-
-				LOG4CXX_DEBUG(logger,
-						"generating cuboid from file " << value << ".");
-				CuboidGenerator in(*particles, value);
-				in.input();
-			}
-
-			else if (strcmp(option, "read") == 0) {
-				if (value == NULL) {
-					LOG4CXX_FATAL(logger,
-							"Error! Missing value for option read.");
-					exit(1);
-				}
-
-				LOG4CXX_DEBUG(logger,
-						"reading particles from file " << value << ".");
-				ParticleInput_FileReader in(*particles, value);
-				in.input();
-			}
-
 			else if (strcmp(option, "test") == 0) {
 				LOG4CXX_DEBUG(logger, "starting unit test.");
 
 				int ret_val = runUnitTest(value);
 				exit(ret_val);
 			}
+			else if (strcmp(option, "sim") == 0) {
+				if(input_given) {
+					LOG4CXX_FATAL(logger, "Error! More than one input file specified.");
+					exit(1);
+				}
+
+				LOG4CXX_DEBUG(logger, "reading parameters for simulation.");
+
+				if(value == NULL) {
+					LOG4CXX_FATAL(logger, "Error! No input file specified.");
+					exit(1);
+				}
+
+				// read XML file. set global variables accordingly.
+				XMLInput input;
+				input.ReadFile(value);
+
+				input_given = true;
+			}
 		} else {
 			LOG4CXX_INFO(logger, "Ignored parameter: " << argsv[i]);
 		}
-	}	// end for
+	} // end for
 
-	// check if there are particles
+	if(!input_given) {
+		// no simulation parameters specified, only tests or information.
+		exit(0);
+	}
+
+	// check if there are any particles
 	if (particles->empty()) {
 		LOG4CXX_FATAL(logger, "Error! No particles given.");
 		exit(1);
 	}
-
-	// set default values for particle handlers if no value was specified.
-	if (fcalc == NULL) {
-		fcalc = new ForceCalculator_LennardJones();
-		LOG4CXX_DEBUG(logger, "using Lennard-Jones force calculator.");
-	}
-
-	if (particleOut == NULL) {
-		particleOut = new ParticleOutput_VTK(*particles, "MD_vtk");
-		LOG4CXX_DEBUG(logger, "using VTKWriter for output.");
-	}
-
-	xcalc = new PositionCalculator();
-	vcalc = new VelocityCalculator();
 }
 
 /**

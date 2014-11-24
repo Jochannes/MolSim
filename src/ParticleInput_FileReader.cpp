@@ -10,9 +10,6 @@
 
 void ParticleInput_FileReader::input() {
 	FileReader filereader;
-	std::list<Particle> readParticles;
 
-	filereader.readFile(readParticles, filename.c_str());
-
-	container.add(readParticles);
+	filereader.readFile(particleList, filename);
 }

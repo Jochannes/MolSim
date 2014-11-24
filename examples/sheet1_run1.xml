@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="../src/XMLInput/simulation.xsd">
+
+
+  <parameter>
+    <start-time>0</start-time>
+    <end-time>1000</end-time>
+    <delta-t>0.014</delta-t>
+    
+    <force-calculator>
+      <type>gravity</type>
+    </force-calculator>
+    
+    <simulation-mode>
+      <type>normal</type>
+    </simulation-mode>
+  </parameter>
+  
+  
+  <input>
+    <particle_file>examples/eingabe-sonne.txt</particle_file>
+  </input>
+  
+  
+  <output>
+    <base_filename>MD_vtk</base_filename>
+    <output_freq>10</output_freq>
+  </output>
+  
+  
+</simulation>
+

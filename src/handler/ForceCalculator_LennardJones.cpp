@@ -10,6 +10,12 @@
 
 #include <cmath>
 
+
+// definition of static members:
+double ForceCalculator_LennardJones::sigma = 1.0;
+double ForceCalculator_LennardJones::epsilon = 5.0;
+
+
 ForceCalculator_LennardJones::ForceCalculator_LennardJones() {
 }
 

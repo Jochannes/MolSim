@@ -6,7 +6,11 @@
  */
 
 #include "VelocityCalculator.h"
-#include "global.h"
+
+
+// global variable for calculation. See "src/global.h".
+extern double delta_t;
+
 
 VelocityCalculator::VelocityCalculator() {
 }

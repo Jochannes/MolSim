@@ -9,7 +9,6 @@
 #define CUBOIDGENERATOR_H_
 
 #include "ParticleInput.h"
-#include "ParticleContainer.h"
 
 /**
  * \brief Particle generator for a 3D rectangular grid of particles.
@@ -28,9 +27,9 @@ public:
 	 * @param param_particles Targeted ParticleContainer in which the particles will be saved.
 	 * @param param_filename Input file from which the cuboid definitions are taken.
 	 */
-	CuboidGenerator(ParticleContainer& param_particles,
+	CuboidGenerator(std::list<Particle>& param_particleList,
 			const char* param_filename) :
-			ParticleInput(param_particles), filename(param_filename) {
+			ParticleInput(param_particleList), filename(param_filename) {
 	}
 
 	virtual ~CuboidGenerator() {

@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+
+  <xs:simpleType name="force-calculator-type_t">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="gravity"/>
+      <xs:enumeration value="lennard-jones"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="simulation-mode-type_t">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="normal"/>
+      <xs:enumeration value="linked-cell"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  
+  <xs:complexType name="force-calculator_t">
+    <xs:sequence>
+      <xs:element name="type" type="force-calculator-type_t"/>
+      <xs:element name="epsilon" type="xs:double" minOccurs="0"/>
+      <xs:element name="sigma" type="xs:double" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="simulation-mode_t">
+    <xs:sequence>
+      <xs:element name="type" type="simulation-mode-type_t"/>
+      <xs:element name="cutoff_radius" type="xs:double" minOccurs="0"/>
+      <xs:element name="domain_size_x" type="xs:double" minOccurs="0"/>
+      <xs:element name="domain_size_y" type="xs:double" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  
+  <xs:complexType name="simulation_parameters_t">
+    <xs:sequence>
+      <xs:element name="start-time" type="xs:double"/>
+      <xs:element name="end-time" type="xs:double"/>
+      <xs:element name="delta-t" type="xs:double"/>
+      <xs:element name="force-calculator" type="force-calculator_t"/>
+      <xs:element name="simulation-mode" type="simulation-mode_t"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="simulation_input_t">
+    <xs:sequence>
+      <xs:element name="particle_file" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="cuboid_file" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="sphere_file" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="simulation_output_t">
+    <xs:sequence>
+      <xs:element name="base_filename" type="xs:string"/>
+      <xs:element name="output_freq" type="xs:unsignedInt"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  
+  <xs:complexType name="simulation_t">
+    <xs:sequence>
+      <xs:element name="parameter" type="simulation_parameters_t"/>
+      <xs:element name="input" type="simulation_input_t"/>
+      <xs:element name="output" type="simulation_output_t"/>
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <xs:element name="simulation" type="simulation_t"/>
+
+
+</xs:schema>

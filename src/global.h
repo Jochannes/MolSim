@@ -26,8 +26,17 @@
 #ifndef GLOBAL_H_
 #define GLOBAL_H_
 
+
 extern double start_time;
 extern double end_time;
 extern double delta_t;
+extern int    output_freq;
+
+extern ParticleContainer* particles;
+extern ParticleOutput* particleOut;
+extern PositionCalculator* xcalc;
+extern VelocityCalculator* vcalc;
+extern ForceCalculator* fcalc;
+
 
 #endif /* GLOBAL_H_ */

@@ -8,7 +8,10 @@
 #ifndef PARTICLEINPUT_H_
 #define PARTICLEINPUT_H_
 
-#include "ParticleContainer.h"
+
+#include "Particle.h"
+
+#include <list>
 
 /**
  * \brief Abstract class for defining an interface for the input of particle containers.
@@ -16,11 +19,11 @@
 class ParticleInput {
 protected:
 	/* particle container to which the particles are read. */
-	ParticleContainer& container;
+	std::list<Particle>& particleList;
 
 public:
-	ParticleInput(ParticleContainer& param_container) :
-			container(param_container) {
+	ParticleInput(std::list<Particle>& param_particleList) :
+			particleList(param_particleList) {
 	}
 
 	virtual ~ParticleInput() {
