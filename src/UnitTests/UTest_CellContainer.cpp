@@ -50,7 +50,7 @@ void UTest_CellContainer::setUp() {
 		}
 		initialParticleList.push_back(p);
 	}
-	cellContainer = CellContainer(domainSize, cutoff, initialParticleList);
+	cellContainer = CellContainer(domainSize, cutoff, &initialParticleList);
 
 
 	//Add particles in halo region
@@ -128,7 +128,7 @@ void UTest_CellContainer::testRemoveSize(){
 		x[j] += floor(numParticles/2) * domainSize[j] / numParticles;
 	}
 	p = Particle(x, v, m);
-	cellContainer.cells[cellContainer.calcCell(x)].add(p);
+	cellContainer.add(p);
 	CPPUNIT_ASSERT(numParticles == cellContainer.size());
 
 	//Remove particle

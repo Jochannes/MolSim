@@ -10,7 +10,6 @@
 
 #include <log4cxx/logger.h>
 #include <stdlib.h>
-#include <fstream>
 using namespace log4cxx;
 
 LoggerPtr CellLogger(Logger::getLogger("MolSim.CellContainer"));
@@ -110,7 +109,6 @@ void CellContainer::setHaloBoundary() {
 				cellNr++;
 			}
 		}
-		ifstream input_file("examples/eingabe-cuboid1.txt");
 	}
 	if (haloSize != cellNr) {
 		LOG4CXX_FATAL(CellLogger,
@@ -137,8 +135,6 @@ void CellContainer::setHaloBoundary() {
 						+ (cellCount[1] - 3) * (cellCount[2] - 3) + 1);
 		boundInds = new int[boundSize];
 
-		cout << "cellCnt: [" << cellCount[0] << ", " << cellCount[1] << ", "
-				<< cellCount[2] << "]\n";
 		//iterate over top and bottom
 		for (int side = 0; side < 2; side++) { //iterate over both sides
 			for (int y = 1; y < cellCount[1] - 1; y++) { //iterate over area
@@ -219,48 +215,13 @@ void CellContainer::setHaloBoundary() {
 }
 
 /**
- * \brief Constructor for setting up an empty master container.
- * @param domainSize Size of the domain in 3 dimensions.
- * @param cutoff Cutoff radius of pairHandler interactions.
- */
-CellContainer::CellContainer(const Vector<double, 3> domainSize,
-		const double cutoff) :
-		domainSize(domainSize), cutoff(cutoff) {
-
-	//Calculate cell count in each dimension (including halo cells)
-	cellCount[0] = domainSize[0] / cutoff + 3;
-	cellCount[1] = domainSize[1] / cutoff + 3;
-	cellCount[2] = domainSize[2] / cutoff + 3;
-	if (domainSize[2] == 0) {
-		dim3 = false;
-		cellCount[2] = 0;
-	} else {
-		dim3 = true;
-		cellCount[2] = domainSize[2] / cutoff + 3;
-	}
-
-	//initialize cell list
-	int N;
-	if (dim3) {
-		N = cellCount[0] * cellCount[1] * cellCount[2];
-	} else {
-		N = cellCount[0] * cellCount[1];
-	}
-	cells = new SimpleContainer[N];
-	cellTotal = N;
-
-	//set halo and boundary cells
-	setHaloBoundary();
-}
-
-/**
  * \brief Constructor for setting up the master container with an initial particle list.
  * @param initialParticleList ParticleList which is copied into the CellContainer.
  * @param domainSize Size of the domain in 3 dimensions.
  * @param cutoff Cutoff radius of pairHandler interactions.
  */
 CellContainer::CellContainer(const Vector<double, 3> domainSize,
-		const double cutoff, list<Particle>& initialParticleList) :
+		const double cutoff, list<Particle>* initialParticleList) :
 		domainSize(domainSize), cutoff(cutoff) {
 
 	LOG4CXX_DEBUG(CellLogger,
@@ -287,11 +248,33 @@ CellContainer::CellContainer(const Vector<double, 3> domainSize,
 	cells = new SimpleContainer[N];
 	cellTotal = N;
 
+	//Set Container coordinates
+	for(int i = 0; i < cellTotal; i++){
+		Vector<int, 3> n = calc3Ind(i);
+		Vector<double, 3> x;
+		x[0] = (n[0] - 1) * cutoff;
+		x[1] = (n[1] - 1) * cutoff;
+		x[2] = (n[2] - 1 * dim3) * cutoff;
+		cells[i].contStart = x;
+
+		x[0] += cutoff;
+		x[1] += cutoff;
+		x[2] += cutoff;
+		cells[i].contEnd = x;
+	}
+
 	//Set halo and boundary cells
 	setHaloBoundary();
 
+	//Set default boundary conditions
+	for (int i = 0; i < 6; i++) {
+		boundConds[i] = new Outflow(i);
+	}
+
 	//copy particles into the right cells
-	add(initialParticleList);
+	if (initialParticleList != NULL) {
+		add(*initialParticleList);
+	}
 }
 
 /**
@@ -376,25 +359,6 @@ int CellContainer::calcCell(Vector<double, 3> x) {
 	n[0] = floor(inds[0]) + 1;
 	n[1] = floor(inds[1]) + 1;
 	n[2] = floor(inds[2]) + 1 * dim3;
-
-	if (dim3) {
-		if ((n[0] < 0 || n[0] >= cellCount[0])
-				|| (n[1] < 0 || n[1] >= cellCount[1])
-				|| (n[2] < 0 || n[2] >= cellCount[2])) {
-			LOG4CXX_FATAL(CellLogger,
-					"Error calculating cell index: Particle out of domain (x = " << x.toString() << " out of D = " << domainSize.toString() << ")");
-			exit(1);
-		}
-		return n[0] + cellCount[0] * n[1] + cellCount[0] * cellCount[1] * n[2];
-	} else {
-		if ((n[0] < 0 || n[0] >= cellCount[0])
-				|| (n[1] < 0 || n[1] >= cellCount[1])) {
-			LOG4CXX_FATAL(CellLogger,
-					"Error calculating cell index: Particle out of domain (x = " << x.toString() << " out of D = " << domainSize.toString() << ")");
-			//exit(1);
-		}
-		return n[0] + cellCount[0] * n[1];
-	}
 
 	//calculate cell index
 	return calcInd(n);
@@ -503,6 +467,68 @@ void CellContainer::update_cells() {
 	while (it != updater.toRemove.end()) {
 		remove((*it).first, (*it).second);
 		it++;
+	}
+
+	//impose boundary conditions
+
+}
+
+/**
+ * \brief Function for imposing boundary conditions.
+ *
+ * This method should always be called after
+ * changing the positions of the particles.
+ *
+ * The boundary conditions for particles at the corners
+ * are imposed twice/three times (as they should be);
+ */
+void CellContainer::impose_boundConds() {
+
+	//impose boundary conditions
+	Vector<int, 3> n;
+	for (int i = 0; i < haloSize; i++) {
+		n = calc3Ind(haloInds[i]);
+		//Find the right boundary
+		for (int dim = 0; dim < 2 + dim3; dim++) {
+			if (n[dim] == 0) {
+
+				//check if the condition acts on halo cells
+				if (!boundConds[2 * dim]->boundCells) {
+					boundConds[2 * dim]->impose(&cells[haloInds[i]]);
+				}
+			} else if (n[dim] == cellCount[dim] - 1) {
+
+				//check if the condition acts on halo cells
+				if (!boundConds[2 * dim + 1]->boundCells) {
+					boundConds[2 * dim + 1]->impose(&cells[haloInds[i]]);
+				}
+			}
+		}
+	}
+	for (int i = 0; i < boundSize; i++) {
+		n = calc3Ind(boundInds[i]);
+		//Find the right boundary
+		for (int dim = 0; dim < 2 + dim3; dim++) {
+			if (n[dim] == 1) {
+
+				//check if the condition acts on boundary cells
+				if (boundConds[2 * dim]->boundCells) {
+					boundConds[2 * dim]->impose(&cells[boundInds[i]]);
+				}
+
+				//found!
+				break;
+			} else if (n[dim] == cellCount[dim] - 2) {
+
+				//check if the condition acts on boundary cells
+				if (boundConds[2 * dim + 1]->boundCells) {
+					boundConds[2 * dim + 1]->impose(&cells[boundInds[i]]);
+				}
+
+				//found!
+				break;
+			}
+		}
 	}
 }
 

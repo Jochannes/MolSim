@@ -48,6 +48,8 @@ public:
 	}
 
 	bool halo; //!< Sets this SimpleContainer as halo region (for the linked-cell algorithm).
+	utils::Vector<double, 3> contStart; //!< Coordinates at which this container starts (lower left front-side corner).
+	utils::Vector<double, 3> contEnd; //!< Coordinates at which this container ends (upper right back-side corner).
 
 	bool empty() {
 		return particleList.empty();

@@ -14,6 +14,8 @@
 #include "ParticleHandler.h"
 #include "PairHandler.h"
 #include "handler/ForcePrepareHandler.h"
+#include "BoundaryCondition/BoundaryCondition.h"
+#include "BoundaryCondition/Outflow.h"
 
 #include <list>
 
@@ -47,9 +49,22 @@ private:
 	void setHaloBoundary();
 
 public:
-	CellContainer(const Vector<double, 3> domainSize, const double cutoff);
+	/**
+	 * \brief Array with one boundary condition per domain side.
+	 *
+	 * The standard boundary condition is "Outflow".
+	 * The domain sides are defined as following:
+	 * 0: x=0
+	 * 1: x=max
+	 * 2: y=0
+	 * 3: y=max
+	 * 4: z=0
+	 * 5: z=max
+	 */
+	BoundaryCondition *boundConds[6];
+
 	CellContainer(const Vector<double, 3> domainSize, const double cutoff,
-			list<Particle>& initialParticleList);
+			list<Particle>* initialParticleList = NULL);
 
 	Vector<int, 3> calc3Ind(int n);
 	int calcInd(Vector<int, 3> n);
@@ -68,6 +83,7 @@ public:
 	void prepare_forces();
 
 	void update_cells();
+	void impose_boundConds();
 
 	void iterate_halo(ParticleHandler& handler);
 	void iterate_boundary(ParticleHandler& handler);

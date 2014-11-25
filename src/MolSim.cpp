@@ -226,6 +226,7 @@ void calculateX() {
 	particles->iterate_all(*xcalc);
 	if (typeid(*particles) == typeid(CellContainer)){
 		((CellContainer*)particles)->update_cells();
+		((CellContainer*)particles)->impose_boundConds();
 	}
 }
 

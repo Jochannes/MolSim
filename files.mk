@@ -13,6 +13,7 @@ src/handler/ForceCalculator_Gravity.cpp\
 src/handler/ForcePrepareHandler.cpp\
 src/handler/ForceCalculator_LennardJones.cpp\
 src/handler/plotHandler_VTK.cpp\
+src/handler/ReflectionHandler.cpp\
 src/ParticleInput_FileReader.cpp\
 src/UnitTests/countParticles.cpp\
 src/UnitTests/UTest_CuboidGenerator.cpp\
@@ -26,5 +27,7 @@ src/XMLInput/XMLInput.cpp\
 src/XMLInput/simulation.cpp\
 src/MolSim.cpp\
 src/ParticleOutput_VTK.cpp\
+src/BoundaryCondition/Reflection.cpp\
+src/BoundaryCondition/Outflow.cpp\
 src/ParticleContainer/SimpleContainer.cpp\
 src/ParticleContainer/CellContainer.cpp\
