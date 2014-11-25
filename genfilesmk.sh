@@ -6,7 +6,7 @@
 #
 # Best way: Run automatically in Eclipse via Project->Properties->Builders->New->Program
 
-#echo "starting generation of files.mk... "
+echo "starting generation of files.mk... "
 
 
 find src -name *.cpp -printf '%p\\\n' > files.mk.tmp
@@ -15,6 +15,6 @@ cat files.mk.tmp >> files.mk
 rm files.mk.tmp
 
 
-#echo "finished."
+echo "finished."
 
 

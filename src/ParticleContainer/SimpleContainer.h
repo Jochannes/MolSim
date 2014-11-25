@@ -1,23 +1,24 @@
 /*
- * ParticleContainer.h
+ * SimpleContainer.h
  *
- *  Created on: 30.10.2014
- *      Author: Jochannes, DanielCAlbert
+ *  Created on: Nov 25, 2014
+ *      Author: johannes
  */
 
-#ifndef PARTICLECONTAINER_H_
-#define PARTICLECONTAINER_H_
+#ifndef SIMPLECONTAINER_H_
+#define SIMPLECONTAINER_H_
 
 #include "Particle.h"
 #include "ParticleHandler.h"
 #include "PairHandler.h"
 #include "handler/ForcePrepareHandler.h"
+#include "ParticleContainer/ParticleContainer.h"
 
 #include <list>
 
 //Forward declaration of unit test class
 namespace unitTest {
-	class UTest_ParticleContainer;
+	class UTest_SimpleContainer;
 }
 
 /**
@@ -30,29 +31,29 @@ namespace unitTest {
  * all particles and particle pairs and processing them using
  * a certain function.
  */
-class ParticleContainer {
+class SimpleContainer: public ParticleContainer {
 
-	friend class unitTest::UTest_ParticleContainer;
+	friend class unitTest::UTest_SimpleContainer;
 
 private:
 	std::list<Particle> particleList;
 
 public:
-	ParticleContainer() :
+	SimpleContainer() :
 			halo(false) {
 	}
-	ParticleContainer(const std::list<Particle>& initialParticleList);
+	SimpleContainer(const std::list<Particle>& initialParticleList);
 
-	~ParticleContainer() {
+	~SimpleContainer() {
 	}
 
-	bool halo; //!< Sets this ParticleContainer as halo region (for the linked-cell algorithm).
+	bool halo; //!< Sets this SimpleContainer as halo region (for the linked-cell algorithm).
 
-	bool empty() const {
+	bool empty() {
 		return particleList.empty();
 	}
 
-	int size() const {
+	int size() {
 		return particleList.size();
 	}
 
@@ -70,4 +71,4 @@ public:
 	void iterate_partner(PairHandler& handler, ParticleContainer *partner);
 };
 
-#endif /* PARTICLECONTAINER_H_ */
+#endif /* SIMPLECONTAINER_H_ */

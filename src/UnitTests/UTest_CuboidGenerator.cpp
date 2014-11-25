@@ -53,7 +53,7 @@ void UTest_CuboidGenerator::setUp() {
 	std::list<Particle> partList;
 	CuboidGenerator cubGen = CuboidGenerator(partList, filename);
 	cubGen.input();
-	partContainer.add(partList);
+	partContainer = SimpleContainer(partList);
 }
 
 /**

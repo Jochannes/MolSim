@@ -5,7 +5,7 @@
  *      Author: johannes
  */
 
-#include "UTest_ParticleContainer.h"
+#include "UTest_SimpleContainer.h"
 
 #include <cstring>
 #include <cstdlib>
@@ -19,14 +19,14 @@
 namespace unitTest {
 
 // Registration of the test suite
-CPPUNIT_TEST_SUITE_REGISTRATION(UTest_ParticleContainer);
+CPPUNIT_TEST_SUITE_REGISTRATION(UTest_SimpleContainer);
 
 /**
  * \brief Set up a particle container.
  *
  * The particle container is set up with UTest_ParticleContainer::numParticles particles.
  */
-void UTest_ParticleContainer::setUp() {
+void UTest_SimpleContainer::setUp() {
 	double x[] = { 0, 0, 0 };
 	double v[] = { 1, 1, 1 };
 	double m = 1;
@@ -35,26 +35,26 @@ void UTest_ParticleContainer::setUp() {
 		Particle p(x, v, m);
 		initialParticleList.push_back(p);
 	}
-	partContainer = ParticleContainer(initialParticleList);
+	partContainer = SimpleContainer(initialParticleList);
 }
 
 /**
  * \brief Free the used resources.
  */
-void UTest_ParticleContainer::tearDown() {
+void UTest_SimpleContainer::tearDown() {
 }
 
 /**
  * \brief Method for testing if ParticleContainer::size returns the correct number of particles.
  */
-void UTest_ParticleContainer::testSize() {
+void UTest_SimpleContainer::testSize() {
 	CPPUNIT_ASSERT(numParticles == partContainer.size());
 }
 
 /**
  * \brief Method for testing if ParticleContainer::add adds the correct number of particles.
  */
-void UTest_ParticleContainer::testAddSize() {
+void UTest_SimpleContainer::testAddSize() {
 
 	//set up a particle
 	double x[] = { 0, 0, 0 };
@@ -78,7 +78,7 @@ void UTest_ParticleContainer::testAddSize() {
 /**
  * \brief Method for testing if ParticleContainer::iterate_all reaches all particles.
  */
-void UTest_ParticleContainer::testIterateAll() {
+void UTest_SimpleContainer::testIterateAll() {
 	marker_handler marker = marker_handler();
 	partContainer.iterate_all(marker);
 	std::list<Particle>::iterator it = partContainer.particleList.begin();
@@ -91,7 +91,7 @@ void UTest_ParticleContainer::testIterateAll() {
 /**
  * \brief Method for testing if ParticleContainer::iterate_all iterates over the correct number of particles.
  */
-void UTest_ParticleContainer::testIterateCount() {
+void UTest_SimpleContainer::testIterateCount() {
 	countParticles cntPart = countParticles();
 	partContainer.iterate_all(cntPart);
 	CPPUNIT_ASSERT(cntPart.cnt == partContainer.size());
@@ -100,7 +100,7 @@ void UTest_ParticleContainer::testIterateCount() {
 /**
  * \brief Method for testing if ParticleContainer::iterate_pairs iterates over the correct number of particle pairs.
  */
-void UTest_ParticleContainer::testIteratePairCount() {
+void UTest_SimpleContainer::testIteratePairCount() {
 	countPairs cntPairs = countPairs();
 	partContainer.iterate_pairs(cntPairs);
 	CPPUNIT_ASSERT(
@@ -110,7 +110,7 @@ void UTest_ParticleContainer::testIteratePairCount() {
 /**
  * \brief Method for testing if ParticleContainer::iterate_pairs_half iterates over the correct number of particle pairs.
  */
-void UTest_ParticleContainer::testIteratePairHalfCount() {
+void UTest_SimpleContainer::testIteratePairHalfCount() {
 	countPairs cntPairs = countPairs();
 	partContainer.iterate_pairs_half(cntPairs);
 	CPPUNIT_ASSERT(

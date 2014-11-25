@@ -1,5 +1,5 @@
-#include "ParticleContainer.h"
-#include "CellContainer.h"
+#include "ParticleContainer/ParticleContainer.h"
+#include "ParticleContainer/CellContainer.h"
 #include "XMLInput/XMLInput.h"
 #include "ParticleOutput.h"
 #include "handler/PositionCalculator.h"
@@ -12,11 +12,11 @@
 #include <log4cxx/logger.h>
 #include <log4cxx/propertyconfigurator.h>
 #include <log4cxx/stream.h>
+#include <typeinfo>
 
 //UnitTests
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <cppunit/ui/text/TestRunner.h>
-#include "UnitTests/UTest_ParticleContainer.h"
 
 using namespace std;
 using namespace log4cxx;
@@ -196,8 +196,6 @@ int runUnitTest(const char* test) {
 
 	//retrieve test suite created by the TestFactoryRegistry
 	runner.addTest(registry.makeTest());
-
-	// TODO: Redirect output to log4cxx?
 
 	//check if a single test or test suite has been chosen
 	if (test != NULL) {

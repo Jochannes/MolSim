@@ -77,7 +77,7 @@ void VTKWriter::writeFile(const std::string& filename, int iteration) {
 
 void VTKWriter::plotParticle(Particle& p) {
 	if (vtkFile->UnstructuredGrid().present()) {
-		LOG4CXX_DEBUG(logger, "UnstructuredGrid is present");
+		LOG4CXX_TRACE(logger, "UnstructuredGrid is present");
 	} else {
 		LOG4CXX_ERROR(logger, "ERROR: No UnstructuredGrid present");
 	}

@@ -9,7 +9,7 @@
 #define CELLUPDATER_H_
 
 #include "ParticleHandler.h"
-#include "CellContainer.h"
+#include "ParticleContainer/CellContainer.h"
 
 /**
  * \brief Handler for updating the ParticleContainer for all particles.
@@ -20,6 +20,14 @@ private:
 
 public:
 	int oldContainerIndex; //!< Index of the old container storing the particle.
+
+	/**
+	 * \brief List of all outdated particles to remove.
+	 *
+	 * The first value contains the particle and the second
+	 * the container from which to remove it from.
+	 */
+	list<pair<Particle, int> > toRemove;
 
 	CellUpdater(CellContainer* cellCont) :
 			cellCont(cellCont) {

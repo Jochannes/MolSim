@@ -14,7 +14,6 @@
 #include <cppunit/TestCaller.h>
 #include <cppunit/TestRunner.h>
 #include <cppunit/extensions/HelperMacros.h>
-#include "ParticleContainer.h"
 #include "handler/ForceCalculator_LennardJones.h"
 
 namespace unitTest {

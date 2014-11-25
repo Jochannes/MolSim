@@ -29,7 +29,7 @@
   
   
   <output>
-    <base_filename>MD_vtk</base_filename>
+    <base_filename>Output/MD_vtk</base_filename>
     <output_freq>10</output_freq>
   </output>
   

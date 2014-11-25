@@ -9,6 +9,8 @@
 #include "handler/CellUpdater.h"
 
 #include <log4cxx/logger.h>
+#include <stdlib.h>
+#include <fstream>
 using namespace log4cxx;
 
 LoggerPtr CellLogger(Logger::getLogger("MolSim.CellContainer"));
@@ -108,12 +110,26 @@ void CellContainer::setHaloBoundary() {
 				cellNr++;
 			}
 		}
+		ifstream input_file("examples/eingabe-cuboid1.txt");
+	}
+	if (haloSize != cellNr) {
+		LOG4CXX_FATAL(CellLogger,
+				"ERROR: Something went wrong creating the halo cells. Number of cells not matching expectation (Expected: " << haloSize << ", actual: " << cellNr);
+		exit(1);
 	}
 
 	//set boundary cells
 	//iterate over inner cube surface
 	cellNr = 0;
 	if (dim3) {
+
+		//check if domain size makes sense for creating boundary cells
+		if (cellCount[2] == 3) {
+			LOG4CXX_FATAL(CellLogger,
+					"ERROR: Domain too small in z-direction (<= cutoff radius). All cells would be boundary cells.");
+			exit(1);
+		}
+
 		//calculate overall size of the boundInds array
 		boundSize = 2
 				* ((cellCount[0] - 3) * (cellCount[1] - 3)
@@ -121,6 +137,8 @@ void CellContainer::setHaloBoundary() {
 						+ (cellCount[1] - 3) * (cellCount[2] - 3) + 1);
 		boundInds = new int[boundSize];
 
+		cout << "cellCnt: [" << cellCount[0] << ", " << cellCount[1] << ", "
+				<< cellCount[2] << "]\n";
 		//iterate over top and bottom
 		for (int side = 0; side < 2; side++) { //iterate over both sides
 			for (int y = 1; y < cellCount[1] - 1; y++) { //iterate over area
@@ -193,6 +211,11 @@ void CellContainer::setHaloBoundary() {
 			}
 		}
 	}
+	if (boundSize != cellNr) {
+		LOG4CXX_FATAL(CellLogger,
+				"ERROR: Something went wrong creating the boundary cells. Number of cells not matching expectation (Expected: " << boundSize << ", actual: " << cellNr);
+		exit(1);
+	}
 }
 
 /**
@@ -217,8 +240,13 @@ CellContainer::CellContainer(const Vector<double, 3> domainSize,
 	}
 
 	//initialize cell list
-	int N = cellCount[0] * cellCount[1] * cellCount[2];
-	cells = new ParticleContainer[N];
+	int N;
+	if (dim3) {
+		N = cellCount[0] * cellCount[1] * cellCount[2];
+	} else {
+		N = cellCount[0] * cellCount[1];
+	}
+	cells = new SimpleContainer[N];
 	cellTotal = N;
 
 	//set halo and boundary cells
@@ -256,7 +284,7 @@ CellContainer::CellContainer(const Vector<double, 3> domainSize,
 	} else {
 		N = cellCount[0] * cellCount[1];
 	}
-	cells = new ParticleContainer[N];
+	cells = new SimpleContainer[N];
 	cellTotal = N;
 
 	//Set halo and boundary cells
@@ -304,7 +332,24 @@ Vector<int, 3> CellContainer::calc3Ind(int n) {
  * \f$ N_i \f$ being the cellCount in the respective dimension.
  */
 int CellContainer::calcInd(Vector<int, 3> n) {
-	return n[0] + cellCount[0] * n[1] + cellCount[0] * cellCount[1] * n[2];
+	if (dim3) {
+		if ((n[0] < 0 || n[0] >= cellCount[0])
+				|| (n[1] < 0 || n[1] >= cellCount[1])
+				|| (n[2] < 0 || n[2] >= cellCount[2])) {
+			LOG4CXX_FATAL(CellLogger,
+					"Error calculating linearized cell index: Index out of domain (n = " << n.toString() << " out of N = " << cellCount.toString() << ")");
+			exit(1);
+		}
+		return n[0] + cellCount[0] * n[1] + cellCount[0] * cellCount[1] * n[2];
+	} else {
+		if ((n[0] < 0 || n[0] >= cellCount[0])
+				|| (n[1] < 0 || n[1] >= cellCount[1])) {
+			LOG4CXX_FATAL(CellLogger,
+					"Error calculating linearized cell index: Index out of domain (n = " << n.toString() << " out of N = " << cellCount.toString() << ")");
+			exit(1);
+		}
+		return n[0] + cellCount[0] * n[1];
+	}
 }
 
 /**
@@ -325,8 +370,8 @@ int CellContainer::calcInd(Vector<int, 3> n) {
  */
 int CellContainer::calcCell(Vector<double, 3> x) {
 
-	//calculate index in each dimension
-	Vector<double, 3> inds = x * (1 / CellContainer::cutoff);
+//calculate index in each dimension
+	Vector<double, 3> inds = x * (1 / cutoff);
 	Vector<int, 3> n;
 	n[0] = floor(inds[0]) + 1;
 	n[1] = floor(inds[1]) + 1;
@@ -337,12 +382,18 @@ int CellContainer::calcCell(Vector<double, 3> x) {
 				|| (n[1] < 0 || n[1] >= cellCount[1])
 				|| (n[2] < 0 || n[2] >= cellCount[2])) {
 			LOG4CXX_FATAL(CellLogger,
-					"Error calculating cell index: Particle out of domain (x = " << x.toString() << ")");
+					"Error calculating cell index: Particle out of domain (x = " << x.toString() << " out of D = " << domainSize.toString() << ")");
+			exit(1);
 		}
-	} else if ((n[0] < 0 || n[0] >= cellCount[0])
-			|| (n[1] < 0 || n[1] >= cellCount[1])) {
-		LOG4CXX_FATAL(CellLogger,
-				"Error calculating cell index: Particle out of domain (x = " << x.toString() << ")");
+		return n[0] + cellCount[0] * n[1] + cellCount[0] * cellCount[1] * n[2];
+	} else {
+		if ((n[0] < 0 || n[0] >= cellCount[0])
+				|| (n[1] < 0 || n[1] >= cellCount[1])) {
+			LOG4CXX_FATAL(CellLogger,
+					"Error calculating cell index: Particle out of domain (x = " << x.toString() << " out of D = " << domainSize.toString() << ")");
+			//exit(1);
+		}
+		return n[0] + cellCount[0] * n[1];
 	}
 
 	//calculate cell index
@@ -425,7 +476,7 @@ void CellContainer::remove(Particle& p, int contInd) {
  * \brief Removes all particles from the halo cells.
  */
 void CellContainer::remove_halo() {
-	//iterate over all halo cells
+//iterate over all halo cells
 	for (int i = 0; i < haloSize; i++) {
 		cells[haloInds[i]].remove_all();
 	}
@@ -440,12 +491,18 @@ void CellContainer::remove_halo() {
 void CellContainer::update_cells() {
 	CellUpdater updater = CellUpdater(this);
 
-//iterate over all cells
+	//iterate over all cells
 	for (int i = 0; i < cellTotal; i++) {
 		if (!cells[i].halo) { //test if this cell is not in the halo region
 			updater.oldContainerIndex = i;
 			cells[i].iterate_all(updater);
 		}
+	}
+
+	std::list<pair<Particle, int> >::iterator it = updater.toRemove.begin();
+	while (it != updater.toRemove.end()) {
+		remove((*it).first, (*it).second);
+		it++;
 	}
 }
 
@@ -457,7 +514,7 @@ void CellContainer::update_cells() {
  * and processes each by calling the provided function.
  */
 void CellContainer::iterate_halo(ParticleHandler& handler) {
-	//iterate over all halo cells
+//iterate over all halo cells
 	for (int i = 0; i < haloSize; i++) {
 		cells[haloInds[i]].iterate_all(handler);
 	}
@@ -471,7 +528,7 @@ void CellContainer::iterate_halo(ParticleHandler& handler) {
  * and processes each by calling the provided function.
  */
 void CellContainer::iterate_boundary(ParticleHandler& handler) {
-	//iterate over all boundary cells
+//iterate over all boundary cells
 	for (int i = 0; i < boundSize; i++) {
 		cells[boundInds[i]].iterate_all(handler);
 	}
@@ -507,6 +564,7 @@ void CellContainer::iterate_all(ParticleHandler& handler) {
  */
 void CellContainer::iterate_pairs(PairHandler& handler) {
 //iterate over all cells
+	int cnt = 0;
 	for (int i = 0; i < cellTotal; i++) {
 		if (!cells[i].halo) { //test if this cell is not in the halo region.
 			//iterate inside of cell
@@ -564,15 +622,15 @@ void CellContainer::iterate_pairs_half(PairHandler& handler) {
 			Vector<int, 3> n = calc3Ind(i);
 			Vector<int, 3> tempN;
 			//iterate over surrounding non-halo cells
-			for (int x = 0; x <= 1; x++) {
-				for (int y = 0; y <= 1; y++) {
+			for (int x = -1; x <= 1; x++) {
+				for (int y = -1; y <= 1; y++) {
 					if (dim3) {
-						for (int z = 0; z <= 1; z++) {
+						for (int z = -1; z <= 1; z++) {
 							tempN[0] = n[0] + x;
 							tempN[1] = n[1] + y;
 							tempN[2] = n[2] + z;
-							if (!cells[calcInd(tempN)].halo //test if not a halo cell
-							&& !(x == 0 && y == 0 && z == 0)) { //do not iterate over the cell itself
+							if (calcInd(tempN) < i //only iterate over cells before this one
+							&& !cells[calcInd(tempN)].halo) { //test if not a halo cell
 								cells[calcInd(n)].iterate_partner(handler,
 										&cells[calcInd(tempN)]);
 							}
@@ -581,8 +639,8 @@ void CellContainer::iterate_pairs_half(PairHandler& handler) {
 						tempN[0] = n[0] + x;
 						tempN[1] = n[1] + y;
 						tempN[2] = n[2];
-						if (!cells[calcInd(tempN)].halo //test if not a halo cell
-						&& !(x == 0 && y == 0)) { //do not iterate over the cell itself
+						if (calcInd(tempN) < i //only iterate over cells before this one
+						&& !cells[calcInd(tempN)].halo) { //test if not a halo cell
 							cells[calcInd(n)].iterate_partner(handler,
 									&cells[calcInd(tempN)]);
 						}

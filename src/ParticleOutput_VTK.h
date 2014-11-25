@@ -9,6 +9,7 @@
 #define PARTICLEOUTPUT_VTK_H_
 
 #include "ParticleOutput.h"
+#include "ParticleContainer/ParticleContainer.h"
 
 #include <string>
 
@@ -29,7 +30,9 @@ public:
 	virtual ~ParticleOutput_VTK() {
 	}
 
-	/**  Writes the particles from the particle container to a VTK-file specified by 'out_name'.
+	/**
+	 * \brief Writes the particles from the particle container to a VTK-file specified by 'out_name'.
+	 * @param iteration Iteration count of the simulation for specifying the filename.
 	 */
 	virtual void output(int iteration);
 

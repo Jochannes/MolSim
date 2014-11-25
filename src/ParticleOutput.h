@@ -8,7 +8,7 @@
 #ifndef PARTICLEOUTPUT_H_
 #define PARTICLEOUTPUT_H_
 
-#include "ParticleContainer.h"
+#include "ParticleContainer/ParticleContainer.h"
 
 /**
  * \brief Abstract class for defining an interface for the output of particle containers.

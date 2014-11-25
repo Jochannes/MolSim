@@ -7,8 +7,8 @@
 
 #include "XMLInput.h"
 
-#include "ParticleContainer.h"
-#include "CellContainer.h"
+#include "ParticleContainer/CellContainer.h"
+#include "ParticleContainer/SimpleContainer.h"
 #include "ParticleInput_FileReader.h"
 #include "CuboidGenerator.h"
 #include "ParticleOutput_VTK.h"
@@ -24,7 +24,6 @@
 #include <auto_ptr.h>
 #include <list>
 #include <string>
-
 
 using namespace std;
 using namespace log4cxx;
@@ -132,13 +131,13 @@ void XMLInput::ReadFile(const char* filename)
 	switch( sm_type_enum ) {
 	case simulation_mode_type_t::normal: {
 			LOG4CXX_DEBUG(xmllogger, "using normal simulation mode.");
-			::particles = new ParticleContainer();
+			::particles = new SimpleContainer();
 		}
 		break;
 
 	case simulation_mode_type_t::linked_cell: {
 			double arg_cutoff_radius;
-			double arg_domain_size[3] = {1, 1, 1};
+			double arg_domain_size[3] = {0, 0, 0};
 
 			LOG4CXX_DEBUG(xmllogger, "using Linked-Cell simulation mode.");
 			
@@ -175,8 +174,8 @@ void XMLInput::ReadFile(const char* filename)
 				// using default value.
 			}
 
-			// TODO: use CellContainer...
-			//::particles = new CellContainer(arg_domain_size, arg_cutoff_radius);
+			//use CellContainer
+			::particles = new CellContainer(arg_domain_size, arg_cutoff_radius);
 		}
 		break;
 	
@@ -184,7 +183,6 @@ void XMLInput::ReadFile(const char* filename)
 		LOG4CXX_FATAL(xmllogger, "Error! Invalid value for simulation mode type!");
 		exit(1);
 	};
-
 
 	// 2: element "input"
 	const simulation_input_t& in = s->input();

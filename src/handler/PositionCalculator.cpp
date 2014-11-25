@@ -7,10 +7,8 @@
 
 #include "PositionCalculator.h"
 
-
 // global variable for calculation. See "src/global.h".
 extern double delta_t;
-
 
 PositionCalculator::PositionCalculator() {
 }

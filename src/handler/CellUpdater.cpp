@@ -6,10 +6,10 @@
  */
 
 #include "CellUpdater.h"
-#include "ParticleContainer.h"
+#include "ParticleContainer/SimpleContainer.h"
 
 /**
- * \brief This method updates the ParticleContainer storing the particle.
+ * \brief This method updates the SimpleContainer storing the particle.
  *
  * This method checks if the particle should be
  * in a different container and updates the parent
@@ -18,6 +18,6 @@
 void CellUpdater::compute(Particle& p) {
 	if(cellCont->calcCell(p.getX()) != oldContainerIndex){
 		cellCont->add(p);
-		cellCont->remove(p, oldContainerIndex);
+		toRemove.push_back(pair<Particle, int>(p, oldContainerIndex));
 	}
 }

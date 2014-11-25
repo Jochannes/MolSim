@@ -52,7 +52,11 @@ static void generateCuboid(list<Particle>& particleList,
 				Particle p(x, velocity, mass);
 
 				// add brownian motion
-				MaxwellBoltzmannDistribution(p, brown_factor, 3);
+				if (num_particles[2] == 1) {
+					MaxwellBoltzmannDistribution(p, brown_factor, 2);
+				} else {
+					MaxwellBoltzmannDistribution(p, brown_factor, 3);
+				}
 
 				// add particle to the passed particle list
 				particleList.push_back(p);

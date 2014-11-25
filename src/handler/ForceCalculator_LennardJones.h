@@ -10,7 +10,6 @@
 
 #include "ForceCalculator.h"
 #include "Particle.h"
-
 /**
  * \brief Class for calculating the force between two particles caused by the Lennard-Jones potential.
  */
@@ -18,7 +17,6 @@ class ForceCalculator_LennardJones: public ForceCalculator {
 public:
 	static double sigma;	//!< Sigma value used for the potential (see equation)
 	static double epsilon;	//!< Epsilon value used for the potential (see equation)
-
 
 	ForceCalculator_LennardJones();
 

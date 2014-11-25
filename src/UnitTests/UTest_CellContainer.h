@@ -15,7 +15,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 
 #include "utils/Vector.h"
-#include "CellContainer.h"
+#include "ParticleContainer/CellContainer.h"
 
 namespace unitTest {
 
