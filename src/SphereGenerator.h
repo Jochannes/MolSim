@@ -25,6 +25,10 @@ private:
 	utils::Vector<double, 3> velocity;	//!< Main velocity of all particles. The velocity will be superposed by Brownian motion.
 	double brown_factor;	//!< Mean velocity of the Brownian motion.
 
+	// auxilliary functions for input()
+	void genCircle(std::list<Particle>& particleList, int radius, int z);
+	void genParticle(std::list<Particle>& particleList, int x, int y, int z);
+
 public:
 	/**
 	 * \brief Initialize the SphereGenerator with all neccessary parameters needed for generating the sphere.
