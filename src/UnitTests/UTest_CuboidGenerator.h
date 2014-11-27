@@ -51,7 +51,7 @@ private:
 	double velocity[3];						//!< Velocity of the particles
 
 public:
-	UTest_CuboidGenerator() {
+	UTest_CuboidGenerator() : distance(1.1225), mass(1){
 	}
 	void setUp();
 	void tearDown();
