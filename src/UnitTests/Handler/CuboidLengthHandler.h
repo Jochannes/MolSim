@@ -14,7 +14,7 @@
 namespace unitTest {
 
 /**
- * \brief Class for calculating the length of the cuboid saved in the ParticleContainer in 3 dimensions.
+ * \brief ParticleHandler for calculating the length of the cuboid saved in the ParticleContainer in 3 dimensions.
  */
 class CuboidLengthHandler: public ParticleHandler {
 private:

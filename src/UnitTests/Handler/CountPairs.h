@@ -13,7 +13,7 @@
 namespace unitTest {
 
 /**
- * \brief Class for counting the number of iterated particle pairs for test purposes.
+ * \brief PairHandler for counting the number of iterated particle pairs for test purposes.
  */
 class CountPairs: public PairHandler {
 public:

@@ -9,6 +9,7 @@
 #include <cstring>
 #include <cstdlib>
 #include <iostream>
+#include <fstream>
 #include <log4cxx/logger.h>
 #include <log4cxx/propertyconfigurator.h>
 #include <log4cxx/stream.h>
@@ -60,13 +61,15 @@ void plotParticles(int iteration);
 double start_time = 0.0;	//!< Starting time of the simulation.
 double end_time = 1000; 	//!< End time of the simulation.
 double delta_t = 0.014; 	//!< Time step size of the simulation.
-int    output_freq = 10;	//!< Output frequency of the simulation.
+int output_freq = 10;	//!< Output frequency of the simulation.
+bool timing = false;	//!< Specifies if the iteration time will be measured.
+char* timingFile;	//!< Specifies if the iteration time will be measured.
 
-ParticleContainer* particles;		//!< Container for encapsulating the particle list.
+ParticleContainer* particles;//!< Container for encapsulating the particle list.
 ParticleOutput* particleOut = NULL; //!< Object for defining the output method to be used.
-PositionCalculator* xcalc = NULL; 	//!< Object for defining the coordinate calculator to be used in the simulation.
-VelocityCalculator* vcalc = NULL; 	//!< Object for defining the velocity calculator to be used in the simulation.
-ForceCalculator* fcalc = NULL; 		//!< Object for defining the force calculator to be used in the simulation.
+PositionCalculator* xcalc = NULL; //!< Object for defining the coordinate calculator to be used in the simulation.
+VelocityCalculator* vcalc = NULL; //!< Object for defining the velocity calculator to be used in the simulation.
+ForceCalculator* fcalc = NULL; //!< Object for defining the force calculator to be used in the simulation.
 
 LoggerPtr logger(Logger::getLogger("MolSim")); //!< Object for handling general logs.
 
@@ -86,12 +89,29 @@ int main(int argc, char* argsv[]) {
 
 	int iteration = 0;
 
+	ofstream time;
+	list<double> elapsed_secs;
+	clock_t begin, end;
+	if (timing) {
+		time.open(timingFile);
+	}
+
 	// for this loop, we assume: current x, current f and current v are known
 	while (current_time < end_time) {
+
+		if (timing) {
+			begin = clock();
+		}
 
 		calculateX(); // calculate new coordinates
 		calculateF(); // calculate new forces
 		calculateV(); // calculate new velocities
+
+		if (timing) {
+			end = clock();
+			elapsed_secs.push_back(double(end - begin) / CLOCKS_PER_SEC);
+			time << elapsed_secs.back() << "\n";
+		}
 
 		iteration++;
 		if (iteration % output_freq == 0) {
@@ -100,6 +120,17 @@ int main(int argc, char* argsv[]) {
 		LOG4CXX_DEBUG(logger, "Iteration " << iteration << " finished.");
 
 		current_time += delta_t;
+	}
+	if (timing) {
+		list<double>::iterator it = elapsed_secs.begin();
+		double avg = 0;
+		while (it != elapsed_secs.end()) {
+			avg += (*it);
+			it++;
+		}
+		avg /= elapsed_secs.size();
+		time << "Average: " << avg << "\n";
+		time.close();
 	}
 
 	LOG4CXX_INFO(logger, "output written. Terminating...");
@@ -134,29 +165,30 @@ void parseParameters(int argc, char* argsv[]) {
 			}
 
 			if (strcmp(option, "help") == 0) {
-				cout << "usage: MolSim OPTIONS...\n"
-						"\n"
-						"Options:\n"
-						"  -help			Prints this information.\n"
-						"  -sim XMLFILE		Starts a simulation with parameters read from XMLFILE.\n"
-						"  -test [NAME]		Runs a unit test. Optionally the name of the test suite can be specified by NAME.\n"
-						"\n" << endl;
-			}
-			else if (strcmp(option, "test") == 0) {
+				cout
+						<< "usage: MolSim OPTIONS...\n"
+								"\n"
+								"Options:\n"
+								"  -help				Prints this information.\n"
+								"  -sim XMLFILE			Starts a simulation with parameters read from XMLFILE.\n"
+								"  -test [NAME]			Runs a unit test. Optionally the name of the test suite can be specified by NAME.\n"
+								"  -timing OUTPUTFILE	Activates time measurement for the iterations with output written to OUTPUTFILE.\n"
+								"\n" << endl;
+			} else if (strcmp(option, "test") == 0) {
 				LOG4CXX_DEBUG(logger, "starting unit test.");
 
 				int ret_val = runUnitTest(value);
 				exit(ret_val);
-			}
-			else if (strcmp(option, "sim") == 0) {
-				if(input_given) {
-					LOG4CXX_FATAL(logger, "Error! More than one input file specified.");
+			} else if (strcmp(option, "sim") == 0) {
+				if (input_given) {
+					LOG4CXX_FATAL(logger,
+							"Error! More than one input file specified.");
 					exit(1);
 				}
 
 				LOG4CXX_DEBUG(logger, "reading parameters for simulation.");
 
-				if(value == NULL) {
+				if (value == NULL) {
 					LOG4CXX_FATAL(logger, "Error! No input file specified.");
 					exit(1);
 				}
@@ -166,13 +198,23 @@ void parseParameters(int argc, char* argsv[]) {
 				input.ReadFile(value);
 
 				input_given = true;
+			} else if (strcmp(option, "timing") == 0) {
+				LOG4CXX_DEBUG(logger, "activating timing.");
+				if (value == NULL) {
+					LOG4CXX_FATAL(logger, "Error! No output file specified.");
+					exit(1);
+				}
+
+				timing = true;
+				timingFile = new char[strlen(value)];
+				strcpy(timingFile, value);
 			}
 		} else {
 			LOG4CXX_INFO(logger, "Ignored parameter: " << argsv[i]);
 		}
 	} // end for
 
-	if(!input_given) {
+	if (!input_given) {
 		// no simulation parameters specified, only tests or information.
 		exit(0);
 	}
@@ -224,9 +266,9 @@ void calculateF() {
  */
 void calculateX() {
 	particles->iterate_all(*xcalc);
-	if (typeid(*particles) == typeid(CellContainer)){
-		((CellContainer*)particles)->update_cells();
-		((CellContainer*)particles)->impose_boundConds();
+	if (typeid(*particles) == typeid(CellContainer)) {
+		((CellContainer*) particles)->update_cells();
+		((CellContainer*) particles)->impose_boundConds();
 	}
 }
 

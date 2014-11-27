@@ -13,7 +13,7 @@
 namespace unitTest {
 
 /**
- * \brief Class for counting the number of iterated particles for test purposes.
+ * \brief ParticleHandler for counting the number of iterated particles for test purposes.
  */
 class CountParticles: public ParticleHandler {
 public:

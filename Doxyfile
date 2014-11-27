@@ -645,7 +645,7 @@ EXAMPLE_RECURSIVE      = NO
 # directories that contain image that are included in the documentation (see
 # the \image command).
 
-IMAGE_PATH             =
+IMAGE_PATH             = ./Images
 
 # The INPUT_FILTER tag can be used to specify a program that doxygen should
 # invoke to filter for each input file. Doxygen will invoke the filter program
@@ -795,6 +795,12 @@ HTML_FOOTER            =
 # stylesheet in the HTML output directory as well, or it will be erased!
 
 HTML_STYLESHEET        =
+
+# The HTML_EXTRA_STYLESHEET tag can be used to specify an additional
+# user-defined cascading style sheet that is used by each HTML page.
+# It can be used to fine-tune the look of the HTML output.
+
+HTML_EXTRA_STYLESHEET        = doxygen_html_style.css
 
 # If the HTML_ALIGN_MEMBERS tag is set to YES, the members of classes,
 # files or namespaces will be aligned in HTML using tables. If set to

@@ -7,10 +7,14 @@
 
 #include "BoundCondCount.h"
 
+namespace unitTest {
+
 /**
  * \brief Counts the number of particle containers this method is called for.
  * @param cont Particle container to count.
  */
 void BoundCondCount::impose(SimpleContainer* cont) {
 	cnt++;
+}
+
 }

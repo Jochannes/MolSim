@@ -14,7 +14,7 @@
 namespace unitTest {
 
 /**
- * \brief Class for checking if the new force is not equal 0.
+ * \brief ParticleHandler for checking if the new force is not equal 0.
  */
 class Check_Reflection: public ParticleHandler {
 private:

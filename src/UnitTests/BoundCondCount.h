@@ -10,6 +10,11 @@
 
 #include "BoundaryCondition/BoundaryCondition.h"
 
+namespace unitTest {
+
+/**
+ * \brief BoundaryCondition for counting the number of particle containers being called.
+*/
 class BoundCondCount : public BoundaryCondition {
 public:
 	BoundCondCount(int side, bool boundCells) : cnt(0), BoundaryCondition(side, boundCells) {}
@@ -18,5 +23,7 @@ public:
 
 	void impose(SimpleContainer* cont);
 };
+
+}
 
 #endif /* BOUNDCONDCOUNT_H_ */

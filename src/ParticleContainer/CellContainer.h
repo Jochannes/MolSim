@@ -30,6 +30,21 @@ namespace unitTest {
 /**
  * \brief Particle container for the linked-cell algorithm
  *
+ * The linked-cell algorithm divides the domain into separate
+ * cells. The particles within each cell then only interact with
+ * the particles in the neigbouring cells.
+ * The normal algorithm iterates over all particle pairs and therefore
+ * has quadratic runtime. The linked-cell algorithm on the other hand
+ * has an approximately linear runtime, leading to a significant
+ * increase in performance. The following graph compares this algorithm
+ * to the normal mode. The simulations were done in a two-dimensional
+ * domain of size (150, 150). The resulting iteration times were averaged
+ * over 20 iterations. The graph shows that the linked-cell algorithm's
+ * runtime per iteration only increases approximately linearly and
+ * performs significantly better, as expected.
+ *
+ * \image html time_linked-cell.png "Comparing the linked-cell algorithm to the normal mode" width=10cm
+ * \image latex time_linked-cell.png "Comparing the linked-cell algorithm to the normal mode" width=10cm
  */
 class CellContainer: public ParticleContainer {
 	friend unitTest::UTest_CellContainer;
