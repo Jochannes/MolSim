@@ -5,8 +5,8 @@
 
   <parameter>
     <start-time>0</start-time>
-    <end-time>20</end-time>
-    <delta-t>0.0005</delta-t>
+    <end-time>10</end-time>
+    <delta-t>0.00005</delta-t>
     
     <force-calculator>
       <type>lennard-jones</type>
@@ -17,22 +17,21 @@
     <simulation-mode>
       <type>linked-cell</type>
       <cutoff_radius>3</cutoff_radius>
-      <domain_size_x>180</domain_size_x>
-      <domain_size_y>90</domain_size_y>
+      <domain_size_x>120</domain_size_x>
+      <domain_size_y>50</domain_size_y>
+      <boundary x_0="reflect" x_max="reflect" y_0="reflect" y_max="reflect" z_0="reflect" z_max="reflect" />
     </simulation-mode>
   </parameter>
   
   
   <input>
-    <particle_file>example_particle_file.txt</particle_file>
-    <cuboid_file>example_cuboid_file.txt</cuboid_file>
-    <sphere_file>example_sphere_file.txt</sphere_file>
+    <sphere x1="60.0" x2="25.0" x3="0.0" r="15" h="1.1225" m="1.0" v1="0.0" v2="-10.0" v3="0.0" />
   </input>
   
   
   <output>
-    <base_filename>MD_vtk</base_filename>
-    <output_freq>10</output_freq>
+    <base_filename>Output/MD_vtk</base_filename>
+    <output_freq>100</output_freq>
   </output>
   
   

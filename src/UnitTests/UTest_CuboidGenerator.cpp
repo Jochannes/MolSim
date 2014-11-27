@@ -36,23 +36,10 @@ void UTest_CuboidGenerator::setUp() {
 	velocity[1] = 0.0;
 	velocity[2] = 0.0;
 
-	//Write file for testing.
-	ofstream myfile;
-	myfile.open(filename);
-	myfile << "1\n";
-	myfile << corner_position[0] << " " << corner_position[1] << " "
-			<< corner_position[2] << " ";
-	myfile << num_particles[0] << " " << num_particles[1] << " "
-			<< num_particles[2] << " ";
-	myfile << distance << " ";
-	myfile << mass << " ";
-	myfile << velocity[0] << " " << velocity[1] << " " << velocity[2] << endl;
-	myfile.close();
-
-	//read in file using a CuboidGenerator
+	// generate particles
 	std::list<Particle> partList;
-	CuboidGenerator cubGen = CuboidGenerator(partList, filename);
-	cubGen.input();
+	CuboidGenerator cubGen = CuboidGenerator(corner_position, num_particles, distance, mass, velocity);
+	cubGen.input(partList);
 	partContainer = SimpleContainer(partList);
 }
 
@@ -60,7 +47,6 @@ void UTest_CuboidGenerator::setUp() {
  * \brief Free the used resources.
  */
 void UTest_CuboidGenerator::tearDown() {
-	remove(filename);
 }
 
 /**

@@ -8,8 +8,21 @@
 #include "ParticleInput_FileReader.h"
 #include "FileReader.h"
 
-void ParticleInput_FileReader::input() {
+using namespace std;
+
+
+void ParticleInput_FileReader::input(list<Particle>& particleList) {
 	FileReader filereader;
 
-	filereader.readFile(particleList, filename);
+	filereader.readFile(particleList, filename.c_str());
+}
+
+
+std::string ParticleInput_FileReader::toString()
+{
+	std::stringstream str;
+
+	str << "\"" << filename << "\"";
+
+	return str.str();
 }

@@ -18,21 +18,24 @@
 class ParticleInput_FileReader: public ParticleInput {
 protected:
 	/** name of the file where the particles are read. */
-	const char* filename;
+	std::string filename;
 
 public:
-	ParticleInput_FileReader(std::list<Particle>& param_particleList,
-			const char* param_filename) :
-			ParticleInput(param_particleList), filename(param_filename) {
+	ParticleInput_FileReader(std::string param_filename) :
+			filename(param_filename) {
 	}
 
 	virtual ~ParticleInput_FileReader() {
 	}
 
-	/**  Reads particles from the file specified by 'filename' and stores them in 'container'.
+	/**  Reads particles from the file specified by 'filename' and stores them in 'particleList'.
 	 */
-	virtual void input();
+	virtual void input(std::list<Particle>& particleList);
 
+	/**
+	 * /brief Returns the filename
+	 */
+	virtual std::string toString();
 };
 
 #endif /* PARTICLEINPUT_FILEREADER_H_ */

@@ -194,8 +194,8 @@ void parseParameters(int argc, char* argsv[]) {
 				}
 
 				// read XML file. set global variables accordingly.
-				XMLInput input;
-				input.ReadFile(value);
+				XMLInput input(value);
+				input.input();
 
 				input_given = true;
 			} else if (strcmp(option, "timing") == 0) {

@@ -14,26 +14,26 @@
 #include <list>
 
 /**
- * \brief Abstract class for defining an interface for the input of particle containers.
+ * \brief Abstract class for defining an interface for the input of particle lists.
  */
 class ParticleInput {
-protected:
-	/* particle container to which the particles are read. */
-	std::list<Particle>& particleList;
-
 public:
-	ParticleInput(std::list<Particle>& param_particleList) :
-			particleList(param_particleList) {
+	ParticleInput() {
 	}
 
 	virtual ~ParticleInput() {
 	}
 
-	/** Fills the particle container with respective input.
+	/** Fills a particle list using respective input method.
 	 *
+	 * @param particleList List of particles to store the particles.
 	 */
-	virtual void input() = 0;
+	virtual void input(std::list<Particle>& particleList) = 0;
 
+	/**
+	 * /brief Returns a string representing this object.
+	 */
+	virtual std::string toString() = 0;
 };
 
 #endif /* PARTICLEINPUT_H_ */

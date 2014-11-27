@@ -130,6 +130,199 @@ operator= (value v)
 }
 
 
+// boundary_type_t
+// 
+
+boundary_type_t::
+boundary_type_t (value v)
+: ::xml_schema::string (_xsd_boundary_type_t_literals_[v])
+{
+}
+
+boundary_type_t::
+boundary_type_t (const char* v)
+: ::xml_schema::string (v)
+{
+}
+
+boundary_type_t::
+boundary_type_t (const ::std::string& v)
+: ::xml_schema::string (v)
+{
+}
+
+boundary_type_t::
+boundary_type_t (const ::xml_schema::string& v)
+: ::xml_schema::string (v)
+{
+}
+
+boundary_type_t::
+boundary_type_t (const boundary_type_t& v,
+                 ::xml_schema::flags f,
+                 ::xml_schema::container* c)
+: ::xml_schema::string (v, f, c)
+{
+}
+
+boundary_type_t& boundary_type_t::
+operator= (value v)
+{
+  static_cast< ::xml_schema::string& > (*this) = 
+  ::xml_schema::string (_xsd_boundary_type_t_literals_[v]);
+
+  return *this;
+}
+
+
+// boundary_t
+// 
+
+const boundary_t::x_0_type& boundary_t::
+x_0 () const
+{
+  return this->x_0_.get ();
+}
+
+boundary_t::x_0_type& boundary_t::
+x_0 ()
+{
+  return this->x_0_.get ();
+}
+
+void boundary_t::
+x_0 (const x_0_type& x)
+{
+  this->x_0_.set (x);
+}
+
+void boundary_t::
+x_0 (::std::auto_ptr< x_0_type > x)
+{
+  this->x_0_.set (x);
+}
+
+const boundary_t::x_max_type& boundary_t::
+x_max () const
+{
+  return this->x_max_.get ();
+}
+
+boundary_t::x_max_type& boundary_t::
+x_max ()
+{
+  return this->x_max_.get ();
+}
+
+void boundary_t::
+x_max (const x_max_type& x)
+{
+  this->x_max_.set (x);
+}
+
+void boundary_t::
+x_max (::std::auto_ptr< x_max_type > x)
+{
+  this->x_max_.set (x);
+}
+
+const boundary_t::y_0_type& boundary_t::
+y_0 () const
+{
+  return this->y_0_.get ();
+}
+
+boundary_t::y_0_type& boundary_t::
+y_0 ()
+{
+  return this->y_0_.get ();
+}
+
+void boundary_t::
+y_0 (const y_0_type& x)
+{
+  this->y_0_.set (x);
+}
+
+void boundary_t::
+y_0 (::std::auto_ptr< y_0_type > x)
+{
+  this->y_0_.set (x);
+}
+
+const boundary_t::y_max_type& boundary_t::
+y_max () const
+{
+  return this->y_max_.get ();
+}
+
+boundary_t::y_max_type& boundary_t::
+y_max ()
+{
+  return this->y_max_.get ();
+}
+
+void boundary_t::
+y_max (const y_max_type& x)
+{
+  this->y_max_.set (x);
+}
+
+void boundary_t::
+y_max (::std::auto_ptr< y_max_type > x)
+{
+  this->y_max_.set (x);
+}
+
+const boundary_t::z_0_type& boundary_t::
+z_0 () const
+{
+  return this->z_0_.get ();
+}
+
+boundary_t::z_0_type& boundary_t::
+z_0 ()
+{
+  return this->z_0_.get ();
+}
+
+void boundary_t::
+z_0 (const z_0_type& x)
+{
+  this->z_0_.set (x);
+}
+
+void boundary_t::
+z_0 (::std::auto_ptr< z_0_type > x)
+{
+  this->z_0_.set (x);
+}
+
+const boundary_t::z_max_type& boundary_t::
+z_max () const
+{
+  return this->z_max_.get ();
+}
+
+boundary_t::z_max_type& boundary_t::
+z_max ()
+{
+  return this->z_max_.get ();
+}
+
+void boundary_t::
+z_max (const z_max_type& x)
+{
+  this->z_max_.set (x);
+}
+
+void boundary_t::
+z_max (::std::auto_ptr< z_max_type > x)
+{
+  this->z_max_.set (x);
+}
+
+
 // force_calculator_t
 // 
 
@@ -305,6 +498,60 @@ domain_size_y (const domain_size_y_optional& x)
   this->domain_size_y_ = x;
 }
 
+const simulation_mode_t::domain_size_z_optional& simulation_mode_t::
+domain_size_z () const
+{
+  return this->domain_size_z_;
+}
+
+simulation_mode_t::domain_size_z_optional& simulation_mode_t::
+domain_size_z ()
+{
+  return this->domain_size_z_;
+}
+
+void simulation_mode_t::
+domain_size_z (const domain_size_z_type& x)
+{
+  this->domain_size_z_.set (x);
+}
+
+void simulation_mode_t::
+domain_size_z (const domain_size_z_optional& x)
+{
+  this->domain_size_z_ = x;
+}
+
+const simulation_mode_t::boundary_optional& simulation_mode_t::
+boundary () const
+{
+  return this->boundary_;
+}
+
+simulation_mode_t::boundary_optional& simulation_mode_t::
+boundary ()
+{
+  return this->boundary_;
+}
+
+void simulation_mode_t::
+boundary (const boundary_type& x)
+{
+  this->boundary_.set (x);
+}
+
+void simulation_mode_t::
+boundary (const boundary_optional& x)
+{
+  this->boundary_ = x;
+}
+
+void simulation_mode_t::
+boundary (::std::auto_ptr< boundary_type > x)
+{
+  this->boundary_.set (x);
+}
+
 
 // simulation_parameters_t
 // 
@@ -412,6 +659,374 @@ simulation_mode (::std::auto_ptr< simulation_mode_type > x)
 }
 
 
+// cuboid_t
+// 
+
+const cuboid_t::x1_type& cuboid_t::
+x1 () const
+{
+  return this->x1_.get ();
+}
+
+cuboid_t::x1_type& cuboid_t::
+x1 ()
+{
+  return this->x1_.get ();
+}
+
+void cuboid_t::
+x1 (const x1_type& x)
+{
+  this->x1_.set (x);
+}
+
+const cuboid_t::x2_type& cuboid_t::
+x2 () const
+{
+  return this->x2_.get ();
+}
+
+cuboid_t::x2_type& cuboid_t::
+x2 ()
+{
+  return this->x2_.get ();
+}
+
+void cuboid_t::
+x2 (const x2_type& x)
+{
+  this->x2_.set (x);
+}
+
+const cuboid_t::x3_type& cuboid_t::
+x3 () const
+{
+  return this->x3_.get ();
+}
+
+cuboid_t::x3_type& cuboid_t::
+x3 ()
+{
+  return this->x3_.get ();
+}
+
+void cuboid_t::
+x3 (const x3_type& x)
+{
+  this->x3_.set (x);
+}
+
+const cuboid_t::n1_type& cuboid_t::
+n1 () const
+{
+  return this->n1_.get ();
+}
+
+cuboid_t::n1_type& cuboid_t::
+n1 ()
+{
+  return this->n1_.get ();
+}
+
+void cuboid_t::
+n1 (const n1_type& x)
+{
+  this->n1_.set (x);
+}
+
+const cuboid_t::n2_type& cuboid_t::
+n2 () const
+{
+  return this->n2_.get ();
+}
+
+cuboid_t::n2_type& cuboid_t::
+n2 ()
+{
+  return this->n2_.get ();
+}
+
+void cuboid_t::
+n2 (const n2_type& x)
+{
+  this->n2_.set (x);
+}
+
+const cuboid_t::n3_type& cuboid_t::
+n3 () const
+{
+  return this->n3_.get ();
+}
+
+cuboid_t::n3_type& cuboid_t::
+n3 ()
+{
+  return this->n3_.get ();
+}
+
+void cuboid_t::
+n3 (const n3_type& x)
+{
+  this->n3_.set (x);
+}
+
+const cuboid_t::h_type& cuboid_t::
+h () const
+{
+  return this->h_.get ();
+}
+
+cuboid_t::h_type& cuboid_t::
+h ()
+{
+  return this->h_.get ();
+}
+
+void cuboid_t::
+h (const h_type& x)
+{
+  this->h_.set (x);
+}
+
+const cuboid_t::m_type& cuboid_t::
+m () const
+{
+  return this->m_.get ();
+}
+
+cuboid_t::m_type& cuboid_t::
+m ()
+{
+  return this->m_.get ();
+}
+
+void cuboid_t::
+m (const m_type& x)
+{
+  this->m_.set (x);
+}
+
+const cuboid_t::v1_type& cuboid_t::
+v1 () const
+{
+  return this->v1_.get ();
+}
+
+cuboid_t::v1_type& cuboid_t::
+v1 ()
+{
+  return this->v1_.get ();
+}
+
+void cuboid_t::
+v1 (const v1_type& x)
+{
+  this->v1_.set (x);
+}
+
+const cuboid_t::v2_type& cuboid_t::
+v2 () const
+{
+  return this->v2_.get ();
+}
+
+cuboid_t::v2_type& cuboid_t::
+v2 ()
+{
+  return this->v2_.get ();
+}
+
+void cuboid_t::
+v2 (const v2_type& x)
+{
+  this->v2_.set (x);
+}
+
+const cuboid_t::v3_type& cuboid_t::
+v3 () const
+{
+  return this->v3_.get ();
+}
+
+cuboid_t::v3_type& cuboid_t::
+v3 ()
+{
+  return this->v3_.get ();
+}
+
+void cuboid_t::
+v3 (const v3_type& x)
+{
+  this->v3_.set (x);
+}
+
+
+// sphere_t
+// 
+
+const sphere_t::x1_type& sphere_t::
+x1 () const
+{
+  return this->x1_.get ();
+}
+
+sphere_t::x1_type& sphere_t::
+x1 ()
+{
+  return this->x1_.get ();
+}
+
+void sphere_t::
+x1 (const x1_type& x)
+{
+  this->x1_.set (x);
+}
+
+const sphere_t::x2_type& sphere_t::
+x2 () const
+{
+  return this->x2_.get ();
+}
+
+sphere_t::x2_type& sphere_t::
+x2 ()
+{
+  return this->x2_.get ();
+}
+
+void sphere_t::
+x2 (const x2_type& x)
+{
+  this->x2_.set (x);
+}
+
+const sphere_t::x3_type& sphere_t::
+x3 () const
+{
+  return this->x3_.get ();
+}
+
+sphere_t::x3_type& sphere_t::
+x3 ()
+{
+  return this->x3_.get ();
+}
+
+void sphere_t::
+x3 (const x3_type& x)
+{
+  this->x3_.set (x);
+}
+
+const sphere_t::r_type& sphere_t::
+r () const
+{
+  return this->r_.get ();
+}
+
+sphere_t::r_type& sphere_t::
+r ()
+{
+  return this->r_.get ();
+}
+
+void sphere_t::
+r (const r_type& x)
+{
+  this->r_.set (x);
+}
+
+const sphere_t::h_type& sphere_t::
+h () const
+{
+  return this->h_.get ();
+}
+
+sphere_t::h_type& sphere_t::
+h ()
+{
+  return this->h_.get ();
+}
+
+void sphere_t::
+h (const h_type& x)
+{
+  this->h_.set (x);
+}
+
+const sphere_t::m_type& sphere_t::
+m () const
+{
+  return this->m_.get ();
+}
+
+sphere_t::m_type& sphere_t::
+m ()
+{
+  return this->m_.get ();
+}
+
+void sphere_t::
+m (const m_type& x)
+{
+  this->m_.set (x);
+}
+
+const sphere_t::v1_type& sphere_t::
+v1 () const
+{
+  return this->v1_.get ();
+}
+
+sphere_t::v1_type& sphere_t::
+v1 ()
+{
+  return this->v1_.get ();
+}
+
+void sphere_t::
+v1 (const v1_type& x)
+{
+  this->v1_.set (x);
+}
+
+const sphere_t::v2_type& sphere_t::
+v2 () const
+{
+  return this->v2_.get ();
+}
+
+sphere_t::v2_type& sphere_t::
+v2 ()
+{
+  return this->v2_.get ();
+}
+
+void sphere_t::
+v2 (const v2_type& x)
+{
+  this->v2_.set (x);
+}
+
+const sphere_t::v3_type& sphere_t::
+v3 () const
+{
+  return this->v3_.get ();
+}
+
+sphere_t::v3_type& sphere_t::
+v3 ()
+{
+  return this->v3_.get ();
+}
+
+void sphere_t::
+v3 (const v3_type& x)
+{
+  this->v3_.set (x);
+}
+
+
 // simulation_input_t
 // 
 
@@ -433,40 +1048,40 @@ particle_file (const particle_file_sequence& s)
   this->particle_file_ = s;
 }
 
-const simulation_input_t::cuboid_file_sequence& simulation_input_t::
-cuboid_file () const
+const simulation_input_t::cuboid_sequence& simulation_input_t::
+cuboid () const
 {
-  return this->cuboid_file_;
+  return this->cuboid_;
 }
 
-simulation_input_t::cuboid_file_sequence& simulation_input_t::
-cuboid_file ()
+simulation_input_t::cuboid_sequence& simulation_input_t::
+cuboid ()
 {
-  return this->cuboid_file_;
-}
-
-void simulation_input_t::
-cuboid_file (const cuboid_file_sequence& s)
-{
-  this->cuboid_file_ = s;
-}
-
-const simulation_input_t::sphere_file_sequence& simulation_input_t::
-sphere_file () const
-{
-  return this->sphere_file_;
-}
-
-simulation_input_t::sphere_file_sequence& simulation_input_t::
-sphere_file ()
-{
-  return this->sphere_file_;
+  return this->cuboid_;
 }
 
 void simulation_input_t::
-sphere_file (const sphere_file_sequence& s)
+cuboid (const cuboid_sequence& s)
 {
-  this->sphere_file_ = s;
+  this->cuboid_ = s;
+}
+
+const simulation_input_t::sphere_sequence& simulation_input_t::
+sphere () const
+{
+  return this->sphere_;
+}
+
+simulation_input_t::sphere_sequence& simulation_input_t::
+sphere ()
+{
+  return this->sphere_;
+}
+
+void simulation_input_t::
+sphere (const sphere_sequence& s)
+{
+  this->sphere_ = s;
 }
 
 
@@ -734,6 +1349,249 @@ _xsd_simulation_mode_type_t_indexes_[2] =
   ::simulation_mode_type_t::normal
 };
 
+// boundary_type_t
+//
+
+boundary_type_t::
+boundary_type_t (const ::xercesc::DOMElement& e,
+                 ::xml_schema::flags f,
+                 ::xml_schema::container* c)
+: ::xml_schema::string (e, f, c)
+{
+  _xsd_boundary_type_t_convert ();
+}
+
+boundary_type_t::
+boundary_type_t (const ::xercesc::DOMAttr& a,
+                 ::xml_schema::flags f,
+                 ::xml_schema::container* c)
+: ::xml_schema::string (a, f, c)
+{
+  _xsd_boundary_type_t_convert ();
+}
+
+boundary_type_t::
+boundary_type_t (const ::std::string& s,
+                 const ::xercesc::DOMElement* e,
+                 ::xml_schema::flags f,
+                 ::xml_schema::container* c)
+: ::xml_schema::string (s, e, f, c)
+{
+  _xsd_boundary_type_t_convert ();
+}
+
+boundary_type_t* boundary_type_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class boundary_type_t (*this, f, c);
+}
+
+boundary_type_t::value boundary_type_t::
+_xsd_boundary_type_t_convert () const
+{
+  ::xsd::cxx::tree::enum_comparator< char > c (_xsd_boundary_type_t_literals_);
+  const value* i (::std::lower_bound (
+                    _xsd_boundary_type_t_indexes_,
+                    _xsd_boundary_type_t_indexes_ + 2,
+                    *this,
+                    c));
+
+  if (i == _xsd_boundary_type_t_indexes_ + 2 || _xsd_boundary_type_t_literals_[*i] != *this)
+  {
+    throw ::xsd::cxx::tree::unexpected_enumerator < char > (*this);
+  }
+
+  return *i;
+}
+
+const char* const boundary_type_t::
+_xsd_boundary_type_t_literals_[2] =
+{
+  "outflow",
+  "reflect"
+};
+
+const boundary_type_t::value boundary_type_t::
+_xsd_boundary_type_t_indexes_[2] =
+{
+  ::boundary_type_t::outflow,
+  ::boundary_type_t::reflect
+};
+
+// boundary_t
+//
+
+boundary_t::
+boundary_t (const x_0_type& x_0,
+            const x_max_type& x_max,
+            const y_0_type& y_0,
+            const y_max_type& y_max,
+            const z_0_type& z_0,
+            const z_max_type& z_max)
+: ::xml_schema::type (),
+  x_0_ (x_0, ::xml_schema::flags (), this),
+  x_max_ (x_max, ::xml_schema::flags (), this),
+  y_0_ (y_0, ::xml_schema::flags (), this),
+  y_max_ (y_max, ::xml_schema::flags (), this),
+  z_0_ (z_0, ::xml_schema::flags (), this),
+  z_max_ (z_max, ::xml_schema::flags (), this)
+{
+}
+
+boundary_t::
+boundary_t (const boundary_t& x,
+            ::xml_schema::flags f,
+            ::xml_schema::container* c)
+: ::xml_schema::type (x, f, c),
+  x_0_ (x.x_0_, f, this),
+  x_max_ (x.x_max_, f, this),
+  y_0_ (x.y_0_, f, this),
+  y_max_ (x.y_max_, f, this),
+  z_0_ (x.z_0_, f, this),
+  z_max_ (x.z_max_, f, this)
+{
+}
+
+boundary_t::
+boundary_t (const ::xercesc::DOMElement& e,
+            ::xml_schema::flags f,
+            ::xml_schema::container* c)
+: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  x_0_ (f, this),
+  x_max_ (f, this),
+  y_0_ (f, this),
+  y_max_ (f, this),
+  z_0_ (f, this),
+  z_max_ (f, this)
+{
+  if ((f & ::xml_schema::flags::base) == 0)
+  {
+    ::xsd::cxx::xml::dom::parser< char > p (e, false, true);
+    this->parse (p, f);
+  }
+}
+
+void boundary_t::
+parse (::xsd::cxx::xml::dom::parser< char >& p,
+       ::xml_schema::flags f)
+{
+  while (p.more_attributes ())
+  {
+    const ::xercesc::DOMAttr& i (p.next_attribute ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    if (n.name () == "x_0" && n.namespace_ ().empty ())
+    {
+      ::std::auto_ptr< x_0_type > r (
+        x_0_traits::create (i, f, this));
+
+      this->x_0_.set (r);
+      continue;
+    }
+
+    if (n.name () == "x_max" && n.namespace_ ().empty ())
+    {
+      ::std::auto_ptr< x_max_type > r (
+        x_max_traits::create (i, f, this));
+
+      this->x_max_.set (r);
+      continue;
+    }
+
+    if (n.name () == "y_0" && n.namespace_ ().empty ())
+    {
+      ::std::auto_ptr< y_0_type > r (
+        y_0_traits::create (i, f, this));
+
+      this->y_0_.set (r);
+      continue;
+    }
+
+    if (n.name () == "y_max" && n.namespace_ ().empty ())
+    {
+      ::std::auto_ptr< y_max_type > r (
+        y_max_traits::create (i, f, this));
+
+      this->y_max_.set (r);
+      continue;
+    }
+
+    if (n.name () == "z_0" && n.namespace_ ().empty ())
+    {
+      ::std::auto_ptr< z_0_type > r (
+        z_0_traits::create (i, f, this));
+
+      this->z_0_.set (r);
+      continue;
+    }
+
+    if (n.name () == "z_max" && n.namespace_ ().empty ())
+    {
+      ::std::auto_ptr< z_max_type > r (
+        z_max_traits::create (i, f, this));
+
+      this->z_max_.set (r);
+      continue;
+    }
+  }
+
+  if (!x_0_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "x_0",
+      "");
+  }
+
+  if (!x_max_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "x_max",
+      "");
+  }
+
+  if (!y_0_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "y_0",
+      "");
+  }
+
+  if (!y_max_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "y_max",
+      "");
+  }
+
+  if (!z_0_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "z_0",
+      "");
+  }
+
+  if (!z_max_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "z_max",
+      "");
+  }
+}
+
+boundary_t* boundary_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class boundary_t (*this, f, c);
+}
+
+boundary_t::
+~boundary_t ()
+{
+}
+
 // force_calculator_t
 //
 
@@ -851,7 +1709,9 @@ simulation_mode_t (const type_type& type)
   type_ (type, ::xml_schema::flags (), this),
   cutoff_radius_ (::xml_schema::flags (), this),
   domain_size_x_ (::xml_schema::flags (), this),
-  domain_size_y_ (::xml_schema::flags (), this)
+  domain_size_y_ (::xml_schema::flags (), this),
+  domain_size_z_ (::xml_schema::flags (), this),
+  boundary_ (::xml_schema::flags (), this)
 {
 }
 
@@ -863,7 +1723,9 @@ simulation_mode_t (const simulation_mode_t& x,
   type_ (x.type_, f, this),
   cutoff_radius_ (x.cutoff_radius_, f, this),
   domain_size_x_ (x.domain_size_x_, f, this),
-  domain_size_y_ (x.domain_size_y_, f, this)
+  domain_size_y_ (x.domain_size_y_, f, this),
+  domain_size_z_ (x.domain_size_z_, f, this),
+  boundary_ (x.boundary_, f, this)
 {
 }
 
@@ -875,7 +1737,9 @@ simulation_mode_t (const ::xercesc::DOMElement& e,
   type_ (f, this),
   cutoff_radius_ (f, this),
   domain_size_x_ (f, this),
-  domain_size_y_ (f, this)
+  domain_size_y_ (f, this),
+  domain_size_z_ (f, this),
+  boundary_ (f, this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
   {
@@ -937,6 +1801,31 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       if (!this->domain_size_y_)
       {
         this->domain_size_y_.set (domain_size_y_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // domain_size_z
+    //
+    if (n.name () == "domain_size_z" && n.namespace_ ().empty ())
+    {
+      if (!this->domain_size_z_)
+      {
+        this->domain_size_z_.set (domain_size_z_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // boundary
+    //
+    if (n.name () == "boundary" && n.namespace_ ().empty ())
+    {
+      ::std::auto_ptr< boundary_type > r (
+        boundary_traits::create (i, f, this));
+
+      if (!this->boundary_)
+      {
+        this->boundary_.set (r);
         continue;
       }
     }
@@ -1150,6 +2039,452 @@ simulation_parameters_t::
 {
 }
 
+// cuboid_t
+//
+
+cuboid_t::
+cuboid_t (const x1_type& x1,
+          const x2_type& x2,
+          const x3_type& x3,
+          const n1_type& n1,
+          const n2_type& n2,
+          const n3_type& n3,
+          const h_type& h,
+          const m_type& m,
+          const v1_type& v1,
+          const v2_type& v2,
+          const v3_type& v3)
+: ::xml_schema::type (),
+  x1_ (x1, ::xml_schema::flags (), this),
+  x2_ (x2, ::xml_schema::flags (), this),
+  x3_ (x3, ::xml_schema::flags (), this),
+  n1_ (n1, ::xml_schema::flags (), this),
+  n2_ (n2, ::xml_schema::flags (), this),
+  n3_ (n3, ::xml_schema::flags (), this),
+  h_ (h, ::xml_schema::flags (), this),
+  m_ (m, ::xml_schema::flags (), this),
+  v1_ (v1, ::xml_schema::flags (), this),
+  v2_ (v2, ::xml_schema::flags (), this),
+  v3_ (v3, ::xml_schema::flags (), this)
+{
+}
+
+cuboid_t::
+cuboid_t (const cuboid_t& x,
+          ::xml_schema::flags f,
+          ::xml_schema::container* c)
+: ::xml_schema::type (x, f, c),
+  x1_ (x.x1_, f, this),
+  x2_ (x.x2_, f, this),
+  x3_ (x.x3_, f, this),
+  n1_ (x.n1_, f, this),
+  n2_ (x.n2_, f, this),
+  n3_ (x.n3_, f, this),
+  h_ (x.h_, f, this),
+  m_ (x.m_, f, this),
+  v1_ (x.v1_, f, this),
+  v2_ (x.v2_, f, this),
+  v3_ (x.v3_, f, this)
+{
+}
+
+cuboid_t::
+cuboid_t (const ::xercesc::DOMElement& e,
+          ::xml_schema::flags f,
+          ::xml_schema::container* c)
+: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  x1_ (f, this),
+  x2_ (f, this),
+  x3_ (f, this),
+  n1_ (f, this),
+  n2_ (f, this),
+  n3_ (f, this),
+  h_ (f, this),
+  m_ (f, this),
+  v1_ (f, this),
+  v2_ (f, this),
+  v3_ (f, this)
+{
+  if ((f & ::xml_schema::flags::base) == 0)
+  {
+    ::xsd::cxx::xml::dom::parser< char > p (e, false, true);
+    this->parse (p, f);
+  }
+}
+
+void cuboid_t::
+parse (::xsd::cxx::xml::dom::parser< char >& p,
+       ::xml_schema::flags f)
+{
+  while (p.more_attributes ())
+  {
+    const ::xercesc::DOMAttr& i (p.next_attribute ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    if (n.name () == "x1" && n.namespace_ ().empty ())
+    {
+      this->x1_.set (x1_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "x2" && n.namespace_ ().empty ())
+    {
+      this->x2_.set (x2_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "x3" && n.namespace_ ().empty ())
+    {
+      this->x3_.set (x3_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "n1" && n.namespace_ ().empty ())
+    {
+      this->n1_.set (n1_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "n2" && n.namespace_ ().empty ())
+    {
+      this->n2_.set (n2_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "n3" && n.namespace_ ().empty ())
+    {
+      this->n3_.set (n3_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "h" && n.namespace_ ().empty ())
+    {
+      this->h_.set (h_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "m" && n.namespace_ ().empty ())
+    {
+      this->m_.set (m_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "v1" && n.namespace_ ().empty ())
+    {
+      this->v1_.set (v1_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "v2" && n.namespace_ ().empty ())
+    {
+      this->v2_.set (v2_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "v3" && n.namespace_ ().empty ())
+    {
+      this->v3_.set (v3_traits::create (i, f, this));
+      continue;
+    }
+  }
+
+  if (!x1_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "x1",
+      "");
+  }
+
+  if (!x2_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "x2",
+      "");
+  }
+
+  if (!x3_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "x3",
+      "");
+  }
+
+  if (!n1_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "n1",
+      "");
+  }
+
+  if (!n2_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "n2",
+      "");
+  }
+
+  if (!n3_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "n3",
+      "");
+  }
+
+  if (!h_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "h",
+      "");
+  }
+
+  if (!m_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "m",
+      "");
+  }
+
+  if (!v1_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "v1",
+      "");
+  }
+
+  if (!v2_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "v2",
+      "");
+  }
+
+  if (!v3_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "v3",
+      "");
+  }
+}
+
+cuboid_t* cuboid_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class cuboid_t (*this, f, c);
+}
+
+cuboid_t::
+~cuboid_t ()
+{
+}
+
+// sphere_t
+//
+
+sphere_t::
+sphere_t (const x1_type& x1,
+          const x2_type& x2,
+          const x3_type& x3,
+          const r_type& r,
+          const h_type& h,
+          const m_type& m,
+          const v1_type& v1,
+          const v2_type& v2,
+          const v3_type& v3)
+: ::xml_schema::type (),
+  x1_ (x1, ::xml_schema::flags (), this),
+  x2_ (x2, ::xml_schema::flags (), this),
+  x3_ (x3, ::xml_schema::flags (), this),
+  r_ (r, ::xml_schema::flags (), this),
+  h_ (h, ::xml_schema::flags (), this),
+  m_ (m, ::xml_schema::flags (), this),
+  v1_ (v1, ::xml_schema::flags (), this),
+  v2_ (v2, ::xml_schema::flags (), this),
+  v3_ (v3, ::xml_schema::flags (), this)
+{
+}
+
+sphere_t::
+sphere_t (const sphere_t& x,
+          ::xml_schema::flags f,
+          ::xml_schema::container* c)
+: ::xml_schema::type (x, f, c),
+  x1_ (x.x1_, f, this),
+  x2_ (x.x2_, f, this),
+  x3_ (x.x3_, f, this),
+  r_ (x.r_, f, this),
+  h_ (x.h_, f, this),
+  m_ (x.m_, f, this),
+  v1_ (x.v1_, f, this),
+  v2_ (x.v2_, f, this),
+  v3_ (x.v3_, f, this)
+{
+}
+
+sphere_t::
+sphere_t (const ::xercesc::DOMElement& e,
+          ::xml_schema::flags f,
+          ::xml_schema::container* c)
+: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  x1_ (f, this),
+  x2_ (f, this),
+  x3_ (f, this),
+  r_ (f, this),
+  h_ (f, this),
+  m_ (f, this),
+  v1_ (f, this),
+  v2_ (f, this),
+  v3_ (f, this)
+{
+  if ((f & ::xml_schema::flags::base) == 0)
+  {
+    ::xsd::cxx::xml::dom::parser< char > p (e, false, true);
+    this->parse (p, f);
+  }
+}
+
+void sphere_t::
+parse (::xsd::cxx::xml::dom::parser< char >& p,
+       ::xml_schema::flags f)
+{
+  while (p.more_attributes ())
+  {
+    const ::xercesc::DOMAttr& i (p.next_attribute ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    if (n.name () == "x1" && n.namespace_ ().empty ())
+    {
+      this->x1_.set (x1_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "x2" && n.namespace_ ().empty ())
+    {
+      this->x2_.set (x2_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "x3" && n.namespace_ ().empty ())
+    {
+      this->x3_.set (x3_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "r" && n.namespace_ ().empty ())
+    {
+      this->r_.set (r_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "h" && n.namespace_ ().empty ())
+    {
+      this->h_.set (h_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "m" && n.namespace_ ().empty ())
+    {
+      this->m_.set (m_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "v1" && n.namespace_ ().empty ())
+    {
+      this->v1_.set (v1_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "v2" && n.namespace_ ().empty ())
+    {
+      this->v2_.set (v2_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "v3" && n.namespace_ ().empty ())
+    {
+      this->v3_.set (v3_traits::create (i, f, this));
+      continue;
+    }
+  }
+
+  if (!x1_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "x1",
+      "");
+  }
+
+  if (!x2_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "x2",
+      "");
+  }
+
+  if (!x3_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "x3",
+      "");
+  }
+
+  if (!r_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "r",
+      "");
+  }
+
+  if (!h_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "h",
+      "");
+  }
+
+  if (!m_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "m",
+      "");
+  }
+
+  if (!v1_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "v1",
+      "");
+  }
+
+  if (!v2_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "v2",
+      "");
+  }
+
+  if (!v3_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "v3",
+      "");
+  }
+}
+
+sphere_t* sphere_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class sphere_t (*this, f, c);
+}
+
+sphere_t::
+~sphere_t ()
+{
+}
+
 // simulation_input_t
 //
 
@@ -1157,8 +2492,8 @@ simulation_input_t::
 simulation_input_t ()
 : ::xml_schema::type (),
   particle_file_ (::xml_schema::flags (), this),
-  cuboid_file_ (::xml_schema::flags (), this),
-  sphere_file_ (::xml_schema::flags (), this)
+  cuboid_ (::xml_schema::flags (), this),
+  sphere_ (::xml_schema::flags (), this)
 {
 }
 
@@ -1168,8 +2503,8 @@ simulation_input_t (const simulation_input_t& x,
                     ::xml_schema::container* c)
 : ::xml_schema::type (x, f, c),
   particle_file_ (x.particle_file_, f, this),
-  cuboid_file_ (x.cuboid_file_, f, this),
-  sphere_file_ (x.sphere_file_, f, this)
+  cuboid_ (x.cuboid_, f, this),
+  sphere_ (x.sphere_, f, this)
 {
 }
 
@@ -1179,8 +2514,8 @@ simulation_input_t (const ::xercesc::DOMElement& e,
                     ::xml_schema::container* c)
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
   particle_file_ (f, this),
-  cuboid_file_ (f, this),
-  sphere_file_ (f, this)
+  cuboid_ (f, this),
+  sphere_ (f, this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
   {
@@ -1210,25 +2545,25 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       continue;
     }
 
-    // cuboid_file
+    // cuboid
     //
-    if (n.name () == "cuboid_file" && n.namespace_ ().empty ())
+    if (n.name () == "cuboid" && n.namespace_ ().empty ())
     {
-      ::std::auto_ptr< cuboid_file_type > r (
-        cuboid_file_traits::create (i, f, this));
+      ::std::auto_ptr< cuboid_type > r (
+        cuboid_traits::create (i, f, this));
 
-      this->cuboid_file_.push_back (r);
+      this->cuboid_.push_back (r);
       continue;
     }
 
-    // sphere_file
+    // sphere
     //
-    if (n.name () == "sphere_file" && n.namespace_ ().empty ())
+    if (n.name () == "sphere" && n.namespace_ ().empty ())
     {
-      ::std::auto_ptr< sphere_file_type > r (
-        sphere_file_traits::create (i, f, this));
+      ::std::auto_ptr< sphere_type > r (
+        sphere_traits::create (i, f, this));
 
-      this->sphere_file_.push_back (r);
+      this->sphere_.push_back (r);
       continue;
     }
 

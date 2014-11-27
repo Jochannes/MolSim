@@ -41,10 +41,9 @@
 
 #include <xsd/cxx/config.hxx>
 
-// changed version from 3030000L to 3029951L for compatability. :D
-#if (XSD_INT_VERSION != 3029951L)
-#error XSD runtime version mismatch
-#endif
+//#if (XSD_INT_VERSION != 3030000L)
+//#error XSD runtime version mismatch
+//#endif
 
 #include <xsd/cxx/pre.hxx>
 
@@ -224,9 +223,13 @@ namespace xml_schema
 //
 class force_calculator_type_t;
 class simulation_mode_type_t;
+class boundary_type_t;
+class boundary_t;
 class force_calculator_t;
 class simulation_mode_t;
 class simulation_parameters_t;
+class cuboid_t;
+class sphere_t;
 class simulation_input_t;
 class simulation_output_t;
 class simulation_t;
@@ -354,6 +357,207 @@ class simulation_mode_type_t: public ::xml_schema::string
   public:
   static const char* const _xsd_simulation_mode_type_t_literals_[2];
   static const value _xsd_simulation_mode_type_t_indexes_[2];
+};
+
+class boundary_type_t: public ::xml_schema::string
+{
+  public:
+  enum value
+  {
+    outflow,
+    reflect
+  };
+
+  boundary_type_t (value v);
+
+  boundary_type_t (const char* v);
+
+  boundary_type_t (const ::std::string& v);
+
+  boundary_type_t (const ::xml_schema::string& v);
+
+  boundary_type_t (const ::xercesc::DOMElement& e,
+                   ::xml_schema::flags f = 0,
+                   ::xml_schema::container* c = 0);
+
+  boundary_type_t (const ::xercesc::DOMAttr& a,
+                   ::xml_schema::flags f = 0,
+                   ::xml_schema::container* c = 0);
+
+  boundary_type_t (const ::std::string& s,
+                   const ::xercesc::DOMElement* e,
+                   ::xml_schema::flags f = 0,
+                   ::xml_schema::container* c = 0);
+
+  boundary_type_t (const boundary_type_t& x,
+                   ::xml_schema::flags f = 0,
+                   ::xml_schema::container* c = 0);
+
+  virtual boundary_type_t*
+  _clone (::xml_schema::flags f = 0,
+          ::xml_schema::container* c = 0) const;
+
+  boundary_type_t&
+  operator= (value v);
+
+  virtual
+  operator value () const
+  {
+    return _xsd_boundary_type_t_convert ();
+  }
+
+  protected:
+  value
+  _xsd_boundary_type_t_convert () const;
+
+  public:
+  static const char* const _xsd_boundary_type_t_literals_[2];
+  static const value _xsd_boundary_type_t_indexes_[2];
+};
+
+class boundary_t: public ::xml_schema::type
+{
+  public:
+  // x_0
+  // 
+  typedef ::boundary_type_t x_0_type;
+  typedef ::xsd::cxx::tree::traits< x_0_type, char > x_0_traits;
+
+  const x_0_type&
+  x_0 () const;
+
+  x_0_type&
+  x_0 ();
+
+  void
+  x_0 (const x_0_type& x);
+
+  void
+  x_0 (::std::auto_ptr< x_0_type > p);
+
+  // x_max
+  // 
+  typedef ::boundary_type_t x_max_type;
+  typedef ::xsd::cxx::tree::traits< x_max_type, char > x_max_traits;
+
+  const x_max_type&
+  x_max () const;
+
+  x_max_type&
+  x_max ();
+
+  void
+  x_max (const x_max_type& x);
+
+  void
+  x_max (::std::auto_ptr< x_max_type > p);
+
+  // y_0
+  // 
+  typedef ::boundary_type_t y_0_type;
+  typedef ::xsd::cxx::tree::traits< y_0_type, char > y_0_traits;
+
+  const y_0_type&
+  y_0 () const;
+
+  y_0_type&
+  y_0 ();
+
+  void
+  y_0 (const y_0_type& x);
+
+  void
+  y_0 (::std::auto_ptr< y_0_type > p);
+
+  // y_max
+  // 
+  typedef ::boundary_type_t y_max_type;
+  typedef ::xsd::cxx::tree::traits< y_max_type, char > y_max_traits;
+
+  const y_max_type&
+  y_max () const;
+
+  y_max_type&
+  y_max ();
+
+  void
+  y_max (const y_max_type& x);
+
+  void
+  y_max (::std::auto_ptr< y_max_type > p);
+
+  // z_0
+  // 
+  typedef ::boundary_type_t z_0_type;
+  typedef ::xsd::cxx::tree::traits< z_0_type, char > z_0_traits;
+
+  const z_0_type&
+  z_0 () const;
+
+  z_0_type&
+  z_0 ();
+
+  void
+  z_0 (const z_0_type& x);
+
+  void
+  z_0 (::std::auto_ptr< z_0_type > p);
+
+  // z_max
+  // 
+  typedef ::boundary_type_t z_max_type;
+  typedef ::xsd::cxx::tree::traits< z_max_type, char > z_max_traits;
+
+  const z_max_type&
+  z_max () const;
+
+  z_max_type&
+  z_max ();
+
+  void
+  z_max (const z_max_type& x);
+
+  void
+  z_max (::std::auto_ptr< z_max_type > p);
+
+  // Constructors.
+  //
+  boundary_t (const x_0_type&,
+              const x_max_type&,
+              const y_0_type&,
+              const y_max_type&,
+              const z_0_type&,
+              const z_max_type&);
+
+  boundary_t (const ::xercesc::DOMElement& e,
+              ::xml_schema::flags f = 0,
+              ::xml_schema::container* c = 0);
+
+  boundary_t (const boundary_t& x,
+              ::xml_schema::flags f = 0,
+              ::xml_schema::container* c = 0);
+
+  virtual boundary_t*
+  _clone (::xml_schema::flags f = 0,
+          ::xml_schema::container* c = 0) const;
+
+  virtual 
+  ~boundary_t ();
+
+  // Implementation.
+  //
+  protected:
+  void
+  parse (::xsd::cxx::xml::dom::parser< char >&,
+         ::xml_schema::flags);
+
+  protected:
+  ::xsd::cxx::tree::one< x_0_type > x_0_;
+  ::xsd::cxx::tree::one< x_max_type > x_max_;
+  ::xsd::cxx::tree::one< y_0_type > y_0_;
+  ::xsd::cxx::tree::one< y_max_type > y_max_;
+  ::xsd::cxx::tree::one< z_0_type > z_0_;
+  ::xsd::cxx::tree::one< z_max_type > z_max_;
 };
 
 class force_calculator_t: public ::xml_schema::type
@@ -518,6 +722,45 @@ class simulation_mode_t: public ::xml_schema::type
   void
   domain_size_y (const domain_size_y_optional& x);
 
+  // domain_size_z
+  // 
+  typedef ::xml_schema::double_ domain_size_z_type;
+  typedef ::xsd::cxx::tree::optional< domain_size_z_type > domain_size_z_optional;
+  typedef ::xsd::cxx::tree::traits< domain_size_z_type, char, ::xsd::cxx::tree::schema_type::double_ > domain_size_z_traits;
+
+  const domain_size_z_optional&
+  domain_size_z () const;
+
+  domain_size_z_optional&
+  domain_size_z ();
+
+  void
+  domain_size_z (const domain_size_z_type& x);
+
+  void
+  domain_size_z (const domain_size_z_optional& x);
+
+  // boundary
+  // 
+  typedef ::boundary_t boundary_type;
+  typedef ::xsd::cxx::tree::optional< boundary_type > boundary_optional;
+  typedef ::xsd::cxx::tree::traits< boundary_type, char > boundary_traits;
+
+  const boundary_optional&
+  boundary () const;
+
+  boundary_optional&
+  boundary ();
+
+  void
+  boundary (const boundary_type& x);
+
+  void
+  boundary (const boundary_optional& x);
+
+  void
+  boundary (::std::auto_ptr< boundary_type > p);
+
   // Constructors.
   //
   simulation_mode_t (const type_type&);
@@ -549,6 +792,8 @@ class simulation_mode_t: public ::xml_schema::type
   cutoff_radius_optional cutoff_radius_;
   domain_size_x_optional domain_size_x_;
   domain_size_y_optional domain_size_y_;
+  domain_size_z_optional domain_size_z_;
+  boundary_optional boundary_;
 };
 
 class simulation_parameters_t: public ::xml_schema::type
@@ -674,6 +919,388 @@ class simulation_parameters_t: public ::xml_schema::type
   ::xsd::cxx::tree::one< simulation_mode_type > simulation_mode_;
 };
 
+class cuboid_t: public ::xml_schema::type
+{
+  public:
+  // x1
+  // 
+  typedef ::xml_schema::double_ x1_type;
+  typedef ::xsd::cxx::tree::traits< x1_type, char, ::xsd::cxx::tree::schema_type::double_ > x1_traits;
+
+  const x1_type&
+  x1 () const;
+
+  x1_type&
+  x1 ();
+
+  void
+  x1 (const x1_type& x);
+
+  // x2
+  // 
+  typedef ::xml_schema::double_ x2_type;
+  typedef ::xsd::cxx::tree::traits< x2_type, char, ::xsd::cxx::tree::schema_type::double_ > x2_traits;
+
+  const x2_type&
+  x2 () const;
+
+  x2_type&
+  x2 ();
+
+  void
+  x2 (const x2_type& x);
+
+  // x3
+  // 
+  typedef ::xml_schema::double_ x3_type;
+  typedef ::xsd::cxx::tree::traits< x3_type, char, ::xsd::cxx::tree::schema_type::double_ > x3_traits;
+
+  const x3_type&
+  x3 () const;
+
+  x3_type&
+  x3 ();
+
+  void
+  x3 (const x3_type& x);
+
+  // n1
+  // 
+  typedef ::xml_schema::unsigned_int n1_type;
+  typedef ::xsd::cxx::tree::traits< n1_type, char > n1_traits;
+
+  const n1_type&
+  n1 () const;
+
+  n1_type&
+  n1 ();
+
+  void
+  n1 (const n1_type& x);
+
+  // n2
+  // 
+  typedef ::xml_schema::unsigned_int n2_type;
+  typedef ::xsd::cxx::tree::traits< n2_type, char > n2_traits;
+
+  const n2_type&
+  n2 () const;
+
+  n2_type&
+  n2 ();
+
+  void
+  n2 (const n2_type& x);
+
+  // n3
+  // 
+  typedef ::xml_schema::unsigned_int n3_type;
+  typedef ::xsd::cxx::tree::traits< n3_type, char > n3_traits;
+
+  const n3_type&
+  n3 () const;
+
+  n3_type&
+  n3 ();
+
+  void
+  n3 (const n3_type& x);
+
+  // h
+  // 
+  typedef ::xml_schema::double_ h_type;
+  typedef ::xsd::cxx::tree::traits< h_type, char, ::xsd::cxx::tree::schema_type::double_ > h_traits;
+
+  const h_type&
+  h () const;
+
+  h_type&
+  h ();
+
+  void
+  h (const h_type& x);
+
+  // m
+  // 
+  typedef ::xml_schema::double_ m_type;
+  typedef ::xsd::cxx::tree::traits< m_type, char, ::xsd::cxx::tree::schema_type::double_ > m_traits;
+
+  const m_type&
+  m () const;
+
+  m_type&
+  m ();
+
+  void
+  m (const m_type& x);
+
+  // v1
+  // 
+  typedef ::xml_schema::double_ v1_type;
+  typedef ::xsd::cxx::tree::traits< v1_type, char, ::xsd::cxx::tree::schema_type::double_ > v1_traits;
+
+  const v1_type&
+  v1 () const;
+
+  v1_type&
+  v1 ();
+
+  void
+  v1 (const v1_type& x);
+
+  // v2
+  // 
+  typedef ::xml_schema::double_ v2_type;
+  typedef ::xsd::cxx::tree::traits< v2_type, char, ::xsd::cxx::tree::schema_type::double_ > v2_traits;
+
+  const v2_type&
+  v2 () const;
+
+  v2_type&
+  v2 ();
+
+  void
+  v2 (const v2_type& x);
+
+  // v3
+  // 
+  typedef ::xml_schema::double_ v3_type;
+  typedef ::xsd::cxx::tree::traits< v3_type, char, ::xsd::cxx::tree::schema_type::double_ > v3_traits;
+
+  const v3_type&
+  v3 () const;
+
+  v3_type&
+  v3 ();
+
+  void
+  v3 (const v3_type& x);
+
+  // Constructors.
+  //
+  cuboid_t (const x1_type&,
+            const x2_type&,
+            const x3_type&,
+            const n1_type&,
+            const n2_type&,
+            const n3_type&,
+            const h_type&,
+            const m_type&,
+            const v1_type&,
+            const v2_type&,
+            const v3_type&);
+
+  cuboid_t (const ::xercesc::DOMElement& e,
+            ::xml_schema::flags f = 0,
+            ::xml_schema::container* c = 0);
+
+  cuboid_t (const cuboid_t& x,
+            ::xml_schema::flags f = 0,
+            ::xml_schema::container* c = 0);
+
+  virtual cuboid_t*
+  _clone (::xml_schema::flags f = 0,
+          ::xml_schema::container* c = 0) const;
+
+  virtual 
+  ~cuboid_t ();
+
+  // Implementation.
+  //
+  protected:
+  void
+  parse (::xsd::cxx::xml::dom::parser< char >&,
+         ::xml_schema::flags);
+
+  protected:
+  ::xsd::cxx::tree::one< x1_type > x1_;
+  ::xsd::cxx::tree::one< x2_type > x2_;
+  ::xsd::cxx::tree::one< x3_type > x3_;
+  ::xsd::cxx::tree::one< n1_type > n1_;
+  ::xsd::cxx::tree::one< n2_type > n2_;
+  ::xsd::cxx::tree::one< n3_type > n3_;
+  ::xsd::cxx::tree::one< h_type > h_;
+  ::xsd::cxx::tree::one< m_type > m_;
+  ::xsd::cxx::tree::one< v1_type > v1_;
+  ::xsd::cxx::tree::one< v2_type > v2_;
+  ::xsd::cxx::tree::one< v3_type > v3_;
+};
+
+class sphere_t: public ::xml_schema::type
+{
+  public:
+  // x1
+  // 
+  typedef ::xml_schema::double_ x1_type;
+  typedef ::xsd::cxx::tree::traits< x1_type, char, ::xsd::cxx::tree::schema_type::double_ > x1_traits;
+
+  const x1_type&
+  x1 () const;
+
+  x1_type&
+  x1 ();
+
+  void
+  x1 (const x1_type& x);
+
+  // x2
+  // 
+  typedef ::xml_schema::double_ x2_type;
+  typedef ::xsd::cxx::tree::traits< x2_type, char, ::xsd::cxx::tree::schema_type::double_ > x2_traits;
+
+  const x2_type&
+  x2 () const;
+
+  x2_type&
+  x2 ();
+
+  void
+  x2 (const x2_type& x);
+
+  // x3
+  // 
+  typedef ::xml_schema::double_ x3_type;
+  typedef ::xsd::cxx::tree::traits< x3_type, char, ::xsd::cxx::tree::schema_type::double_ > x3_traits;
+
+  const x3_type&
+  x3 () const;
+
+  x3_type&
+  x3 ();
+
+  void
+  x3 (const x3_type& x);
+
+  // r
+  // 
+  typedef ::xml_schema::unsigned_int r_type;
+  typedef ::xsd::cxx::tree::traits< r_type, char > r_traits;
+
+  const r_type&
+  r () const;
+
+  r_type&
+  r ();
+
+  void
+  r (const r_type& x);
+
+  // h
+  // 
+  typedef ::xml_schema::double_ h_type;
+  typedef ::xsd::cxx::tree::traits< h_type, char, ::xsd::cxx::tree::schema_type::double_ > h_traits;
+
+  const h_type&
+  h () const;
+
+  h_type&
+  h ();
+
+  void
+  h (const h_type& x);
+
+  // m
+  // 
+  typedef ::xml_schema::double_ m_type;
+  typedef ::xsd::cxx::tree::traits< m_type, char, ::xsd::cxx::tree::schema_type::double_ > m_traits;
+
+  const m_type&
+  m () const;
+
+  m_type&
+  m ();
+
+  void
+  m (const m_type& x);
+
+  // v1
+  // 
+  typedef ::xml_schema::double_ v1_type;
+  typedef ::xsd::cxx::tree::traits< v1_type, char, ::xsd::cxx::tree::schema_type::double_ > v1_traits;
+
+  const v1_type&
+  v1 () const;
+
+  v1_type&
+  v1 ();
+
+  void
+  v1 (const v1_type& x);
+
+  // v2
+  // 
+  typedef ::xml_schema::double_ v2_type;
+  typedef ::xsd::cxx::tree::traits< v2_type, char, ::xsd::cxx::tree::schema_type::double_ > v2_traits;
+
+  const v2_type&
+  v2 () const;
+
+  v2_type&
+  v2 ();
+
+  void
+  v2 (const v2_type& x);
+
+  // v3
+  // 
+  typedef ::xml_schema::double_ v3_type;
+  typedef ::xsd::cxx::tree::traits< v3_type, char, ::xsd::cxx::tree::schema_type::double_ > v3_traits;
+
+  const v3_type&
+  v3 () const;
+
+  v3_type&
+  v3 ();
+
+  void
+  v3 (const v3_type& x);
+
+  // Constructors.
+  //
+  sphere_t (const x1_type&,
+            const x2_type&,
+            const x3_type&,
+            const r_type&,
+            const h_type&,
+            const m_type&,
+            const v1_type&,
+            const v2_type&,
+            const v3_type&);
+
+  sphere_t (const ::xercesc::DOMElement& e,
+            ::xml_schema::flags f = 0,
+            ::xml_schema::container* c = 0);
+
+  sphere_t (const sphere_t& x,
+            ::xml_schema::flags f = 0,
+            ::xml_schema::container* c = 0);
+
+  virtual sphere_t*
+  _clone (::xml_schema::flags f = 0,
+          ::xml_schema::container* c = 0) const;
+
+  virtual 
+  ~sphere_t ();
+
+  // Implementation.
+  //
+  protected:
+  void
+  parse (::xsd::cxx::xml::dom::parser< char >&,
+         ::xml_schema::flags);
+
+  protected:
+  ::xsd::cxx::tree::one< x1_type > x1_;
+  ::xsd::cxx::tree::one< x2_type > x2_;
+  ::xsd::cxx::tree::one< x3_type > x3_;
+  ::xsd::cxx::tree::one< r_type > r_;
+  ::xsd::cxx::tree::one< h_type > h_;
+  ::xsd::cxx::tree::one< m_type > m_;
+  ::xsd::cxx::tree::one< v1_type > v1_;
+  ::xsd::cxx::tree::one< v2_type > v2_;
+  ::xsd::cxx::tree::one< v3_type > v3_;
+};
+
 class simulation_input_t: public ::xml_schema::type
 {
   public:
@@ -694,39 +1321,39 @@ class simulation_input_t: public ::xml_schema::type
   void
   particle_file (const particle_file_sequence& s);
 
-  // cuboid_file
+  // cuboid
   // 
-  typedef ::xml_schema::string cuboid_file_type;
-  typedef ::xsd::cxx::tree::sequence< cuboid_file_type > cuboid_file_sequence;
-  typedef cuboid_file_sequence::iterator cuboid_file_iterator;
-  typedef cuboid_file_sequence::const_iterator cuboid_file_const_iterator;
-  typedef ::xsd::cxx::tree::traits< cuboid_file_type, char > cuboid_file_traits;
+  typedef ::cuboid_t cuboid_type;
+  typedef ::xsd::cxx::tree::sequence< cuboid_type > cuboid_sequence;
+  typedef cuboid_sequence::iterator cuboid_iterator;
+  typedef cuboid_sequence::const_iterator cuboid_const_iterator;
+  typedef ::xsd::cxx::tree::traits< cuboid_type, char > cuboid_traits;
 
-  const cuboid_file_sequence&
-  cuboid_file () const;
+  const cuboid_sequence&
+  cuboid () const;
 
-  cuboid_file_sequence&
-  cuboid_file ();
+  cuboid_sequence&
+  cuboid ();
 
   void
-  cuboid_file (const cuboid_file_sequence& s);
+  cuboid (const cuboid_sequence& s);
 
-  // sphere_file
+  // sphere
   // 
-  typedef ::xml_schema::string sphere_file_type;
-  typedef ::xsd::cxx::tree::sequence< sphere_file_type > sphere_file_sequence;
-  typedef sphere_file_sequence::iterator sphere_file_iterator;
-  typedef sphere_file_sequence::const_iterator sphere_file_const_iterator;
-  typedef ::xsd::cxx::tree::traits< sphere_file_type, char > sphere_file_traits;
+  typedef ::sphere_t sphere_type;
+  typedef ::xsd::cxx::tree::sequence< sphere_type > sphere_sequence;
+  typedef sphere_sequence::iterator sphere_iterator;
+  typedef sphere_sequence::const_iterator sphere_const_iterator;
+  typedef ::xsd::cxx::tree::traits< sphere_type, char > sphere_traits;
 
-  const sphere_file_sequence&
-  sphere_file () const;
+  const sphere_sequence&
+  sphere () const;
 
-  sphere_file_sequence&
-  sphere_file ();
+  sphere_sequence&
+  sphere ();
 
   void
-  sphere_file (const sphere_file_sequence& s);
+  sphere (const sphere_sequence& s);
 
   // Constructors.
   //
@@ -756,8 +1383,8 @@ class simulation_input_t: public ::xml_schema::type
 
   protected:
   particle_file_sequence particle_file_;
-  cuboid_file_sequence cuboid_file_;
-  sphere_file_sequence sphere_file_;
+  cuboid_sequence cuboid_;
+  sphere_sequence sphere_;
 };
 
 class simulation_output_t: public ::xml_schema::type
