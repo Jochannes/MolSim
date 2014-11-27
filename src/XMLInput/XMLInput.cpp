@@ -26,6 +26,7 @@
 #include <auto_ptr.h>
 #include <list>
 #include <string>
+#include <sstream>
 
 using namespace std;
 using namespace log4cxx;
@@ -185,6 +186,22 @@ void XMLInput::ReadFile()
 				this->boundary[3] = b.y_max();
 				this->boundary[4] = b.z_0();
 				this->boundary[5] = b.z_max();
+
+				stringstream str;
+				str << "[ ";
+				for(int i=0; i<6; i++) {
+					switch(this->boundary[i]) {
+					case boundary_type_t::outflow:
+						str << "outflow ";
+						break;
+					case boundary_type_t::reflect:
+						str << "reflect ";
+						break;
+					}
+				}
+				str << "]";
+
+				LOG4CXX_DEBUG(xmllogger, "reading boundary conditions for Linked-Cell-mode: " << str.str());
 			}
 			else {
 				LOG4CXX_DEBUG(xmllogger, "no boundary conditions specified for Linked-Cell-mode.");
@@ -243,9 +260,10 @@ void XMLInput::ReadFile()
 		double distance           = it->h();
 		double mass               = it->m();
 		double velocity[3]        = {it->v1(), it->v2(), it->v3()};
+		bool   use3D              = false;
 		double brown_factor       = 0.1;
 
-		SphereGenerator s(center_position, radius, distance, mass, velocity, brown_factor);
+		SphereGenerator s(center_position, radius, distance, mass, velocity, use3D, brown_factor);
 		this->sphere.push_back(s);
 
 		LOG4CXX_DEBUG(xmllogger, "reading sphere " << s.toString());

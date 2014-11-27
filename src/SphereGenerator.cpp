@@ -10,8 +10,8 @@
 #include "utils/Vector.h"
 
 #include <cstdlib>
+#include <cmath>
 #include <iostream>
-#include <fstream>
 #include <sstream>
 #include <log4cxx/logger.h>
 
@@ -29,25 +29,46 @@ void SphereGenerator::genParticle(std::list<Particle>& particleList, int x, int 
 	pos[2] = center_position[2] + z*distance;
 
 	Particle P(pos, velocity, mass);
-	MaxwellBoltzmannDistribution(P, brown_factor, 3);
+	MaxwellBoltzmannDistribution(P, brown_factor, (use3D ? 3 : 2));
 
 	particleList.push_back(P);
 }
 
 
-void SphereGenerator::genCircle(std::list<Particle>& particleList, int r, int z)
+void SphereGenerator::genRow(std::list<Particle>& particleList, int x, int y, int size)
 {
-	int r_2 = r*r;
-	int y = r;
-/*
-	// cross
-	for(int i=0; i<r; i++) {
-		genParticle(particleList, 0, i, z);
-		genParticle(particleList, 0, -i, z);
-		genParticle(particleList, i, 0, z);
-		genParticle(particleList, -i, 0, z);
+	if(size < 0) {
+		size = sqrt(radius*radius - x*x - y*y);
 	}
-*/
+	if (size > 0) {
+		genParticle(particleList, x, y, 0);
+
+		for(int i=1; i<=size; i++) {
+			genParticle(particleList, x, y, i);
+			genParticle(particleList, x, y, -i);
+		}
+	}
+}
+
+
+void SphereGenerator::genCircle(std::list<Particle>& particleList)
+{
+	LOG4CXX_DEBUG(SGLogger, "generating sphere " << toString());
+
+	int r_2 = radius*radius;
+	int y = radius;
+
+	// center
+	genParticle(particleList, 0, 0, 0);
+
+	// cross
+	for(int i=1; i<radius; i++) {
+		genParticle(particleList, 0, i, 0);
+		genParticle(particleList, 0, -i, 0);
+		genParticle(particleList, i, 0, 0);
+		genParticle(particleList, -i, 0, 0);
+	}
+
 	// rest of circle
 	for(int x=1; x<y; x++) {
 
@@ -56,52 +77,76 @@ void SphereGenerator::genCircle(std::list<Particle>& particleList, int r, int z)
 		}
 
 		// diagonale
-		genParticle(particleList, x, x, z);
-		genParticle(particleList, x, -x, z);
-		genParticle(particleList, -x, x, z);
-		genParticle(particleList, -x, -x, z);
+		genParticle(particleList, x, x, 0);
+		genParticle(particleList, x, -x, 0);
+		genParticle(particleList, -x, x, 0);
+		genParticle(particleList, -x, -x, 0);
 
 		// plot rows
 		for(int i=x+1; i<=y; i++) {
-			genParticle(particleList, x, i, z);
-			genParticle(particleList, i, x, z);
 
-			genParticle(particleList, x, -i, z);
-			genParticle(particleList, i, -x, z);
+			genParticle(particleList, x, i, 0);
+			genParticle(particleList, i, x, 0);
 
-			genParticle(particleList, -x, i, z);
-			genParticle(particleList, -i, x, z);
+			genParticle(particleList, x, -i, 0);
+			genParticle(particleList, i, -x, 0);
 
-			genParticle(particleList, -x, -i, z);
-			genParticle(particleList, -i, -x, z);
+			genParticle(particleList, -x, i, 0);
+			genParticle(particleList, -i, x, 0);
+
+			genParticle(particleList, -x, -i, 0);
+			genParticle(particleList, -i, -x, 0);
 		}
-
-
 	}
 }
 
-void SphereGenerator::input(std::list<Particle>& particleList)
+
+void SphereGenerator::genSphere(std::list<Particle>& particleList)
 {
 	LOG4CXX_DEBUG(SGLogger, "generating sphere " << toString());
 
-	int r_2 = (radius-1)*(radius-1);
-	int y = radius-1;
+	int r_2 = radius*radius;
+	int y = radius;
 
 	// center
-	genCircle(particleList, radius, 0);
+	genRow(particleList, 0, 0, radius-1);
 
-	// rest of sphere
-	for(int z=1; z<y; z++) {
+	// cross
+	for(int i=1; i<radius; i++) {
+		genRow(particleList, 0, i);
+		genRow(particleList, 0, -i);
+		genRow(particleList, i, 0);
+		genRow(particleList, -i, 0);
+	}
 
-		if( (z*z + y*y) > r_2 ) {
+	// rest of circle
+	for(int x=1; x<y; x++) {
+
+		if( (x*x + y*y) > r_2 ) {
 			y--;
 		}
 
-		genCircle(particleList, y, z);
-		genCircle(particleList, y, -z);
+		// diagonale
+		genRow(particleList, x, x);
+		genRow(particleList, x, -x);
+		genRow(particleList, -x, x);
+		genRow(particleList, -x, -x);
 
-		genCircle(particleList, radius-y, z);
-		genCircle(particleList, radius-y, -z);
+		// plot rows
+		for(int i=x+1; i<=y; i++) {
+
+			genRow(particleList, x, i);
+			genRow(particleList, i, x);
+
+			genRow(particleList, x, -i);
+			genRow(particleList, i, -x);
+
+			genRow(particleList, -x, i);
+			genRow(particleList, -i, x);
+
+			genRow(particleList, -x, -i);
+			genRow(particleList, -i, -x);
+		}
 	}
 }
 
@@ -115,6 +160,7 @@ std::string SphereGenerator::toString()
 			"; h=" << distance <<
 			"; m=" << mass <<
 			"; v=" << velocity.toString() <<
+			"; mode=" << (use3D ? "3D" : "2D") <<
 			"; brown_factor=" << brown_factor <<
 			"]";
 
