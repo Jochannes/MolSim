@@ -14,17 +14,17 @@
 #include "ParticleHandler.h"
 #include "PairHandler.h"
 #include "handler/ForcePrepareHandler.h"
-#include "BoundaryCondition/BoundaryCondition.h"
-#include "BoundaryCondition/Outflow.h"
 
 #include <list>
 
 using namespace std;
 using namespace utils;
 
-//Forward declaration of unit test class
+//Forward declarations
+class BoundaryCondition;
 namespace unitTest {
-class UTest_CellContainer;
+	class UTest_CellContainer;
+	class UTest_BoundaryCondition;
 }
 
 /**
@@ -33,13 +33,11 @@ class UTest_CellContainer;
  */
 class CellContainer: public ParticleContainer {
 	friend unitTest::UTest_CellContainer;
+	friend unitTest::UTest_BoundaryCondition;
 
 private:
 	SimpleContainer* cells; //!< Array with one SimpleContainer per cell, including the halo region.
 	Vector<double, 3> domainSize; 	//!< Domain size in each dimension.
-	Vector<int, 3> cellCount; //!< Number of cells in each dimension \f$ N_i \f$.
-	int cellTotal;					//!< Total number of cells \f$ N \f$.
-	double cutoff;					//!< Cutoff radius.
 	int* haloInds;//!< Indices of all halo cells for fast and simple iteration.
 	int* boundInds;	//!< Indices of all boundary cells for fast and simple iteration.
 	int haloSize;					//!< Number of halo cells.
@@ -62,6 +60,9 @@ public:
 	 * 5: z=max
 	 */
 	BoundaryCondition *boundConds[6];
+	double cutoff;					//!< Cutoff radius.
+	Vector<int, 3> cellCount; //!< Number of cells in each dimension \f$ N_i \f$.
+	int cellTotal;					//!< Total number of cells \f$ N \f$.
 
 	CellContainer(const Vector<double, 3> domainSize, const double cutoff,
 			list<Particle>* initialParticleList = NULL);

@@ -6,8 +6,9 @@
  */
 
 #include "UTest_CellContainer.h"
-#include "countParticles.h"
-#include "countPairs.h"
+#include "UnitTests/Handler/CountParticles.h"
+#include "UnitTests/Handler/CountPairs.h"
+#include "UnitTests/BoundCondCount.h"
 
 namespace unitTest {
 
@@ -20,7 +21,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION(UTest_CellContainer);
  * The domainSize is set to (40, 40, 40) and the cutoff radius to 3.0.
  */
 UTest_CellContainer::UTest_CellContainer() :
-		domainSize(utils::Vector<double, 3>(40)), cutoff(3), cellContainer(
+		numParticles(100), numHalo(10), domainSize(
+				utils::Vector<double, 3>(40)), cutoff(3), cellCont(
 				CellContainer(domainSize, cutoff)) {
 }
 
@@ -39,7 +41,7 @@ void UTest_CellContainer::setUp() {
 
 	double test[] = { 0, 0, 0 };
 	for (int j = 0; j < 3; j++) {
-		test[j] += floor(numParticles/2) * domainSize[j] / numParticles;
+		test[j] += floor(numParticles / 2) * domainSize[j] / numParticles;
 	}
 
 	std::list<Particle> initialParticleList;
@@ -50,24 +52,23 @@ void UTest_CellContainer::setUp() {
 		}
 		initialParticleList.push_back(p);
 	}
-	cellContainer = CellContainer(domainSize, cutoff, &initialParticleList);
-
+	cellCont = CellContainer(domainSize, cutoff, &initialParticleList);
 
 	//Add particles in halo region
 	for (int j = 0; j < 3; j++) {
-		x[j] = - cutoff * 0.5;
+		x[j] = -cutoff * 0.5;
 	}
 	std::list<Particle> haloParticleList;
 	for (int i = 0; i < numHalo; i++) {
 		Particle p(x, v, m);
-		if(i >= numHalo/2){
+		if (i >= numHalo / 2) {
 			for (int j = 0; j < 3; j++) {
 				x[j] = domainSize[j] + cutoff;
 			}
 		}
 		haloParticleList.push_back(p);
 	}
-	cellContainer.add(haloParticleList);
+	cellCont.add(haloParticleList);
 }
 
 /**
@@ -77,10 +78,29 @@ void UTest_CellContainer::tearDown() {
 }
 
 /**
+ * \brief Method for testing if the cell index is calculated self-consistently.
+ *
+ * It does so by first calculating the three-dimensional index and then converting
+ * it back to the linearized index using the calcInd and the calcCell function.
+ */
+void UTest_CellContainer::testIndexCalc() {
+	utils::Vector<double, 3> x;
+	for (int i = 0; i < cellCont.cellTotal; i++) {
+		CPPUNIT_ASSERT(i == cellCont.calcInd(cellCont.calc3Ind(i)));
+
+		x[0] = cellCont.calc3Ind(i)[0];
+		x[1] = cellCont.calc3Ind(i)[1];
+		x[2] = cellCont.calc3Ind(i)[2];
+		x = (x - 0.5) * cellCont.cutoff;
+		CPPUNIT_ASSERT(i == cellCont.calcCell(x));
+	}
+}
+
+/**
  * \brief Method for testing if CellContainer::size returns the correct number of particles.
  */
 void UTest_CellContainer::testSize() {
-	CPPUNIT_ASSERT(numParticles == cellContainer.size());
+	CPPUNIT_ASSERT(numParticles == cellCont.size());
 }
 
 /**
@@ -95,22 +115,22 @@ void UTest_CellContainer::testAddSize() {
 	Particle p(x, v, m);
 
 	//Test the addition of a single particle
-	cellContainer.add(p);
-	CPPUNIT_ASSERT(numParticles + 1 == cellContainer.size());
+	cellCont.add(p);
+	CPPUNIT_ASSERT(numParticles + 1 == cellCont.size());
 
 	//Test the addition of a particle list
 	std::list<Particle> lsPart;
 	for (int i = 0; i < numParticles; i++) {
 		lsPart.push_back(p);
 	}
-	cellContainer.add(lsPart);
-	CPPUNIT_ASSERT(2 * numParticles + 1 == cellContainer.size());
+	cellCont.add(lsPart);
+	CPPUNIT_ASSERT(2 * numParticles + 1 == cellCont.size());
 }
 
 /**
  * \brief Method for testing if CellContainer::remove removes the correct number of particles.
  */
-void UTest_CellContainer::testRemoveSize(){
+void UTest_CellContainer::testRemoveSize() {
 
 	//set up a particle
 	double x[] = { 0, 0, 0 };
@@ -119,54 +139,85 @@ void UTest_CellContainer::testRemoveSize(){
 	Particle p(x, v, m);
 
 	//Test the removal of a particle
-	cellContainer.remove(p);
-	CPPUNIT_ASSERT(numParticles - 1 == cellContainer.size());
+	cellCont.remove(p);
+	CPPUNIT_ASSERT(numParticles - 1 == cellCont.size());
 
 	//Test the removal of a particle from a specific container
 	//Add particle
 	for (int j = 0; j < 3; j++) {
-		x[j] += floor(numParticles/2) * domainSize[j] / numParticles;
+		x[j] += floor(numParticles / 2) * domainSize[j] / numParticles;
 	}
 	p = Particle(x, v, m);
-	cellContainer.add(p);
-	CPPUNIT_ASSERT(numParticles == cellContainer.size());
+	cellCont.add(p);
+	CPPUNIT_ASSERT(numParticles == cellCont.size());
 
 	//Remove particle
-	cellContainer.remove(p,cellContainer.calcCell(x));
-	CPPUNIT_ASSERT(numParticles - 1 == cellContainer.size());
+	cellCont.remove(p, cellCont.calcCell(x));
+	CPPUNIT_ASSERT(numParticles - 1 == cellCont.size());
 }
 
 /**
  * \brief Method for testing if CellContainer::remove_halo removes all halo particles.
  */
-void UTest_CellContainer::testRemoveHalo(){
-	cellContainer.remove_halo();
-	countParticles cntPart = countParticles();
-	cellContainer.iterate_halo(cntPart);
+void UTest_CellContainer::testRemoveHalo() {
+	cellCont.remove_halo();
+	CountParticles cntPart = CountParticles();
+	cellCont.iterate_halo(cntPart);
 	CPPUNIT_ASSERT(cntPart.cnt == 0);
-	CPPUNIT_ASSERT(numParticles == cellContainer.size());
+	CPPUNIT_ASSERT(numParticles == cellCont.size());
+}
+
+/**
+ * \brief Tests if CellContainer::impose_boundConds iterates each side over the right number of cells.
+ */
+void UTest_CellContainer::testImposeBoundCount() {
+
+	//test count for halo cells
+	for (int i = 0; i < 6; i++) {
+		cellCont.boundConds[i] = new BoundCondCount(i, false);
+	}
+	cellCont.impose_boundConds();
+	for (int i = 0; i < 6; i++) {
+		CPPUNIT_ASSERT(
+				((BoundCondCount* )cellCont.boundConds[i])->cnt
+						== 16 * 16);
+		delete(cellCont.boundConds[i]);
+	}
+
+	//test count for boundary cells
+	for (int i = 0; i < 6; i++) {
+		cellCont.boundConds[i] = new BoundCondCount(i, true);
+	}
+	cellCont.impose_boundConds();
+	for (int i = 0; i < 6; i++) {
+		CPPUNIT_ASSERT(
+				((BoundCondCount* )cellCont.boundConds[i])->cnt
+						== 14 * 14);
+		delete(cellCont.boundConds[i]);
+	}
 }
 
 /**
  * \brief Method for testing if CellContainer::iterate_boundary iterates over the correct number of particles.
  */
-void UTest_CellContainer::testIterateBoundaryCount(){
-	countParticles cntPart = countParticles();
-	cellContainer.iterate_halo(cntPart);
+void UTest_CellContainer::testIterateBoundaryCount() {
+	CountParticles cntPart = CountParticles();
+	cellCont.iterate_halo(cntPart);
 
 	//Calculate how many cells are in the boundary
 	int boundCnt = 0;
 	double x[3] = { 0, 0, 0 };
-	int nMin[3] = {1,1,1}; //lower left bottom cell
+	int nMin[3] = { 1, 1, 1 }; //lower left bottom cell
 	int nMax[3]; //upper right top cell
-	nMax[0] = cellContainer.cellCount[0] - 2;
-	nMax[1] = cellContainer.cellCount[1] - 2;
-	nMax[2] = cellContainer.cellCount[2] - 2;
+	nMax[0] = cellCont.cellCount[0] - 2;
+	nMax[1] = cellCont.cellCount[1] - 2;
+	nMax[2] = cellCont.cellCount[2] - 2;
 	for (int i = 0; i < numParticles; i++) {
 		for (int j = 0; j < 3; j++) {
 			x[j] += domainSize[j] / numParticles;
 		}
-		if(cellContainer.calcCell(x) == cellContainer.calcInd(nMin) || cellContainer.calcCell(x) == cellContainer.calcInd(nMax)){
+		if (cellCont.calcCell(x) == cellCont.calcInd(nMin)
+				|| cellCont.calcCell(x) == cellCont.calcInd(nMax)) {
 			boundCnt++;
 		}
 	}
@@ -177,9 +228,9 @@ void UTest_CellContainer::testIterateBoundaryCount(){
 /**
  * \brief Method for testing if CellContainer::iterate_halo iterates over the correct number of particles.
  */
-void UTest_CellContainer::testIterateHaloCount(){
-	countParticles cntHalo = countParticles();
-	cellContainer.iterate_halo(cntHalo);
+void UTest_CellContainer::testIterateHaloCount() {
+	CountParticles cntHalo = CountParticles();
+	cellCont.iterate_halo(cntHalo);
 	CPPUNIT_ASSERT(cntHalo.cnt == numHalo);
 }
 
@@ -187,9 +238,9 @@ void UTest_CellContainer::testIterateHaloCount(){
  * \brief Method for testing if CellContainer::iterate_all iterates over the correct number of particles.
  */
 void UTest_CellContainer::testIterateCount() {
-	countParticles cntPart = countParticles();
-	cellContainer.iterate_all(cntPart);
-	CPPUNIT_ASSERT(cntPart.cnt == cellContainer.size());
+	CountParticles cntPart = CountParticles();
+	cellCont.iterate_all(cntPart);
+	CPPUNIT_ASSERT(cntPart.cnt == cellCont.size());
 }
 
 /**
@@ -204,14 +255,12 @@ void UTest_CellContainer::testIterateCount() {
  * The uncertainty is therefore limited by the number of particles.
  */
 void UTest_CellContainer::testIteratePairCount() {
-	double partsPerCell = numParticles / (cellContainer.cellCount[0] - 2);
-	double avgCount = partsPerCell * numParticles * 3	//All particles interact with 3 cells
-			- partsPerCell * partsPerCell * 2;			//except those in boundary cells
-	countPairs cntPairs = countPairs();
-	cellContainer.iterate_pairs(cntPairs);
-	CPPUNIT_ASSERT(
-			fabs(cntPairs.cnt - avgCount)
-					<= numParticles);
+	double partsPerCell = numParticles / (cellCont.cellCount[0] - 2);
+	double avgCount = partsPerCell * numParticles * 3//All particles interact with 3 cells
+	- partsPerCell * partsPerCell * 2;			//except those in boundary cells
+	CountPairs cntPairs = CountPairs();
+	cellCont.iterate_pairs(cntPairs);
+	CPPUNIT_ASSERT(fabs(cntPairs.cnt - avgCount) <= numParticles);
 }
 
 /**
@@ -226,15 +275,13 @@ void UTest_CellContainer::testIteratePairCount() {
  * The uncertainty is therefore limited by the number of particles.
  */
 void UTest_CellContainer::testIteratePairHalfCount() {
-	double partsPerCell = numParticles / (cellContainer.cellCount[0] - 2);
-	double avgCount = partsPerCell * numParticles * 3	//All particles interact with 3 cells
-			- partsPerCell * partsPerCell * 2;			//except those in boundary cells
+	double partsPerCell = numParticles / (cellCont.cellCount[0] - 2);
+	double avgCount = partsPerCell * numParticles * 3//All particles interact with 3 cells
+	- partsPerCell * partsPerCell * 2;			//except those in boundary cells
 	avgCount *= 0.5;
-	countPairs cntPairs = countPairs();
-	cellContainer.iterate_pairs_half(cntPairs);
-	CPPUNIT_ASSERT(
-			fabs(cntPairs.cnt - avgCount)
-					<= numParticles);
+	CountPairs cntPairs = CountPairs();
+	cellCont.iterate_pairs_half(cntPairs);
+	CPPUNIT_ASSERT(fabs(cntPairs.cnt - avgCount) <= numParticles);
 }
 
 }

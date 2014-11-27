@@ -8,17 +8,14 @@
 #ifndef BOUNDARYCONDITION_H_
 #define BOUNDARYCONDITION_H_
 
-//Forward declaration
-class SimpleContainer;
+#include "utils/Vector.h"
+#include "ParticleContainer/CellContainer.h"
 
 /**
  * \brief Abstract class for defining an interface for boundary conditions.
  */
 class BoundaryCondition {
-public:
-	virtual ~BoundaryCondition() {
-	}
-
+protected:
 	/**
 	 * \brief Integer defining the domain side on which this condition is imposed.
 	 *
@@ -32,7 +29,36 @@ public:
 	 */
 	int side;
 
+	/**
+	 * \brief Main constructor.
+	 *
+	 * @param cellCont The CellContainer on which this BoundaryCondition is acting.
+	 * @param side Side on which this BoundaryCondition is acting.
+	 * @param boundCells Specifies if this BoundaryCondition is acting on boundary cells instead of halo cells.
+	 *
+	 * This method automatically calculates the boundary of the passed cell container.
+	 */
+	BoundaryCondition(CellContainer* cellCont, int side, bool boundCells) : side(side), boundCells(boundCells)
+	{
+		boundary[0] = (cellCont->cellCount[0] - 1) * cellCont->cutoff;
+		boundary[1] = (cellCont->cellCount[1] - 1) * cellCont->cutoff;
+		boundary[2] = (cellCont->cellCount[2] - 1) * cellCont->cutoff;
+	}
+
+	/**
+	 * \brief Main constructor.
+	 * @param side Side on which this BoundaryCondition is acting.
+	 * @param boundCells Specifies if this BoundaryCondition is acting on boundary cells instead of halo cells.
+	 */
+	BoundaryCondition(int side, bool boundCells) : side(side), boundCells(boundCells) {}
+
+public:
+
 	bool boundCells; //!< Specifies if the boundary condition acts on boundary cells instead of halo cells.
+	utils::Vector<double, 3> boundary; //!< Boundary of the CellContainer (not equal to domain size!).
+
+	virtual ~BoundaryCondition() {
+	}
 
 	/**
 	 * /brief Abstract function for imposing the boundary conditions on this container.

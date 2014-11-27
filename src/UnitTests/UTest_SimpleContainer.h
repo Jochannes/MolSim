@@ -37,10 +37,12 @@ class UTest_SimpleContainer : public CppUnit::TestFixture {
 	CPPUNIT_TEST_SUITE_END();
 
 private:
-	int numParticles = 20; 				//!< Number of particles with which the container will be initialized.
+	int numParticles; 				//!< Number of particles with which the container will be initialized.
 	SimpleContainer partContainer; 	//!< ParticleContainer for testing.
 
 public:
+	UTest_SimpleContainer() : numParticles(20) {}
+
 	void setUp();
 	void tearDown();
 	void testSize();

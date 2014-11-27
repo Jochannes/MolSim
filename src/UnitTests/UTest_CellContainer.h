@@ -19,12 +19,22 @@
 
 namespace unitTest {
 
+
+/**
+ * \brief Class for testing the CellContainer.
+ *
+ * This TestFixture tests several properties
+ * of the CellContainer.
+ *
+ */
 class UTest_CellContainer : public CppUnit::TestFixture {
 	CPPUNIT_TEST_SUITE (UTest_CellContainer);
+	CPPUNIT_TEST (testIndexCalc);
 	CPPUNIT_TEST (testSize);
 	CPPUNIT_TEST (testAddSize);
 	CPPUNIT_TEST (testRemoveSize);
 	CPPUNIT_TEST (testRemoveHalo);
+	CPPUNIT_TEST (testImposeBoundCount);
 	CPPUNIT_TEST (testIterateBoundaryCount);
 	CPPUNIT_TEST (testIterateHaloCount);
 	CPPUNIT_TEST (testIterateCount);
@@ -33,21 +43,23 @@ class UTest_CellContainer : public CppUnit::TestFixture {
 	CPPUNIT_TEST_SUITE_END();
 
 private:
-	int numParticles = 100; 				//!< Number of particles with which the container will be initialized.
-	int numHalo = 10; 						//!< Number of particles in the halo region with which the container will be initialized.
+	int numParticles; 				//!< Number of particles with which the container will be initialized.
+	int numHalo; 						//!< Number of particles in the halo region with which the container will be initialized.
 	utils::Vector<double, 3> domainSize;	//!< Domain size for the cell container in each dimension.
 	double cutoff;							//!< Cutoff radius for the cell container.
-	CellContainer cellContainer; 			//!< CellContainer for testing.
+	CellContainer cellCont; 			//!< CellContainer for testing.
 
 public:
 	UTest_CellContainer();
 	void setUp();
 	void tearDown();
 
+	void testIndexCalc();
 	void testSize();
 	void testAddSize();
 	void testRemoveSize();
 	void testRemoveHalo();
+	void testImposeBoundCount();
 	void testIterateBoundaryCount();
 	void testIterateHaloCount();
 	void testIterateCount();

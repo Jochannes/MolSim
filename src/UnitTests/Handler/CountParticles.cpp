@@ -1,29 +1,29 @@
 /*
- * countParticles.cpp
+ * CountParticles.cpp
  *
  *  Created on: Nov 3, 2014
  *      Author: johannes
  */
 
-#include "countParticles.h"
+#include "CountParticles.h"
 
 namespace unitTest {
 
 /**
  * \brief Sets up the handler by setting cnt to 0.
  */
-countParticles::countParticles() :
+CountParticles::CountParticles() :
 		cnt(0) {
 }
 
-countParticles::~countParticles() {
+CountParticles::~CountParticles() {
 }
 
 /**
  * \brief This method increments cnt by 1, thereby counting the number of particle.
  * @param p Particle to count
  */
-void countParticles::compute(Particle& p) {
+void CountParticles::compute(Particle& p) {
 	cnt++;
 }
 

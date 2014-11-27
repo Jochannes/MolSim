@@ -1,22 +1,22 @@
 /*
- * countPairs.cpp
+ * CountPairs.cpp
  *
  *  Created on: Nov 3, 2014
  *      Author: johannes
  */
 
-#include "countPairs.h"
+#include "CountPairs.h"
 
 namespace unitTest {
 
 /**
  * \brief Sets up the handler by setting cnt to 0.
  */
-countPairs::countPairs() :
+CountPairs::CountPairs() :
 		cnt(0) {
 }
 
-countPairs::~countPairs() {
+CountPairs::~CountPairs() {
 }
 
 /**
@@ -24,7 +24,7 @@ countPairs::~countPairs() {
  * @param p1 First Particle in the counted pair
  * @param p2 Second Particle in the counted pair
  */
-void countPairs::compute(Particle& p1, Particle& p2) {
+void CountPairs::compute(Particle& p1, Particle& p2) {
 	cnt++;
 }
 

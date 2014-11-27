@@ -32,7 +32,8 @@ public:
 	 * 5: z=max
 	 */
 	int side;
-	SimpleContainer* cont; //<! Particle container from which sides the particle is reflected.
+
+	utils::Vector<double, 3> boundary; //!< Boundary of the CellContainer.
 
 	virtual void compute(Particle& p);
 };

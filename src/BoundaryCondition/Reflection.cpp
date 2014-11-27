@@ -17,7 +17,7 @@
  */
 void Reflection::impose(SimpleContainer* cont) {
 	ReflectionHandler reflect;
-	reflect.side = side;
-	reflect.cont = cont;
+	reflect.side = BoundaryCondition::side;
+	reflect.boundary = BoundaryCondition::boundary;
 	cont->iterate_all(reflect);
 }

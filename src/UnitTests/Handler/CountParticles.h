@@ -1,5 +1,5 @@
 /*
- * countParticles.h
+ * CountParticles.h
  *
  *  Created on: Nov 3, 2014
  *      Author: johannes
@@ -8,7 +8,6 @@
 #ifndef COUNTPARTICLES_H_
 #define COUNTPARTICLES_H_
 
-#include "Particle.h"
 #include "ParticleHandler.h"
 
 namespace unitTest {
@@ -16,11 +15,11 @@ namespace unitTest {
 /**
  * \brief Class for counting the number of iterated particles for test purposes.
  */
-class countParticles: public ParticleHandler {
+class CountParticles: public ParticleHandler {
 public:
 	int cnt;	//!< Number of counted particles
-	countParticles();
-	virtual ~countParticles();
+	CountParticles();
+	virtual ~CountParticles();
 
 	virtual void compute(Particle& p);
 };

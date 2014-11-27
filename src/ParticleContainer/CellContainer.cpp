@@ -7,6 +7,8 @@
 
 #include "CellContainer.h"
 #include "handler/CellUpdater.h"
+#include "BoundaryCondition/BoundaryCondition.h"
+#include "BoundaryCondition/Outflow.h"
 
 #include <log4cxx/logger.h>
 #include <stdlib.h>
@@ -248,21 +250,6 @@ CellContainer::CellContainer(const Vector<double, 3> domainSize,
 	cells = new SimpleContainer[N];
 	cellTotal = N;
 
-	//Set Container coordinates
-	for(int i = 0; i < cellTotal; i++){
-		Vector<int, 3> n = calc3Ind(i);
-		Vector<double, 3> x;
-		x[0] = (n[0] - 1) * cutoff;
-		x[1] = (n[1] - 1) * cutoff;
-		x[2] = (n[2] - 1 * dim3) * cutoff;
-		cells[i].contStart = x;
-
-		x[0] += cutoff;
-		x[1] += cutoff;
-		x[2] += cutoff;
-		cells[i].contEnd = x;
-	}
-
 	//Set halo and boundary cells
 	setHaloBoundary();
 
@@ -480,7 +467,7 @@ void CellContainer::update_cells() {
  * changing the positions of the particles.
  *
  * The boundary conditions for particles at the corners
- * are imposed twice/three times (as they should be);
+ * are imposed twice/three times (as they should be).
  */
 void CellContainer::impose_boundConds() {
 
@@ -491,13 +478,11 @@ void CellContainer::impose_boundConds() {
 		//Find the right boundary
 		for (int dim = 0; dim < 2 + dim3; dim++) {
 			if (n[dim] == 0) {
-
 				//check if the condition acts on halo cells
 				if (!boundConds[2 * dim]->boundCells) {
 					boundConds[2 * dim]->impose(&cells[haloInds[i]]);
 				}
 			} else if (n[dim] == cellCount[dim] - 1) {
-
 				//check if the condition acts on halo cells
 				if (!boundConds[2 * dim + 1]->boundCells) {
 					boundConds[2 * dim + 1]->impose(&cells[haloInds[i]]);
@@ -515,18 +500,12 @@ void CellContainer::impose_boundConds() {
 				if (boundConds[2 * dim]->boundCells) {
 					boundConds[2 * dim]->impose(&cells[boundInds[i]]);
 				}
-
-				//found!
-				break;
 			} else if (n[dim] == cellCount[dim] - 2) {
 
 				//check if the condition acts on boundary cells
 				if (boundConds[2 * dim + 1]->boundCells) {
 					boundConds[2 * dim + 1]->impose(&cells[boundInds[i]]);
 				}
-
-				//found!
-				break;
 			}
 		}
 	}

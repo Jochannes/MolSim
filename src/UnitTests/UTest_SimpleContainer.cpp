@@ -12,9 +12,9 @@
 #include <cmath>
 #include <iostream>
 #include <cppunit/extensions/HelperMacros.h>
-#include "marker_handler.h"
-#include "countParticles.h"
-#include "countPairs.h"
+#include "Handler/Marker.h"
+#include "Handler/CountParticles.h"
+#include "Handler/CountPairs.h"
 
 namespace unitTest {
 
@@ -79,7 +79,7 @@ void UTest_SimpleContainer::testAddSize() {
  * \brief Method for testing if ParticleContainer::iterate_all reaches all particles.
  */
 void UTest_SimpleContainer::testIterateAll() {
-	marker_handler marker = marker_handler();
+	Marker marker = Marker();
 	partContainer.iterate_all(marker);
 	std::list<Particle>::iterator it = partContainer.particleList.begin();
 	while (it != partContainer.particleList.end()) {
@@ -92,7 +92,7 @@ void UTest_SimpleContainer::testIterateAll() {
  * \brief Method for testing if ParticleContainer::iterate_all iterates over the correct number of particles.
  */
 void UTest_SimpleContainer::testIterateCount() {
-	countParticles cntPart = countParticles();
+	CountParticles cntPart = CountParticles();
 	partContainer.iterate_all(cntPart);
 	CPPUNIT_ASSERT(cntPart.cnt == partContainer.size());
 }
@@ -101,7 +101,7 @@ void UTest_SimpleContainer::testIterateCount() {
  * \brief Method for testing if ParticleContainer::iterate_pairs iterates over the correct number of particle pairs.
  */
 void UTest_SimpleContainer::testIteratePairCount() {
-	countPairs cntPairs = countPairs();
+	CountPairs cntPairs = CountPairs();
 	partContainer.iterate_pairs(cntPairs);
 	CPPUNIT_ASSERT(
 			cntPairs.cnt == partContainer.size() * (partContainer.size() - 1));
@@ -111,7 +111,7 @@ void UTest_SimpleContainer::testIteratePairCount() {
  * \brief Method for testing if ParticleContainer::iterate_pairs_half iterates over the correct number of particle pairs.
  */
 void UTest_SimpleContainer::testIteratePairHalfCount() {
-	countPairs cntPairs = countPairs();
+	CountPairs cntPairs = CountPairs();
 	partContainer.iterate_pairs_half(cntPairs);
 	CPPUNIT_ASSERT(
 			cntPairs.cnt

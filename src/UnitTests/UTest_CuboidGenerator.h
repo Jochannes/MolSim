@@ -20,7 +20,7 @@
 
 #include "CuboidGenerator.h"
 #include "ParticleContainer/SimpleContainer.h"
-#include "cuboidLengthHandler.h"
+#include "Handler/CuboidLengthHandler.h"
 
 using namespace std;
 
@@ -44,7 +44,7 @@ CPPUNIT_TEST_SUITE( UTest_CuboidGenerator );
 
 private:
 	SimpleContainer partContainer; 		//!< Particle container for testing.
-	char filename[15] = "cuboidTest.txt";	//!< File in which the test input is saved
+	char filename[15];	//!< File in which the test input is saved
 	double corner_position[3];				//!< Position of the lower left front-side corner of the cuboid
 	int num_particles[3];					//!< Number of particles per dimension
 	double distance;						//!< Distance between particles
@@ -52,6 +52,10 @@ private:
 	double velocity[3];						//!< Velocity of the particles
 
 public:
+	UTest_CuboidGenerator() {
+		string tmp = "cuboidTest.txt";
+		strcpy(filename, tmp.c_str());
+	}
 	void setUp();
 	void tearDown();
 	void testCount();

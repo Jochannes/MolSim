@@ -78,7 +78,7 @@ void UTest_CuboidGenerator::testCount() {
 void UTest_CuboidGenerator::testLength() {
 
 	//Calculate the length
-	cuboidLengthHandler calcLength;
+	CuboidLengthHandler calcLength;
 	partContainer.iterate_all(calcLength);
 
 	//Test the length in all 3 dimensions

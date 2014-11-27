@@ -8,33 +8,19 @@
 #ifndef REFLECTION_H_
 #define REFLECTION_H_
 
-#include "BoundaryCondition.h"
-#include "ParticleContainer/SimpleContainer.h"
+#include "BoundaryCondition/BoundaryCondition.h"
 
 /**
  * \brief BoundaryCondition for reflecting particles on the domain border.
  *
- * This BoundaryCondition reflects all
- * particles from the domain border.
+ * This BoundaryCondition reflects all particles from
+ * the domain border. It acts on boundary cells.
  */
 class Reflection: public BoundaryCondition {
+
 public:
-	Reflection(int side) : side(side), boundCells(true) {}
 
-	/**
-	 * \brief Integer defining the domain side on which this condition is imposed.
-	 *
-	 * The domain sides are defined as following:
-	 * 0: x=0
-	 * 1: x=max
-	 * 2: y=0
-	 * 3: y=max
-	 * 4: z=0
-	 * 5: z=max
-	 */
-	int side;
-
-	bool boundCells; //!< Set to true; this boundary condition acts on boundary cells.
+	Reflection(CellContainer* cont, int side) : BoundaryCondition(cont, side, true) {}
 
 	void impose(SimpleContainer* cont);
 };
