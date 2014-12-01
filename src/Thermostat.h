@@ -16,22 +16,27 @@
 /**
  * /brief A Thermostat controlling the temperatures of a ParticleContainer.
  *
+ * The thermostat sets the velocities of the particles after a specified amount
+ * of iterations to match a specific temperature.
+ * The said temperature can be constant or rising/falling to a specified target
+ * temperature. The temperature will then be changed gradually in temperature
+ * steps after a specified amount iterations - until the target is reached.
  */
 class Thermostat
 {
 private:
-	ParticleContainer& particles;
+	ParticleContainer& particles;	//!< ParticleContainer which temperatures the thermostat should control.
 
 	const int num_dimensions;		//!< number of dimensions
 	const int steps_thermostat;		//!< number of time steps after which the thermostat is applied
 
-	double target_temp;				//!< temperature of the particles the thermostat is targeting
+	double target_temp;				//!< temperature of the particles the thermostat is targeting.
 	double next_temp;				//!< temperature of the particles the thermostat will apply in the next step.
 	const bool constant;			//!< determines whether the target temperature is constant.
 	const int steps_tempchange;		//!< number of timesteps after which the temperature is changed
 	const double delta_temp;		//!< step size in which the temperature is changed
 
-	const double mass = 1.0;		//!< mass of the particles
+	static const double mass = 1.0;		//!< mass of the particles
 
 	/**
 	 * /brief Auxilliary function for calculating the kinetic energy of all particles.
@@ -45,12 +50,33 @@ private:
 	}
 
 public:
-	static const double k_B = 1.3806488;
+	static const double k_B = 1.3806488;	//!< Boltzmann constant
 
-	Thermostat(ParticleContainer& param_particles, int param_num_dimensions, int param_steps_thermostat,
+	/**
+	 * /brief Initialize the Thermostat. A constant temperature will be used.
+	 *
+	 * @param param_particles The ParticleContainer which temperatures the thermostat should control.
+	 * @param param_num_dimensions The number of dimensions.
+	 * @param param_init_temp The initial temperature of the particles.
+	 * @param param_steps_thermostat The number of time steps after which the temperature is applied.
+	 * @param applyBrown Determines wheather the brownian motion should be applied to the particles. Default: yes.
+	 */
+	Thermostat(ParticleContainer& param_particles, int param_num_dimensions, double param_init_temp, int param_steps_thermostat,
 				bool applyBrown = true);
 
-	Thermostat(ParticleContainer& param_particles, int param_num_dimensions, int param_steps_thermostat,
+	/**
+	 * /brief Initialize the Thermostat. The temperatures will change until a target is reached.
+	 *
+	 * @param param_particles The ParticleContainer which temperatures the thermostat should control.
+	 * @param param_num_dimensions The number of dimensions.
+	 * @param param_init_temp The initial temperature of the particles.
+	 * @param param_steps_thermostat The number of time steps after which the temperature is applied.
+	 * @param param_target_temp The temperature of the particles the thermostat is targeting.
+	 * @param param_delta_temp The step size in which the temperature is changed.
+	 * @param param_steps_tempchange The number of timesteps after which the temperature is changed.
+	 * @param applyBrown Determines wheather the brownian motion should be applied to the particles. Default: yes.
+	 */
+	Thermostat(ParticleContainer& param_particles, int param_num_dimensions, double param_init_temp, int param_steps_thermostat,
 				double param_target_temp, double param_delta_temp, int param_steps_tempchange,
 				bool applyBrown = true);
 
