@@ -1,13 +1,5 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-
-
-  <xs:simpleType name="force-calculator-type_t">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="gravity"/>
-      <xs:enumeration value="lennard-jones"/>
-    </xs:restriction>
-  </xs:simpleType>
   
   <xs:simpleType name="simulation-mode-type_t">
     <xs:restriction base="xs:string">
@@ -20,6 +12,7 @@
     <xs:restriction base="xs:string">
       <xs:enumeration value="outflow"/>
       <xs:enumeration value="reflect"/>
+      <xs:enumeration value="periodic"/>
     </xs:restriction>
   </xs:simpleType>
 
@@ -32,24 +25,32 @@
     <xs:attribute name="z_0" type="boundary-type_t" use="required"/>
     <xs:attribute name="z_max" type="boundary-type_t" use="required"/>
   </xs:complexType>
-
-
-  <xs:complexType name="force-calculator_t">
+  
+  <xs:complexType name="simulation_force-calculator_t">
     <xs:sequence>
-      <xs:element name="type" type="force-calculator-type_t"/>
-      <xs:element name="epsilon" type="xs:double" minOccurs="0"/>
-      <xs:element name="sigma" type="xs:double" minOccurs="0"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="lennard-jones" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="lj-cutoff" type="lj_cutoff_t"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="gravity" type="gravity_t"/>
     </xs:sequence>
   </xs:complexType>
+
+  <xs:complexType name="lj_cutoff_t">
+  	<xs:attribute name="cutoff_factor" type="xs:double" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="gravity_t">
+  	<xs:attribute name="g_grav" type="xs:double" use="required"/>
+  </xs:complexType>
+  
   
   <xs:complexType name="simulation-mode_t">
     <xs:sequence>
       <xs:element name="type" type="simulation-mode-type_t"/>
-      <xs:element name="cutoff_radius" type="xs:double" minOccurs="0"/>
-      <xs:element name="domain_size_x" type="xs:double" minOccurs="0"/>
-      <xs:element name="domain_size_y" type="xs:double" minOccurs="0"/>
-      <xs:element name="domain_size_z" type="xs:double" minOccurs="0"/>
-      <xs:element name="boundary" type="boundary_t" minOccurs="0"/>
+      <xs:element minOccurs="0" name="cutoff_radius" type="xs:double"/>
+      <xs:element minOccurs="0" name="domain_size_x" type="xs:double"/>
+      <xs:element minOccurs="0" name="domain_size_y" type="xs:double"/>
+      <xs:element minOccurs="0" name="domain_size_z" type="xs:double"/>
+      <xs:element minOccurs="0" name="boundary" type="boundary_t"/>
     </xs:sequence>
   </xs:complexType>
   
@@ -58,7 +59,6 @@
       <xs:element name="start-time" type="xs:double"/>
       <xs:element name="end-time" type="xs:double"/>
       <xs:element name="delta-t" type="xs:double"/>
-      <xs:element name="force-calculator" type="force-calculator_t"/>
       <xs:element name="simulation-mode" type="simulation-mode_t"/>
     </xs:sequence>
   </xs:complexType>
@@ -73,6 +73,9 @@
     <xs:attribute name="n3" type="xs:unsignedInt" use="required"/>
     <xs:attribute name="h" type="xs:double" use="required"/>
     <xs:attribute name="m" type="xs:double" use="required"/>
+    <xs:attribute name="epsilon" type="xs:double" use="required"/>
+    <xs:attribute name="sigma" type="xs:double" use="required"/>
+    <xs:attribute name="type" type="xs:int" use="required"/>
     <xs:attribute name="v1" type="xs:double" use="required"/>
     <xs:attribute name="v2" type="xs:double" use="required"/>
     <xs:attribute name="v3" type="xs:double" use="required"/>
@@ -85,6 +88,9 @@
     <xs:attribute name="r" type="xs:unsignedInt" use="required"/>
     <xs:attribute name="h" type="xs:double" use="required"/>
     <xs:attribute name="m" type="xs:double" use="required"/>
+    <xs:attribute name="epsilon" type="xs:double" use="required"/>
+    <xs:attribute name="sigma" type="xs:double" use="required"/>
+    <xs:attribute name="type" type="xs:int" use="required"/>
     <xs:attribute name="v1" type="xs:double" use="required"/>
     <xs:attribute name="v2" type="xs:double" use="required"/>
     <xs:attribute name="v3" type="xs:double" use="required"/>
@@ -92,9 +98,9 @@
   
   <xs:complexType name="simulation_input_t">
     <xs:sequence>
-      <xs:element name="particle_file" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="cuboid" type="cuboid_t" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="sphere" type="sphere_t" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="particle_file" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="cuboid" type="cuboid_t"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="sphere" type="sphere_t"/>
     </xs:sequence>
   </xs:complexType>
   
@@ -110,6 +116,7 @@
   <xs:complexType name="simulation_t">
     <xs:sequence>
       <xs:element name="parameter" type="simulation_parameters_t"/>
+      <xs:element name="force-calculator" type="simulation_force-calculator_t"/>
       <xs:element name="input" type="simulation_input_t"/>
       <xs:element name="output" type="simulation_output_t"/>
     </xs:sequence>

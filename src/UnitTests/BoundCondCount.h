@@ -17,7 +17,7 @@ namespace unitTest {
 */
 class BoundCondCount : public BoundaryCondition {
 public:
-	BoundCondCount(int side, bool boundCells) : cnt(0), BoundaryCondition(side, boundCells) {}
+	BoundCondCount(int side, bool boundCells, bool haloCells) : cnt(0), BoundaryCondition(side, boundCells, haloCells) {}
 
 	int cnt; //!< Counts the number of calls to the impose method.
 

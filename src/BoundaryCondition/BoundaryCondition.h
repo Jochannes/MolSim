@@ -29,6 +29,8 @@ protected:
 	 */
 	int side;
 
+	CellContainer* cellCont; //!< Boundary of the CellContainer (not equal to domain size!).
+
 	/**
 	 * \brief Main constructor.
 	 *
@@ -38,24 +40,19 @@ protected:
 	 *
 	 * This method automatically calculates the boundary of the passed cell container.
 	 */
-	BoundaryCondition(CellContainer* cellCont, int side, bool boundCells) : side(side), boundCells(boundCells)
-	{
-		boundary[0] = (cellCont->cellCount[0] - 1) * cellCont->cutoff;
-		boundary[1] = (cellCont->cellCount[1] - 1) * cellCont->cutoff;
-		boundary[2] = (cellCont->cellCount[2] - 1) * cellCont->cutoff;
-	}
+	BoundaryCondition(CellContainer* cellCont, int side, bool boundCells, bool haloCells) : cellCont(cellCont), side(side), boundCells(boundCells), haloCells(haloCells) { }
 
 	/**
 	 * \brief Main constructor.
 	 * @param side Side on which this BoundaryCondition is acting.
 	 * @param boundCells Specifies if this BoundaryCondition is acting on boundary cells instead of halo cells.
 	 */
-	BoundaryCondition(int side, bool boundCells) : side(side), boundCells(boundCells) {}
+	BoundaryCondition(int side, bool boundCells, bool haloCells) : side(side), boundCells(boundCells), haloCells(haloCells) {}
 
 public:
 
-	bool boundCells; //!< Specifies if the boundary condition acts on boundary cells instead of halo cells.
-	utils::Vector<double, 3> boundary; //!< Boundary of the CellContainer (not equal to domain size!).
+	bool boundCells; //!< Specifies if the boundary condition acts on boundary cells.
+	bool haloCells; //!< Specifies if the boundary condition acts on halo cells.
 
 	virtual ~BoundaryCondition() {
 	}

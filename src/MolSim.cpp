@@ -67,9 +67,10 @@ char* timingFile;	//!< Specifies if the iteration time will be measured.
 
 ParticleContainer* particles;//!< Container for encapsulating the particle list.
 ParticleOutput* particleOut = NULL; //!< Object for defining the output method to be used.
-PositionCalculator* xcalc = NULL; //!< Object for defining the coordinate calculator to be used in the simulation.
-VelocityCalculator* vcalc = NULL; //!< Object for defining the velocity calculator to be used in the simulation.
-ForceCalculator* fcalc = NULL; //!< Object for defining the force calculator to be used in the simulation.
+PositionCalculator* xcalc = NULL; //!< Object for defining the coordinate calculator used in the simulation.
+VelocityCalculator* vcalc = NULL; //!< Object for defining the velocity calculator used in the simulation.
+ForceCalculator** fcalcs; //!< Object for defining the force calculators used in the simulation.
+int numForceCalcs;			//!< Number of force calculators.
 
 LoggerPtr logger(Logger::getLogger("MolSim")); //!< Object for handling general logs.
 
@@ -250,14 +251,20 @@ int runUnitTest(const char* test) {
 /**
  * The forces are calculated by first resetting them to 0
  * and then using the iteration function in ParticleHandler
- * to call the force calculation method saved in `fcalc` for each particle.
+ * to call all force calculation methods saved in fcalcs for each particle.
  */
 void calculateF() {
 	// update OldF and set F to 0.0
 	particles->prepare_forces();
 
 	// calculate forces
-	particles->iterate_pairs_half(*fcalc);
+	for(int i = 0; i < numForceCalcs; i++) {
+		if (fcalcs[i]->interaction) {
+			particles->iterate_pairs_half(*fcalcs[i]);
+		} else {
+			particles->iterate_all(*fcalcs[i]);
+		}
+	}
 }
 
 /**
@@ -267,8 +274,9 @@ void calculateF() {
 void calculateX() {
 	particles->iterate_all(*xcalc);
 	if (typeid(*particles) == typeid(CellContainer)) {
-		((CellContainer*) particles)->update_cells();
+		((CellContainer*) particles)->remove_halo_virtual();
 		((CellContainer*) particles)->impose_boundConds();
+		((CellContainer*) particles)->update_cells();
 	}
 }
 

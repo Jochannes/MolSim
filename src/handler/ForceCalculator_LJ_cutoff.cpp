@@ -11,8 +11,9 @@
 
 #include <cmath>
 
-ForceCalculator_LJ_cutoff::ForceCalculator_LJ_cutoff() :
-		cutoff(3.0) {
+ForceCalculator_LJ_cutoff::ForceCalculator_LJ_cutoff(double arg_cutoff) :
+		cutoff_factor(arg_cutoff) {
+	ForceCalculator::interaction = true;
 }
 
 ForceCalculator_LJ_cutoff::~ForceCalculator_LJ_cutoff() {
@@ -34,17 +35,23 @@ ForceCalculator_LJ_cutoff::~ForceCalculator_LJ_cutoff() {
  * \f]
  */
 void ForceCalculator_LJ_cutoff::compute(Particle& p1, Particle& p2) {
+
+	//Calculate epsilon and sigma
+	double epsilon = p1.getEpsilon();
+	double sigma = p1.getSigma();
+	if (p1.getType() != p2.getType()) {
+		double epsilon = sqrt(p1.getEpsilon() * p2.getEpsilon());
+		double sigma = (p1.getSigma() + p2.getSigma()) * 0.5;
+	}
+
+	double cutoff = cutoff_factor * sigma;
 	double distance = (p1.getX() - p2.getX()).L2Norm();
 	if (distance < cutoff) {
 		double invDistance = 1.0 / distance;
 
-		double factor = 24 * ForceCalculator_LennardJones::epsilon * invDistance
-				* invDistance
-				* (pow(ForceCalculator_LennardJones::sigma * invDistance, 6)
-						- 2
-								* pow(
-										ForceCalculator_LennardJones::sigma
-												* invDistance, 12));
+		double factor = 24 * epsilon * invDistance * invDistance
+				* (pow(sigma * invDistance, 6)
+						- 2 * pow(sigma * invDistance, 12));
 
 		utils::Vector<double, 3> force = factor * (p2.getX() - p1.getX());
 

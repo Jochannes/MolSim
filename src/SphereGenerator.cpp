@@ -28,7 +28,7 @@ void SphereGenerator::genParticle(std::list<Particle>& particleList, int x, int 
 	pos[1] = center_position[1] + y*distance;
 	pos[2] = center_position[2] + z*distance;
 
-	Particle P(pos, velocity, mass);
+	Particle P(pos, velocity, mass, epsilon, sigma, type);
 	MaxwellBoltzmannDistribution(P, brown_factor, (use3D ? 3 : 2));
 
 	particleList.push_back(P);
@@ -165,4 +165,19 @@ std::string SphereGenerator::toString()
 			"]";
 
 	return str.str();
+}
+
+/**
+ * \brief Generate a sphere or circle.
+ *
+ * Generates a sphere or circle of particles in a grid
+ * using the parameters specified in the constructor.
+ *
+ * @param particleList List of particles to store the generated particles.
+ */
+void SphereGenerator::input(std::list<Particle>& particleList) {
+	if(use3D)
+		genSphere(particleList);
+	else
+		genCircle(particleList);
 }

@@ -20,7 +20,7 @@ class Reflection: public BoundaryCondition {
 
 public:
 
-	Reflection(CellContainer* cont, int side) : BoundaryCondition(cont, side, true) {}
+	Reflection(CellContainer* cont, int side) : BoundaryCondition(cont, side, true, false) {}
 
 	void impose(SimpleContainer* cont);
 };

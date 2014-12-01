@@ -22,19 +22,22 @@ private:
 	int num_particles[3];	//!< Number of particles in all three dimensions.
 	double distance;		//!< Distance between two particles (lattice constant).
 	double mass;			//!< Mass of a single particle.
+	double epsilon; 		//!< Lennard-Jones parameter epsilon for the particles.
+	double sigma; 			//!< Lennard-Jones parameter sigma for the particles.
+	int type;				//!< Type of the particles.
 	utils::Vector<double, 3> velocity;	//!< Main velocity of all particles. The velocity will be superposed by Brownian motion.
 	double brown_factor;	//!< Mean velocity of the Brownian motion.
-
 public:
+
 	/**
 	 * \brief Initialize the CuboidGenerator with all neccessary parameters needed for generating the cuboid.
 	 *
 	 */
 	CuboidGenerator(utils::Vector<double, 3> param_corner_position, int param_num_particles[3], double param_distance,
-					double param_mass, utils::Vector<double, 3> param_velocity, double param_brown_factor = 0.1 )
+					double param_mass, utils::Vector<double, 3> param_velocity, double param_epsilon = 5.0, double param_sigma = 1.0, int param_type = 0, double param_brown_factor = 0.1 )
 	:
 		corner_position(param_corner_position), distance(param_distance),
-		mass(param_mass), velocity(param_velocity), brown_factor(param_brown_factor)
+		mass(param_mass), epsilon(param_epsilon), sigma(param_sigma), type(param_type), velocity(param_velocity), brown_factor(param_brown_factor)
 	{
 		num_particles[0] = param_num_particles[0];
 		num_particles[1] = param_num_particles[1];

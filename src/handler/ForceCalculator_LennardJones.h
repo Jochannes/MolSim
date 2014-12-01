@@ -15,14 +15,18 @@
  */
 class ForceCalculator_LennardJones: public ForceCalculator {
 public:
-	static double sigma;	//!< Sigma value used for the potential (see equation)
-	static double epsilon;	//!< Epsilon value used for the potential (see equation)
-
 	ForceCalculator_LennardJones();
 
 	virtual ~ForceCalculator_LennardJones();
 
 	virtual void compute(Particle& p1, Particle& p2);
+
+	/**
+	 * /brief Function for calculating the force acting on one particle.
+	 *
+	 * Since this is an interaction force, this method does nothing.
+	 */
+	virtual void compute(Particle& p) {}
 };
 
 #endif /* FORCECALCULATORLENNARDJONES_H_ */

@@ -40,20 +40,16 @@ void UTest_BoundaryCondition::setUp() {
 	double v[] = { 0, 0, 0 };
 	double m = 1;
 
-	double test[] = { 0, 0, 0 };
-	for (int j = 0; j < 3; j++) {
-		test[j] += floor(numParticles / 2) * domainSize[j] / numParticles;
-	}
-
+	cellCont = CellContainer(domainSize, cutoff);
 	std::list<Particle> initialParticleList;
 	for (int dim = 0; dim < 3; dim++) {
 		for (int i = 0; i < numParticles / 3; i++) {
-			x[dim] += 3 * (domainSize[dim]-2) / numParticles;
+			x[dim] += 3 * (cellCont.effDomain[dim]-2) / numParticles;
 			Particle p(x, v, m);
 			initialParticleList.push_back(p);
 		}
 	}
-	cellCont = CellContainer(domainSize, cutoff, &initialParticleList);
+	cellCont.add(initialParticleList);
 
 	//Add particles in halo region
 	for (int j = 0; j < 3; j++) {
@@ -64,7 +60,7 @@ void UTest_BoundaryCondition::setUp() {
 		Particle p(x, v, m);
 		if (i >= numHalo / 2) {
 			for (int j = 0; j < 3; j++) {
-				x[j] = domainSize[j] + cutoff;
+				x[j] = cellCont.effDomain[j] + cutoff / 2;
 			}
 		}
 		haloParticleList.push_back(p);
@@ -102,10 +98,6 @@ void UTest_BoundaryCondition::testOutflow() {
  */
 void UTest_BoundaryCondition::testReflectionCnt() {
 
-	//set constants for the Lennard-Jones Potential
-	ForceCalculator_LennardJones::sigma = 1;
-	ForceCalculator_LennardJones::epsilon = 5;
-
 	//Impose boundary conditions
 	for (int i = 0; i < 6; i++) {
 		cellCont.boundConds[i] = new Reflection(&cellCont, i);
@@ -113,13 +105,9 @@ void UTest_BoundaryCondition::testReflectionCnt() {
 	cellCont.impose_boundConds();
 
 	//Check result
-	Vector<double, 3> bound;
-	bound[0] = (cellCont.cellCount[0] - 1) * cellCont.cutoff;
-	bound[1] = (cellCont.cellCount[1] - 1) * cellCont.cutoff;
-	bound[2] = (cellCont.cellCount[2] - 1) * cellCont.cutoff;
-	double limit = pow(2,1/6.0) * ForceCalculator_LennardJones::sigma;
+	double limit = pow(2,1/6.0) * Particle::def_sigma;
 
-	Check_Reflection check_force(limit, bound);
+	Check_Reflection check_force(limit, cellCont.effDomain);
 	cellCont.iterate_boundary(check_force);
 	CPPUNIT_ASSERT(check_force.notZero);
 }

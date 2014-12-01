@@ -28,7 +28,7 @@ ReflectionHandler::~ReflectionHandler() {
 void ReflectionHandler::compute(Particle& p) {
 
 	//calculate border of repulsive force
-	double limit = pow(2,1/6.0) * ForceCalculator_LennardJones::sigma;
+	double limit = pow(2,1/6.0) * p.getSigma();
 
 
 	//Choose the right side of the particle container for reflection
@@ -36,10 +36,8 @@ void ReflectionHandler::compute(Particle& p) {
 		if(p.getX()[side/2] < limit){
 
 			//create counter particle
-			utils::Vector<double, 3> xCounter = p.getX();
-			xCounter[side/2] = 0;
-			double vCounter[] = { 0, 0, 0 };
-			Particle counter(xCounter, vCounter, p.getM());
+			Particle counter(p);
+			p.getX()[side/2] = 0;
 
 			//do the reflection
 			ForceCalculator_LennardJones reflectionForce;
@@ -49,10 +47,8 @@ void ReflectionHandler::compute(Particle& p) {
 		if(boundary[side/2] - p.getX()[side/2] < limit){
 
 			//create counter particle
-			utils::Vector<double, 3> xCounter = p.getX();
-			xCounter[side/2] = boundary[side/2];
-			double vCounter[] = { 0, 0, 0 };
-			Particle counter(xCounter, vCounter, p.getM());
+			Particle counter(p);
+			p.getX()[side/2] = boundary[side/2];
 
 			//do the reflection
 			ForceCalculator_LennardJones reflectionForce;

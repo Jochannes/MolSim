@@ -240,6 +240,15 @@ CellContainer::CellContainer(const Vector<double, 3> domainSize,
 		cellCount[2] = domainSize[2] / cutoff + 3;
 	}
 
+	//Calculate effective domain size
+	effDomain[0] = (cellCount[0] - 2) * cutoff;
+	effDomain[1] = (cellCount[1] - 2) * cutoff;
+	if(dim3){
+		effDomain[2] = (cellCount[2] - 2) * cutoff;
+	}else{
+		effDomain[2] = cutoff;
+	}
+
 	//initialize cell list
 	int N;
 	if (dim3) {
@@ -434,6 +443,16 @@ void CellContainer::remove_halo() {
 }
 
 /**
+ * \brief Removes all virtual particles from the halo cells.
+ */
+void CellContainer::remove_halo_virtual() {
+//iterate over all halo cells
+	for (int i = 0; i < haloSize; i++) {
+		cells[haloInds[i]].remove_virtual();
+	}
+}
+
+/**
  * \brief Function for updating the cells for all particles.
  *
  * This method should always be called after
@@ -479,12 +498,12 @@ void CellContainer::impose_boundConds() {
 		for (int dim = 0; dim < 2 + dim3; dim++) {
 			if (n[dim] == 0) {
 				//check if the condition acts on halo cells
-				if (!boundConds[2 * dim]->boundCells) {
+				if (boundConds[2 * dim]->haloCells) {
 					boundConds[2 * dim]->impose(&cells[haloInds[i]]);
 				}
 			} else if (n[dim] == cellCount[dim] - 1) {
 				//check if the condition acts on halo cells
-				if (!boundConds[2 * dim + 1]->boundCells) {
+				if (boundConds[2 * dim + 1]->haloCells) {
 					boundConds[2 * dim + 1]->impose(&cells[haloInds[i]]);
 				}
 			}
@@ -577,7 +596,7 @@ void CellContainer::iterate_pairs(PairHandler& handler) {
 
 			Vector<int, 3> n = calc3Ind(i);
 			Vector<int, 3> tempN;
-			//iterate over surrounding non-halo cells
+			//iterate over surrounding cells, including halo cells.
 			for (int x = -1; x <= 1; x++) {
 				for (int y = -1; y <= 1; y++) {
 					if (dim3) {
@@ -585,8 +604,7 @@ void CellContainer::iterate_pairs(PairHandler& handler) {
 							tempN[0] = n[0] + x;
 							tempN[1] = n[1] + y;
 							tempN[2] = n[2] + z;
-							if (!cells[calcInd(tempN)].halo //test if not a halo cell
-							&& !(x == 0 && y == 0 && z == 0)) { //do not iterate over the cell itself
+							if (!(x == 0 && y == 0 && z == 0)) { //do not iterate over the cell itself
 								cells[calcInd(n)].iterate_partner(handler,
 										&cells[calcInd(tempN)]);
 							}
@@ -595,8 +613,7 @@ void CellContainer::iterate_pairs(PairHandler& handler) {
 						tempN[0] = n[0] + x;
 						tempN[1] = n[1] + y;
 						tempN[2] = n[2];
-						if (!cells[calcInd(tempN)].halo //test if not a halo cell
-						&& !(x == 0 && y == 0)) { //do not iterate over the cell itself
+						if (!(x == 0 && y == 0)) { //do not iterate over the cell itself
 							cells[calcInd(n)].iterate_partner(handler,
 									&cells[calcInd(tempN)]);
 						}
@@ -626,7 +643,7 @@ void CellContainer::iterate_pairs_half(PairHandler& handler) {
 
 			Vector<int, 3> n = calc3Ind(i);
 			Vector<int, 3> tempN;
-			//iterate over surrounding non-halo cells
+			//iterate over surrounding cells, including halo cells.
 			for (int x = -1; x <= 1; x++) {
 				for (int y = -1; y <= 1; y++) {
 					if (dim3) {
@@ -634,8 +651,7 @@ void CellContainer::iterate_pairs_half(PairHandler& handler) {
 							tempN[0] = n[0] + x;
 							tempN[1] = n[1] + y;
 							tempN[2] = n[2] + z;
-							if (calcInd(tempN) < i //only iterate over cells before this one
-							&& !cells[calcInd(tempN)].halo) { //test if not a halo cell
+							if (calcInd(tempN) < i) { //only iterate over cells before this one
 								cells[calcInd(n)].iterate_partner(handler,
 										&cells[calcInd(tempN)]);
 							}
@@ -644,8 +660,7 @@ void CellContainer::iterate_pairs_half(PairHandler& handler) {
 						tempN[0] = n[0] + x;
 						tempN[1] = n[1] + y;
 						tempN[2] = n[2];
-						if (calcInd(tempN) < i //only iterate over cells before this one
-						&& !cells[calcInd(tempN)].halo) { //test if not a halo cell
+						if (calcInd(tempN) < i) { //only iterate over cells before this one
 							cells[calcInd(n)].iterate_partner(handler,
 									&cells[calcInd(tempN)]);
 						}

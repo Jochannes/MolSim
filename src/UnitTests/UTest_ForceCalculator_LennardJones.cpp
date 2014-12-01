@@ -18,7 +18,7 @@ void UTest_ForceCalculator_LennardJones::setUp() {
 	double m = 1;
 	p1 = Particle(x, v, m);
 	p2 = Particle(x, v, m);
-	r_well = ForceCalculator_LennardJones::sigma * pow(2.0, 1.0 / 6); //potential well distance
+	r_well = Particle::def_sigma * pow(2.0, 1.0 / 6); //potential well distance
 }
 
 /**

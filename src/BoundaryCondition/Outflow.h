@@ -22,7 +22,7 @@ class Outflow : public BoundaryCondition {
 
 public:
 
-	Outflow(int side) : BoundaryCondition(side, false) {}
+	Outflow(int side) : BoundaryCondition(side, false, true) {}
 
 	void impose(SimpleContainer* cont);
 };

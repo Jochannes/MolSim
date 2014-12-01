@@ -41,9 +41,9 @@
 
 #include <xsd/cxx/config.hxx>
 
-//#if (XSD_INT_VERSION != 3030000L)
-//#error XSD runtime version mismatch
-//#endif
+#if (XSD_INT_VERSION != 3030000L)
+#error XSD runtime version mismatch
+#endif
 
 #include <xsd/cxx/pre.hxx>
 
@@ -221,11 +221,12 @@ namespace xml_schema
 
 // Forward declarations.
 //
-class force_calculator_type_t;
 class simulation_mode_type_t;
 class boundary_type_t;
 class boundary_t;
-class force_calculator_t;
+class simulation_force_calculator_t;
+class lj_cutoff_t;
+class gravity_t;
 class simulation_mode_t;
 class simulation_parameters_t;
 class cuboid_t;
@@ -246,62 +247,6 @@ class simulation_t;
 #include <xsd/cxx/tree/list.hxx>
 
 #include <xsd/cxx/xml/dom/parsing-header.hxx>
-
-class force_calculator_type_t: public ::xml_schema::string
-{
-  public:
-  enum value
-  {
-    gravity,
-    lennard_jones
-  };
-
-  force_calculator_type_t (value v);
-
-  force_calculator_type_t (const char* v);
-
-  force_calculator_type_t (const ::std::string& v);
-
-  force_calculator_type_t (const ::xml_schema::string& v);
-
-  force_calculator_type_t (const ::xercesc::DOMElement& e,
-                           ::xml_schema::flags f = 0,
-                           ::xml_schema::container* c = 0);
-
-  force_calculator_type_t (const ::xercesc::DOMAttr& a,
-                           ::xml_schema::flags f = 0,
-                           ::xml_schema::container* c = 0);
-
-  force_calculator_type_t (const ::std::string& s,
-                           const ::xercesc::DOMElement* e,
-                           ::xml_schema::flags f = 0,
-                           ::xml_schema::container* c = 0);
-
-  force_calculator_type_t (const force_calculator_type_t& x,
-                           ::xml_schema::flags f = 0,
-                           ::xml_schema::container* c = 0);
-
-  virtual force_calculator_type_t*
-  _clone (::xml_schema::flags f = 0,
-          ::xml_schema::container* c = 0) const;
-
-  force_calculator_type_t&
-  operator= (value v);
-
-  virtual
-  operator value () const
-  {
-    return _xsd_force_calculator_type_t_convert ();
-  }
-
-  protected:
-  value
-  _xsd_force_calculator_type_t_convert () const;
-
-  public:
-  static const char* const _xsd_force_calculator_type_t_literals_[2];
-  static const value _xsd_force_calculator_type_t_indexes_[2];
-};
 
 class simulation_mode_type_t: public ::xml_schema::string
 {
@@ -365,7 +310,8 @@ class boundary_type_t: public ::xml_schema::string
   enum value
   {
     outflow,
-    reflect
+    reflect,
+    periodic
   };
 
   boundary_type_t (value v);
@@ -411,8 +357,8 @@ class boundary_type_t: public ::xml_schema::string
   _xsd_boundary_type_t_convert () const;
 
   public:
-  static const char* const _xsd_boundary_type_t_literals_[2];
-  static const value _xsd_boundary_type_t_indexes_[2];
+  static const char* const _xsd_boundary_type_t_literals_[3];
+  static const value _xsd_boundary_type_t_indexes_[3];
 };
 
 class boundary_t: public ::xml_schema::type
@@ -560,80 +506,78 @@ class boundary_t: public ::xml_schema::type
   ::xsd::cxx::tree::one< z_max_type > z_max_;
 };
 
-class force_calculator_t: public ::xml_schema::type
+class simulation_force_calculator_t: public ::xml_schema::type
 {
   public:
-  // type
+  // lennard-jones
   // 
-  typedef ::force_calculator_type_t type_type;
-  typedef ::xsd::cxx::tree::traits< type_type, char > type_traits;
+  typedef ::xml_schema::string lennard_jones_type;
+  typedef ::xsd::cxx::tree::sequence< lennard_jones_type > lennard_jones_sequence;
+  typedef lennard_jones_sequence::iterator lennard_jones_iterator;
+  typedef lennard_jones_sequence::const_iterator lennard_jones_const_iterator;
+  typedef ::xsd::cxx::tree::traits< lennard_jones_type, char > lennard_jones_traits;
 
-  const type_type&
-  type () const;
+  const lennard_jones_sequence&
+  lennard_jones () const;
 
-  type_type&
-  type ();
+  lennard_jones_sequence&
+  lennard_jones ();
 
   void
-  type (const type_type& x);
+  lennard_jones (const lennard_jones_sequence& s);
 
-  void
-  type (::std::auto_ptr< type_type > p);
-
-  // epsilon
+  // lj-cutoff
   // 
-  typedef ::xml_schema::double_ epsilon_type;
-  typedef ::xsd::cxx::tree::optional< epsilon_type > epsilon_optional;
-  typedef ::xsd::cxx::tree::traits< epsilon_type, char, ::xsd::cxx::tree::schema_type::double_ > epsilon_traits;
+  typedef ::lj_cutoff_t lj_cutoff_type;
+  typedef ::xsd::cxx::tree::sequence< lj_cutoff_type > lj_cutoff_sequence;
+  typedef lj_cutoff_sequence::iterator lj_cutoff_iterator;
+  typedef lj_cutoff_sequence::const_iterator lj_cutoff_const_iterator;
+  typedef ::xsd::cxx::tree::traits< lj_cutoff_type, char > lj_cutoff_traits;
 
-  const epsilon_optional&
-  epsilon () const;
+  const lj_cutoff_sequence&
+  lj_cutoff () const;
 
-  epsilon_optional&
-  epsilon ();
+  lj_cutoff_sequence&
+  lj_cutoff ();
 
   void
-  epsilon (const epsilon_type& x);
+  lj_cutoff (const lj_cutoff_sequence& s);
 
-  void
-  epsilon (const epsilon_optional& x);
-
-  // sigma
+  // gravity
   // 
-  typedef ::xml_schema::double_ sigma_type;
-  typedef ::xsd::cxx::tree::optional< sigma_type > sigma_optional;
-  typedef ::xsd::cxx::tree::traits< sigma_type, char, ::xsd::cxx::tree::schema_type::double_ > sigma_traits;
+  typedef ::gravity_t gravity_type;
+  typedef ::xsd::cxx::tree::sequence< gravity_type > gravity_sequence;
+  typedef gravity_sequence::iterator gravity_iterator;
+  typedef gravity_sequence::const_iterator gravity_const_iterator;
+  typedef ::xsd::cxx::tree::traits< gravity_type, char > gravity_traits;
 
-  const sigma_optional&
-  sigma () const;
+  const gravity_sequence&
+  gravity () const;
 
-  sigma_optional&
-  sigma ();
+  gravity_sequence&
+  gravity ();
 
   void
-  sigma (const sigma_type& x);
-
-  void
-  sigma (const sigma_optional& x);
+  gravity (const gravity_sequence& s);
 
   // Constructors.
   //
-  force_calculator_t (const type_type&);
+  simulation_force_calculator_t ();
 
-  force_calculator_t (const ::xercesc::DOMElement& e,
-                      ::xml_schema::flags f = 0,
-                      ::xml_schema::container* c = 0);
+  simulation_force_calculator_t (const ::xercesc::DOMElement& e,
+                                 ::xml_schema::flags f = 0,
+                                 ::xml_schema::container* c = 0);
 
-  force_calculator_t (const force_calculator_t& x,
-                      ::xml_schema::flags f = 0,
-                      ::xml_schema::container* c = 0);
+  simulation_force_calculator_t (const simulation_force_calculator_t& x,
+                                 ::xml_schema::flags f = 0,
+                                 ::xml_schema::container* c = 0);
 
-  virtual force_calculator_t*
+  virtual simulation_force_calculator_t*
   _clone (::xml_schema::flags f = 0,
           ::xml_schema::container* c = 0) const;
 
   virtual 
-  ~force_calculator_t ();
+  ~simulation_force_calculator_t ();
 
   // Implementation.
   //
@@ -643,9 +587,103 @@ class force_calculator_t: public ::xml_schema::type
          ::xml_schema::flags);
 
   protected:
-  ::xsd::cxx::tree::one< type_type > type_;
-  epsilon_optional epsilon_;
-  sigma_optional sigma_;
+  lennard_jones_sequence lennard_jones_;
+  lj_cutoff_sequence lj_cutoff_;
+  gravity_sequence gravity_;
+};
+
+class lj_cutoff_t: public ::xml_schema::type
+{
+  public:
+  // cutoff_factor
+  // 
+  typedef ::xml_schema::double_ cutoff_factor_type;
+  typedef ::xsd::cxx::tree::traits< cutoff_factor_type, char, ::xsd::cxx::tree::schema_type::double_ > cutoff_factor_traits;
+
+  const cutoff_factor_type&
+  cutoff_factor () const;
+
+  cutoff_factor_type&
+  cutoff_factor ();
+
+  void
+  cutoff_factor (const cutoff_factor_type& x);
+
+  // Constructors.
+  //
+  lj_cutoff_t (const cutoff_factor_type&);
+
+  lj_cutoff_t (const ::xercesc::DOMElement& e,
+               ::xml_schema::flags f = 0,
+               ::xml_schema::container* c = 0);
+
+  lj_cutoff_t (const lj_cutoff_t& x,
+               ::xml_schema::flags f = 0,
+               ::xml_schema::container* c = 0);
+
+  virtual lj_cutoff_t*
+  _clone (::xml_schema::flags f = 0,
+          ::xml_schema::container* c = 0) const;
+
+  virtual 
+  ~lj_cutoff_t ();
+
+  // Implementation.
+  //
+  protected:
+  void
+  parse (::xsd::cxx::xml::dom::parser< char >&,
+         ::xml_schema::flags);
+
+  protected:
+  ::xsd::cxx::tree::one< cutoff_factor_type > cutoff_factor_;
+};
+
+class gravity_t: public ::xml_schema::type
+{
+  public:
+  // g_grav
+  // 
+  typedef ::xml_schema::double_ g_grav_type;
+  typedef ::xsd::cxx::tree::traits< g_grav_type, char, ::xsd::cxx::tree::schema_type::double_ > g_grav_traits;
+
+  const g_grav_type&
+  g_grav () const;
+
+  g_grav_type&
+  g_grav ();
+
+  void
+  g_grav (const g_grav_type& x);
+
+  // Constructors.
+  //
+  gravity_t (const g_grav_type&);
+
+  gravity_t (const ::xercesc::DOMElement& e,
+             ::xml_schema::flags f = 0,
+             ::xml_schema::container* c = 0);
+
+  gravity_t (const gravity_t& x,
+             ::xml_schema::flags f = 0,
+             ::xml_schema::container* c = 0);
+
+  virtual gravity_t*
+  _clone (::xml_schema::flags f = 0,
+          ::xml_schema::container* c = 0) const;
+
+  virtual 
+  ~gravity_t ();
+
+  // Implementation.
+  //
+  protected:
+  void
+  parse (::xsd::cxx::xml::dom::parser< char >&,
+         ::xml_schema::flags);
+
+  protected:
+  ::xsd::cxx::tree::one< g_grav_type > g_grav_;
 };
 
 class simulation_mode_t: public ::xml_schema::type
@@ -841,23 +879,6 @@ class simulation_parameters_t: public ::xml_schema::type
   void
   delta_t (const delta_t_type& x);
 
-  // force-calculator
-  // 
-  typedef ::force_calculator_t force_calculator_type;
-  typedef ::xsd::cxx::tree::traits< force_calculator_type, char > force_calculator_traits;
-
-  const force_calculator_type&
-  force_calculator () const;
-
-  force_calculator_type&
-  force_calculator ();
-
-  void
-  force_calculator (const force_calculator_type& x);
-
-  void
-  force_calculator (::std::auto_ptr< force_calculator_type > p);
-
   // simulation-mode
   // 
   typedef ::simulation_mode_t simulation_mode_type;
@@ -880,13 +901,11 @@ class simulation_parameters_t: public ::xml_schema::type
   simulation_parameters_t (const start_time_type&,
                            const end_time_type&,
                            const delta_t_type&,
-                           const force_calculator_type&,
                            const simulation_mode_type&);
 
   simulation_parameters_t (const start_time_type&,
                            const end_time_type&,
                            const delta_t_type&,
-                           ::std::auto_ptr< force_calculator_type >&,
                            ::std::auto_ptr< simulation_mode_type >&);
 
   simulation_parameters_t (const ::xercesc::DOMElement& e,
@@ -915,7 +934,6 @@ class simulation_parameters_t: public ::xml_schema::type
   ::xsd::cxx::tree::one< start_time_type > start_time_;
   ::xsd::cxx::tree::one< end_time_type > end_time_;
   ::xsd::cxx::tree::one< delta_t_type > delta_t_;
-  ::xsd::cxx::tree::one< force_calculator_type > force_calculator_;
   ::xsd::cxx::tree::one< simulation_mode_type > simulation_mode_;
 };
 
@@ -1034,6 +1052,48 @@ class cuboid_t: public ::xml_schema::type
   void
   m (const m_type& x);
 
+  // epsilon
+  // 
+  typedef ::xml_schema::double_ epsilon_type;
+  typedef ::xsd::cxx::tree::traits< epsilon_type, char, ::xsd::cxx::tree::schema_type::double_ > epsilon_traits;
+
+  const epsilon_type&
+  epsilon () const;
+
+  epsilon_type&
+  epsilon ();
+
+  void
+  epsilon (const epsilon_type& x);
+
+  // sigma
+  // 
+  typedef ::xml_schema::double_ sigma_type;
+  typedef ::xsd::cxx::tree::traits< sigma_type, char, ::xsd::cxx::tree::schema_type::double_ > sigma_traits;
+
+  const sigma_type&
+  sigma () const;
+
+  sigma_type&
+  sigma ();
+
+  void
+  sigma (const sigma_type& x);
+
+  // type
+  // 
+  typedef ::xml_schema::int_ type_type;
+  typedef ::xsd::cxx::tree::traits< type_type, char > type_traits;
+
+  const type_type&
+  type () const;
+
+  type_type&
+  type ();
+
+  void
+  type (const type_type& x);
+
   // v1
   // 
   typedef ::xml_schema::double_ v1_type;
@@ -1086,6 +1146,9 @@ class cuboid_t: public ::xml_schema::type
             const n3_type&,
             const h_type&,
             const m_type&,
+            const epsilon_type&,
+            const sigma_type&,
+            const type_type&,
             const v1_type&,
             const v2_type&,
             const v3_type&);
@@ -1121,6 +1184,9 @@ class cuboid_t: public ::xml_schema::type
   ::xsd::cxx::tree::one< n3_type > n3_;
   ::xsd::cxx::tree::one< h_type > h_;
   ::xsd::cxx::tree::one< m_type > m_;
+  ::xsd::cxx::tree::one< epsilon_type > epsilon_;
+  ::xsd::cxx::tree::one< sigma_type > sigma_;
+  ::xsd::cxx::tree::one< type_type > type_;
   ::xsd::cxx::tree::one< v1_type > v1_;
   ::xsd::cxx::tree::one< v2_type > v2_;
   ::xsd::cxx::tree::one< v3_type > v3_;
@@ -1213,6 +1279,48 @@ class sphere_t: public ::xml_schema::type
   void
   m (const m_type& x);
 
+  // epsilon
+  // 
+  typedef ::xml_schema::double_ epsilon_type;
+  typedef ::xsd::cxx::tree::traits< epsilon_type, char, ::xsd::cxx::tree::schema_type::double_ > epsilon_traits;
+
+  const epsilon_type&
+  epsilon () const;
+
+  epsilon_type&
+  epsilon ();
+
+  void
+  epsilon (const epsilon_type& x);
+
+  // sigma
+  // 
+  typedef ::xml_schema::double_ sigma_type;
+  typedef ::xsd::cxx::tree::traits< sigma_type, char, ::xsd::cxx::tree::schema_type::double_ > sigma_traits;
+
+  const sigma_type&
+  sigma () const;
+
+  sigma_type&
+  sigma ();
+
+  void
+  sigma (const sigma_type& x);
+
+  // type
+  // 
+  typedef ::xml_schema::int_ type_type;
+  typedef ::xsd::cxx::tree::traits< type_type, char > type_traits;
+
+  const type_type&
+  type () const;
+
+  type_type&
+  type ();
+
+  void
+  type (const type_type& x);
+
   // v1
   // 
   typedef ::xml_schema::double_ v1_type;
@@ -1263,6 +1371,9 @@ class sphere_t: public ::xml_schema::type
             const r_type&,
             const h_type&,
             const m_type&,
+            const epsilon_type&,
+            const sigma_type&,
+            const type_type&,
             const v1_type&,
             const v2_type&,
             const v3_type&);
@@ -1296,6 +1407,9 @@ class sphere_t: public ::xml_schema::type
   ::xsd::cxx::tree::one< r_type > r_;
   ::xsd::cxx::tree::one< h_type > h_;
   ::xsd::cxx::tree::one< m_type > m_;
+  ::xsd::cxx::tree::one< epsilon_type > epsilon_;
+  ::xsd::cxx::tree::one< sigma_type > sigma_;
+  ::xsd::cxx::tree::one< type_type > type_;
   ::xsd::cxx::tree::one< v1_type > v1_;
   ::xsd::cxx::tree::one< v2_type > v2_;
   ::xsd::cxx::tree::one< v3_type > v3_;
@@ -1473,6 +1587,23 @@ class simulation_t: public ::xml_schema::type
   void
   parameter (::std::auto_ptr< parameter_type > p);
 
+  // force-calculator
+  // 
+  typedef ::simulation_force_calculator_t force_calculator_type;
+  typedef ::xsd::cxx::tree::traits< force_calculator_type, char > force_calculator_traits;
+
+  const force_calculator_type&
+  force_calculator () const;
+
+  force_calculator_type&
+  force_calculator ();
+
+  void
+  force_calculator (const force_calculator_type& x);
+
+  void
+  force_calculator (::std::auto_ptr< force_calculator_type > p);
+
   // input
   // 
   typedef ::simulation_input_t input_type;
@@ -1510,10 +1641,12 @@ class simulation_t: public ::xml_schema::type
   // Constructors.
   //
   simulation_t (const parameter_type&,
+                const force_calculator_type&,
                 const input_type&,
                 const output_type&);
 
   simulation_t (::std::auto_ptr< parameter_type >&,
+                ::std::auto_ptr< force_calculator_type >&,
                 ::std::auto_ptr< input_type >&,
                 ::std::auto_ptr< output_type >&);
 
@@ -1541,6 +1674,7 @@ class simulation_t: public ::xml_schema::type
 
   protected:
   ::xsd::cxx::tree::one< parameter_type > parameter_;
+  ::xsd::cxx::tree::one< force_calculator_type > force_calculator_;
   ::xsd::cxx::tree::one< input_type > input_;
   ::xsd::cxx::tree::one< output_type > output_;
 };

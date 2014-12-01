@@ -75,7 +75,9 @@ public:
 	 * 5: z=max
 	 */
 	BoundaryCondition *boundConds[6];
+
 	double cutoff;					//!< Cutoff radius.
+	Vector<double, 3> effDomain; //!< Effective domain size in each dimension.
 	Vector<int, 3> cellCount; //!< Number of cells in each dimension \f$ N_i \f$.
 	int cellTotal;					//!< Total number of cells \f$ N \f$.
 
@@ -95,6 +97,7 @@ public:
 	void remove(Particle& p);
 	void remove(Particle& p, int contInd);
 	void remove_halo();
+	void remove_halo_virtual();
 
 	void prepare_forces();
 

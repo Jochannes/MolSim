@@ -18,6 +18,6 @@
 void Reflection::impose(SimpleContainer* cont) {
 	ReflectionHandler reflect;
 	reflect.side = BoundaryCondition::side;
-	reflect.boundary = BoundaryCondition::boundary;
+	reflect.boundary = BoundaryCondition::cellCont->effDomain;
 	cont->iterate_all(reflect);
 }

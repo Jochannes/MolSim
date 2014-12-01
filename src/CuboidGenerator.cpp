@@ -33,7 +33,7 @@ void CuboidGenerator::input(list<Particle>& particleList)
 
 			for (int k = 0; k < num_particles[2]; k++) {
 				// create a new Particle
-				Particle p(x, velocity, mass);
+				Particle p(x, velocity, mass, epsilon, sigma, type);
 
 				// add brownian motion
 				if (num_particles[2] == 1) {

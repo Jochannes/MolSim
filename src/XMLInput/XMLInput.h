@@ -11,6 +11,9 @@
 #include "ParticleInput_FileReader.h"
 #include "CuboidGenerator.h"
 #include "SphereGenerator.h"
+#include "handler/ForceCalculator_Gravity.h"
+#include "handler/ForceCalculator_LennardJones.h"
+#include "handler/ForceCalculator_LJ_cutoff.h"
 #include "XMLInput/simulation.h"
 
 #include <string>
@@ -30,9 +33,10 @@ private:
 	double end_time;
 	double delta_t;
 
-	force_calculator_type_t::value fc_type;
-	double epsilon;
-	double sigma;
+	std::vector<ForceCalculator_LennardJones> lennard_jones;
+	std::vector<ForceCalculator_LJ_cutoff> lj_cutoff;
+	std::vector<ForceCalculator_Gravity> gravity;
+	int forceCalcCnt;
 
 	simulation_mode_type_t::value sm_type;
 	double cutoff_radius;
@@ -64,8 +68,8 @@ public:
 	 */
 	XMLInput(const char* param_xmlfilename) :
 			xmlfilename(param_xmlfilename), start_time(0), end_time(1000), delta_t(
-					0.014), fc_type(force_calculator_type_t::lennard_jones), sm_type(
-					simulation_mode_type_t::linked_cell), epsilon(5), sigma(1), cutoff_radius(
+					0.014), sm_type(
+					simulation_mode_type_t::linked_cell), cutoff_radius(
 					3), output_freq(10) {
 		std::string temp = "MD_vtk";
 		base_filename = temp.c_str();

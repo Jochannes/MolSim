@@ -40,51 +40,6 @@
 
 #include "simulation.h"
 
-// force_calculator_type_t
-// 
-
-force_calculator_type_t::
-force_calculator_type_t (value v)
-: ::xml_schema::string (_xsd_force_calculator_type_t_literals_[v])
-{
-}
-
-force_calculator_type_t::
-force_calculator_type_t (const char* v)
-: ::xml_schema::string (v)
-{
-}
-
-force_calculator_type_t::
-force_calculator_type_t (const ::std::string& v)
-: ::xml_schema::string (v)
-{
-}
-
-force_calculator_type_t::
-force_calculator_type_t (const ::xml_schema::string& v)
-: ::xml_schema::string (v)
-{
-}
-
-force_calculator_type_t::
-force_calculator_type_t (const force_calculator_type_t& v,
-                         ::xml_schema::flags f,
-                         ::xml_schema::container* c)
-: ::xml_schema::string (v, f, c)
-{
-}
-
-force_calculator_type_t& force_calculator_type_t::
-operator= (value v)
-{
-  static_cast< ::xml_schema::string& > (*this) = 
-  ::xml_schema::string (_xsd_force_calculator_type_t_literals_[v]);
-
-  return *this;
-}
-
-
 // simulation_mode_type_t
 // 
 
@@ -323,79 +278,105 @@ z_max (::std::auto_ptr< z_max_type > x)
 }
 
 
-// force_calculator_t
+// simulation_force_calculator_t
 // 
 
-const force_calculator_t::type_type& force_calculator_t::
-type () const
+const simulation_force_calculator_t::lennard_jones_sequence& simulation_force_calculator_t::
+lennard_jones () const
 {
-  return this->type_.get ();
+  return this->lennard_jones_;
 }
 
-force_calculator_t::type_type& force_calculator_t::
-type ()
+simulation_force_calculator_t::lennard_jones_sequence& simulation_force_calculator_t::
+lennard_jones ()
 {
-  return this->type_.get ();
+  return this->lennard_jones_;
 }
 
-void force_calculator_t::
-type (const type_type& x)
+void simulation_force_calculator_t::
+lennard_jones (const lennard_jones_sequence& s)
 {
-  this->type_.set (x);
+  this->lennard_jones_ = s;
 }
 
-void force_calculator_t::
-type (::std::auto_ptr< type_type > x)
+const simulation_force_calculator_t::lj_cutoff_sequence& simulation_force_calculator_t::
+lj_cutoff () const
 {
-  this->type_.set (x);
+  return this->lj_cutoff_;
 }
 
-const force_calculator_t::epsilon_optional& force_calculator_t::
-epsilon () const
+simulation_force_calculator_t::lj_cutoff_sequence& simulation_force_calculator_t::
+lj_cutoff ()
 {
-  return this->epsilon_;
+  return this->lj_cutoff_;
 }
 
-force_calculator_t::epsilon_optional& force_calculator_t::
-epsilon ()
+void simulation_force_calculator_t::
+lj_cutoff (const lj_cutoff_sequence& s)
 {
-  return this->epsilon_;
+  this->lj_cutoff_ = s;
 }
 
-void force_calculator_t::
-epsilon (const epsilon_type& x)
+const simulation_force_calculator_t::gravity_sequence& simulation_force_calculator_t::
+gravity () const
 {
-  this->epsilon_.set (x);
+  return this->gravity_;
 }
 
-void force_calculator_t::
-epsilon (const epsilon_optional& x)
+simulation_force_calculator_t::gravity_sequence& simulation_force_calculator_t::
+gravity ()
 {
-  this->epsilon_ = x;
+  return this->gravity_;
 }
 
-const force_calculator_t::sigma_optional& force_calculator_t::
-sigma () const
+void simulation_force_calculator_t::
+gravity (const gravity_sequence& s)
 {
-  return this->sigma_;
+  this->gravity_ = s;
 }
 
-force_calculator_t::sigma_optional& force_calculator_t::
-sigma ()
+
+// lj_cutoff_t
+// 
+
+const lj_cutoff_t::cutoff_factor_type& lj_cutoff_t::
+cutoff_factor () const
 {
-  return this->sigma_;
+  return this->cutoff_factor_.get ();
 }
 
-void force_calculator_t::
-sigma (const sigma_type& x)
+lj_cutoff_t::cutoff_factor_type& lj_cutoff_t::
+cutoff_factor ()
 {
-  this->sigma_.set (x);
+  return this->cutoff_factor_.get ();
 }
 
-void force_calculator_t::
-sigma (const sigma_optional& x)
+void lj_cutoff_t::
+cutoff_factor (const cutoff_factor_type& x)
 {
-  this->sigma_ = x;
+  this->cutoff_factor_.set (x);
+}
+
+
+// gravity_t
+// 
+
+const gravity_t::g_grav_type& gravity_t::
+g_grav () const
+{
+  return this->g_grav_.get ();
+}
+
+gravity_t::g_grav_type& gravity_t::
+g_grav ()
+{
+  return this->g_grav_.get ();
+}
+
+void gravity_t::
+g_grav (const g_grav_type& x)
+{
+  this->g_grav_.set (x);
 }
 
 
@@ -610,30 +591,6 @@ delta_t (const delta_t_type& x)
   this->delta_t_.set (x);
 }
 
-const simulation_parameters_t::force_calculator_type& simulation_parameters_t::
-force_calculator () const
-{
-  return this->force_calculator_.get ();
-}
-
-simulation_parameters_t::force_calculator_type& simulation_parameters_t::
-force_calculator ()
-{
-  return this->force_calculator_.get ();
-}
-
-void simulation_parameters_t::
-force_calculator (const force_calculator_type& x)
-{
-  this->force_calculator_.set (x);
-}
-
-void simulation_parameters_t::
-force_calculator (::std::auto_ptr< force_calculator_type > x)
-{
-  this->force_calculator_.set (x);
-}
-
 const simulation_parameters_t::simulation_mode_type& simulation_parameters_t::
 simulation_mode () const
 {
@@ -806,6 +763,60 @@ m (const m_type& x)
   this->m_.set (x);
 }
 
+const cuboid_t::epsilon_type& cuboid_t::
+epsilon () const
+{
+  return this->epsilon_.get ();
+}
+
+cuboid_t::epsilon_type& cuboid_t::
+epsilon ()
+{
+  return this->epsilon_.get ();
+}
+
+void cuboid_t::
+epsilon (const epsilon_type& x)
+{
+  this->epsilon_.set (x);
+}
+
+const cuboid_t::sigma_type& cuboid_t::
+sigma () const
+{
+  return this->sigma_.get ();
+}
+
+cuboid_t::sigma_type& cuboid_t::
+sigma ()
+{
+  return this->sigma_.get ();
+}
+
+void cuboid_t::
+sigma (const sigma_type& x)
+{
+  this->sigma_.set (x);
+}
+
+const cuboid_t::type_type& cuboid_t::
+type () const
+{
+  return this->type_.get ();
+}
+
+cuboid_t::type_type& cuboid_t::
+type ()
+{
+  return this->type_.get ();
+}
+
+void cuboid_t::
+type (const type_type& x)
+{
+  this->type_.set (x);
+}
+
 const cuboid_t::v1_type& cuboid_t::
 v1 () const
 {
@@ -970,6 +981,60 @@ void sphere_t::
 m (const m_type& x)
 {
   this->m_.set (x);
+}
+
+const sphere_t::epsilon_type& sphere_t::
+epsilon () const
+{
+  return this->epsilon_.get ();
+}
+
+sphere_t::epsilon_type& sphere_t::
+epsilon ()
+{
+  return this->epsilon_.get ();
+}
+
+void sphere_t::
+epsilon (const epsilon_type& x)
+{
+  this->epsilon_.set (x);
+}
+
+const sphere_t::sigma_type& sphere_t::
+sigma () const
+{
+  return this->sigma_.get ();
+}
+
+sphere_t::sigma_type& sphere_t::
+sigma ()
+{
+  return this->sigma_.get ();
+}
+
+void sphere_t::
+sigma (const sigma_type& x)
+{
+  this->sigma_.set (x);
+}
+
+const sphere_t::type_type& sphere_t::
+type () const
+{
+  return this->type_.get ();
+}
+
+sphere_t::type_type& sphere_t::
+type ()
+{
+  return this->type_.get ();
+}
+
+void sphere_t::
+type (const type_type& x)
+{
+  this->type_.set (x);
 }
 
 const sphere_t::v1_type& sphere_t::
@@ -1158,6 +1223,30 @@ parameter (::std::auto_ptr< parameter_type > x)
   this->parameter_.set (x);
 }
 
+const simulation_t::force_calculator_type& simulation_t::
+force_calculator () const
+{
+  return this->force_calculator_.get ();
+}
+
+simulation_t::force_calculator_type& simulation_t::
+force_calculator ()
+{
+  return this->force_calculator_.get ();
+}
+
+void simulation_t::
+force_calculator (const force_calculator_type& x)
+{
+  this->force_calculator_.set (x);
+}
+
+void simulation_t::
+force_calculator (::std::auto_ptr< force_calculator_type > x)
+{
+  this->force_calculator_.set (x);
+}
+
 const simulation_t::input_type& simulation_t::
 input () const
 {
@@ -1208,76 +1297,6 @@ output (::std::auto_ptr< output_type > x)
 
 
 #include <xsd/cxx/xml/dom/parsing-source.hxx>
-
-// force_calculator_type_t
-//
-
-force_calculator_type_t::
-force_calculator_type_t (const ::xercesc::DOMElement& e,
-                         ::xml_schema::flags f,
-                         ::xml_schema::container* c)
-: ::xml_schema::string (e, f, c)
-{
-  _xsd_force_calculator_type_t_convert ();
-}
-
-force_calculator_type_t::
-force_calculator_type_t (const ::xercesc::DOMAttr& a,
-                         ::xml_schema::flags f,
-                         ::xml_schema::container* c)
-: ::xml_schema::string (a, f, c)
-{
-  _xsd_force_calculator_type_t_convert ();
-}
-
-force_calculator_type_t::
-force_calculator_type_t (const ::std::string& s,
-                         const ::xercesc::DOMElement* e,
-                         ::xml_schema::flags f,
-                         ::xml_schema::container* c)
-: ::xml_schema::string (s, e, f, c)
-{
-  _xsd_force_calculator_type_t_convert ();
-}
-
-force_calculator_type_t* force_calculator_type_t::
-_clone (::xml_schema::flags f,
-        ::xml_schema::container* c) const
-{
-  return new class force_calculator_type_t (*this, f, c);
-}
-
-force_calculator_type_t::value force_calculator_type_t::
-_xsd_force_calculator_type_t_convert () const
-{
-  ::xsd::cxx::tree::enum_comparator< char > c (_xsd_force_calculator_type_t_literals_);
-  const value* i (::std::lower_bound (
-                    _xsd_force_calculator_type_t_indexes_,
-                    _xsd_force_calculator_type_t_indexes_ + 2,
-                    *this,
-                    c));
-
-  if (i == _xsd_force_calculator_type_t_indexes_ + 2 || _xsd_force_calculator_type_t_literals_[*i] != *this)
-  {
-    throw ::xsd::cxx::tree::unexpected_enumerator < char > (*this);
-  }
-
-  return *i;
-}
-
-const char* const force_calculator_type_t::
-_xsd_force_calculator_type_t_literals_[2] =
-{
-  "gravity",
-  "lennard-jones"
-};
-
-const force_calculator_type_t::value force_calculator_type_t::
-_xsd_force_calculator_type_t_indexes_[2] =
-{
-  ::force_calculator_type_t::gravity,
-  ::force_calculator_type_t::lennard_jones
-};
 
 // simulation_mode_type_t
 //
@@ -1393,11 +1412,11 @@ _xsd_boundary_type_t_convert () const
   ::xsd::cxx::tree::enum_comparator< char > c (_xsd_boundary_type_t_literals_);
   const value* i (::std::lower_bound (
                     _xsd_boundary_type_t_indexes_,
-                    _xsd_boundary_type_t_indexes_ + 2,
+                    _xsd_boundary_type_t_indexes_ + 3,
                     *this,
                     c));
 
-  if (i == _xsd_boundary_type_t_indexes_ + 2 || _xsd_boundary_type_t_literals_[*i] != *this)
+  if (i == _xsd_boundary_type_t_indexes_ + 3 || _xsd_boundary_type_t_literals_[*i] != *this)
   {
     throw ::xsd::cxx::tree::unexpected_enumerator < char > (*this);
   }
@@ -1406,16 +1425,18 @@ _xsd_boundary_type_t_convert () const
 }
 
 const char* const boundary_type_t::
-_xsd_boundary_type_t_literals_[2] =
+_xsd_boundary_type_t_literals_[3] =
 {
   "outflow",
-  "reflect"
+  "reflect",
+  "periodic"
 };
 
 const boundary_type_t::value boundary_type_t::
-_xsd_boundary_type_t_indexes_[2] =
+_xsd_boundary_type_t_indexes_[3] =
 {
   ::boundary_type_t::outflow,
+  ::boundary_type_t::periodic,
   ::boundary_type_t::reflect
 };
 
@@ -1592,37 +1613,37 @@ boundary_t::
 {
 }
 
-// force_calculator_t
+// simulation_force_calculator_t
 //
 
-force_calculator_t::
-force_calculator_t (const type_type& type)
+simulation_force_calculator_t::
+simulation_force_calculator_t ()
 : ::xml_schema::type (),
-  type_ (type, ::xml_schema::flags (), this),
-  epsilon_ (::xml_schema::flags (), this),
-  sigma_ (::xml_schema::flags (), this)
+  lennard_jones_ (::xml_schema::flags (), this),
+  lj_cutoff_ (::xml_schema::flags (), this),
+  gravity_ (::xml_schema::flags (), this)
 {
 }
 
-force_calculator_t::
-force_calculator_t (const force_calculator_t& x,
-                    ::xml_schema::flags f,
-                    ::xml_schema::container* c)
+simulation_force_calculator_t::
+simulation_force_calculator_t (const simulation_force_calculator_t& x,
+                               ::xml_schema::flags f,
+                               ::xml_schema::container* c)
 : ::xml_schema::type (x, f, c),
-  type_ (x.type_, f, this),
-  epsilon_ (x.epsilon_, f, this),
-  sigma_ (x.sigma_, f, this)
+  lennard_jones_ (x.lennard_jones_, f, this),
+  lj_cutoff_ (x.lj_cutoff_, f, this),
+  gravity_ (x.gravity_, f, this)
 {
 }
 
-force_calculator_t::
-force_calculator_t (const ::xercesc::DOMElement& e,
-                    ::xml_schema::flags f,
-                    ::xml_schema::container* c)
+simulation_force_calculator_t::
+simulation_force_calculator_t (const ::xercesc::DOMElement& e,
+                               ::xml_schema::flags f,
+                               ::xml_schema::container* c)
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
-  type_ (f, this),
-  epsilon_ (f, this),
-  sigma_ (f, this)
+  lennard_jones_ (f, this),
+  lj_cutoff_ (f, this),
+  gravity_ (f, this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
   {
@@ -1631,7 +1652,7 @@ force_calculator_t (const ::xercesc::DOMElement& e,
   }
 }
 
-void force_calculator_t::
+void simulation_force_calculator_t::
 parse (::xsd::cxx::xml::dom::parser< char >& p,
        ::xml_schema::flags f)
 {
@@ -1641,62 +1662,192 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     const ::xsd::cxx::xml::qualified_name< char > n (
       ::xsd::cxx::xml::dom::name< char > (i));
 
-    // type
+    // lennard-jones
     //
-    if (n.name () == "type" && n.namespace_ ().empty ())
+    if (n.name () == "lennard-jones" && n.namespace_ ().empty ())
     {
-      ::std::auto_ptr< type_type > r (
-        type_traits::create (i, f, this));
+      ::std::auto_ptr< lennard_jones_type > r (
+        lennard_jones_traits::create (i, f, this));
 
-      if (!type_.present ())
-      {
-        this->type_.set (r);
-        continue;
-      }
+      this->lennard_jones_.push_back (r);
+      continue;
     }
 
-    // epsilon
+    // lj-cutoff
     //
-    if (n.name () == "epsilon" && n.namespace_ ().empty ())
+    if (n.name () == "lj-cutoff" && n.namespace_ ().empty ())
     {
-      if (!this->epsilon_)
-      {
-        this->epsilon_.set (epsilon_traits::create (i, f, this));
-        continue;
-      }
+      ::std::auto_ptr< lj_cutoff_type > r (
+        lj_cutoff_traits::create (i, f, this));
+
+      this->lj_cutoff_.push_back (r);
+      continue;
     }
 
-    // sigma
+    // gravity
     //
-    if (n.name () == "sigma" && n.namespace_ ().empty ())
+    if (n.name () == "gravity" && n.namespace_ ().empty ())
     {
-      if (!this->sigma_)
-      {
-        this->sigma_.set (sigma_traits::create (i, f, this));
-        continue;
-      }
+      ::std::auto_ptr< gravity_type > r (
+        gravity_traits::create (i, f, this));
+
+      this->gravity_.push_back (r);
+      continue;
     }
 
     break;
   }
+}
 
-  if (!type_.present ())
+simulation_force_calculator_t* simulation_force_calculator_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class simulation_force_calculator_t (*this, f, c);
+}
+
+simulation_force_calculator_t::
+~simulation_force_calculator_t ()
+{
+}
+
+// lj_cutoff_t
+//
+
+lj_cutoff_t::
+lj_cutoff_t (const cutoff_factor_type& cutoff_factor)
+: ::xml_schema::type (),
+  cutoff_factor_ (cutoff_factor, ::xml_schema::flags (), this)
+{
+}
+
+lj_cutoff_t::
+lj_cutoff_t (const lj_cutoff_t& x,
+             ::xml_schema::flags f,
+             ::xml_schema::container* c)
+: ::xml_schema::type (x, f, c),
+  cutoff_factor_ (x.cutoff_factor_, f, this)
+{
+}
+
+lj_cutoff_t::
+lj_cutoff_t (const ::xercesc::DOMElement& e,
+             ::xml_schema::flags f,
+             ::xml_schema::container* c)
+: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  cutoff_factor_ (f, this)
+{
+  if ((f & ::xml_schema::flags::base) == 0)
   {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "type",
+    ::xsd::cxx::xml::dom::parser< char > p (e, false, true);
+    this->parse (p, f);
+  }
+}
+
+void lj_cutoff_t::
+parse (::xsd::cxx::xml::dom::parser< char >& p,
+       ::xml_schema::flags f)
+{
+  while (p.more_attributes ())
+  {
+    const ::xercesc::DOMAttr& i (p.next_attribute ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    if (n.name () == "cutoff_factor" && n.namespace_ ().empty ())
+    {
+      this->cutoff_factor_.set (cutoff_factor_traits::create (i, f, this));
+      continue;
+    }
+  }
+
+  if (!cutoff_factor_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "cutoff_factor",
       "");
   }
 }
 
-force_calculator_t* force_calculator_t::
+lj_cutoff_t* lj_cutoff_t::
 _clone (::xml_schema::flags f,
         ::xml_schema::container* c) const
 {
-  return new class force_calculator_t (*this, f, c);
+  return new class lj_cutoff_t (*this, f, c);
 }
 
-force_calculator_t::
-~force_calculator_t ()
+lj_cutoff_t::
+~lj_cutoff_t ()
+{
+}
+
+// gravity_t
+//
+
+gravity_t::
+gravity_t (const g_grav_type& g_grav)
+: ::xml_schema::type (),
+  g_grav_ (g_grav, ::xml_schema::flags (), this)
+{
+}
+
+gravity_t::
+gravity_t (const gravity_t& x,
+           ::xml_schema::flags f,
+           ::xml_schema::container* c)
+: ::xml_schema::type (x, f, c),
+  g_grav_ (x.g_grav_, f, this)
+{
+}
+
+gravity_t::
+gravity_t (const ::xercesc::DOMElement& e,
+           ::xml_schema::flags f,
+           ::xml_schema::container* c)
+: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  g_grav_ (f, this)
+{
+  if ((f & ::xml_schema::flags::base) == 0)
+  {
+    ::xsd::cxx::xml::dom::parser< char > p (e, false, true);
+    this->parse (p, f);
+  }
+}
+
+void gravity_t::
+parse (::xsd::cxx::xml::dom::parser< char >& p,
+       ::xml_schema::flags f)
+{
+  while (p.more_attributes ())
+  {
+    const ::xercesc::DOMAttr& i (p.next_attribute ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    if (n.name () == "g_grav" && n.namespace_ ().empty ())
+    {
+      this->g_grav_.set (g_grav_traits::create (i, f, this));
+      continue;
+    }
+  }
+
+  if (!g_grav_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "g_grav",
+      "");
+  }
+}
+
+gravity_t* gravity_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class gravity_t (*this, f, c);
+}
+
+gravity_t::
+~gravity_t ()
 {
 }
 
@@ -1860,13 +2011,11 @@ simulation_parameters_t::
 simulation_parameters_t (const start_time_type& start_time,
                          const end_time_type& end_time,
                          const delta_t_type& delta_t,
-                         const force_calculator_type& force_calculator,
                          const simulation_mode_type& simulation_mode)
 : ::xml_schema::type (),
   start_time_ (start_time, ::xml_schema::flags (), this),
   end_time_ (end_time, ::xml_schema::flags (), this),
   delta_t_ (delta_t, ::xml_schema::flags (), this),
-  force_calculator_ (force_calculator, ::xml_schema::flags (), this),
   simulation_mode_ (simulation_mode, ::xml_schema::flags (), this)
 {
 }
@@ -1875,13 +2024,11 @@ simulation_parameters_t::
 simulation_parameters_t (const start_time_type& start_time,
                          const end_time_type& end_time,
                          const delta_t_type& delta_t,
-                         ::std::auto_ptr< force_calculator_type >& force_calculator,
                          ::std::auto_ptr< simulation_mode_type >& simulation_mode)
 : ::xml_schema::type (),
   start_time_ (start_time, ::xml_schema::flags (), this),
   end_time_ (end_time, ::xml_schema::flags (), this),
   delta_t_ (delta_t, ::xml_schema::flags (), this),
-  force_calculator_ (force_calculator, ::xml_schema::flags (), this),
   simulation_mode_ (simulation_mode, ::xml_schema::flags (), this)
 {
 }
@@ -1894,7 +2041,6 @@ simulation_parameters_t (const simulation_parameters_t& x,
   start_time_ (x.start_time_, f, this),
   end_time_ (x.end_time_, f, this),
   delta_t_ (x.delta_t_, f, this),
-  force_calculator_ (x.force_calculator_, f, this),
   simulation_mode_ (x.simulation_mode_, f, this)
 {
 }
@@ -1907,7 +2053,6 @@ simulation_parameters_t (const ::xercesc::DOMElement& e,
   start_time_ (f, this),
   end_time_ (f, this),
   delta_t_ (f, this),
-  force_calculator_ (f, this),
   simulation_mode_ (f, this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
@@ -1960,20 +2105,6 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       }
     }
 
-    // force-calculator
-    //
-    if (n.name () == "force-calculator" && n.namespace_ ().empty ())
-    {
-      ::std::auto_ptr< force_calculator_type > r (
-        force_calculator_traits::create (i, f, this));
-
-      if (!force_calculator_.present ())
-      {
-        this->force_calculator_.set (r);
-        continue;
-      }
-    }
-
     // simulation-mode
     //
     if (n.name () == "simulation-mode" && n.namespace_ ().empty ())
@@ -2012,13 +2143,6 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       "");
   }
 
-  if (!force_calculator_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "force-calculator",
-      "");
-  }
-
   if (!simulation_mode_.present ())
   {
     throw ::xsd::cxx::tree::expected_element< char > (
@@ -2051,6 +2175,9 @@ cuboid_t (const x1_type& x1,
           const n3_type& n3,
           const h_type& h,
           const m_type& m,
+          const epsilon_type& epsilon,
+          const sigma_type& sigma,
+          const type_type& type,
           const v1_type& v1,
           const v2_type& v2,
           const v3_type& v3)
@@ -2063,6 +2190,9 @@ cuboid_t (const x1_type& x1,
   n3_ (n3, ::xml_schema::flags (), this),
   h_ (h, ::xml_schema::flags (), this),
   m_ (m, ::xml_schema::flags (), this),
+  epsilon_ (epsilon, ::xml_schema::flags (), this),
+  sigma_ (sigma, ::xml_schema::flags (), this),
+  type_ (type, ::xml_schema::flags (), this),
   v1_ (v1, ::xml_schema::flags (), this),
   v2_ (v2, ::xml_schema::flags (), this),
   v3_ (v3, ::xml_schema::flags (), this)
@@ -2082,6 +2212,9 @@ cuboid_t (const cuboid_t& x,
   n3_ (x.n3_, f, this),
   h_ (x.h_, f, this),
   m_ (x.m_, f, this),
+  epsilon_ (x.epsilon_, f, this),
+  sigma_ (x.sigma_, f, this),
+  type_ (x.type_, f, this),
   v1_ (x.v1_, f, this),
   v2_ (x.v2_, f, this),
   v3_ (x.v3_, f, this)
@@ -2101,6 +2234,9 @@ cuboid_t (const ::xercesc::DOMElement& e,
   n3_ (f, this),
   h_ (f, this),
   m_ (f, this),
+  epsilon_ (f, this),
+  sigma_ (f, this),
+  type_ (f, this),
   v1_ (f, this),
   v2_ (f, this),
   v3_ (f, this)
@@ -2167,6 +2303,24 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     if (n.name () == "m" && n.namespace_ ().empty ())
     {
       this->m_.set (m_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "epsilon" && n.namespace_ ().empty ())
+    {
+      this->epsilon_.set (epsilon_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "sigma" && n.namespace_ ().empty ())
+    {
+      this->sigma_.set (sigma_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "type" && n.namespace_ ().empty ())
+    {
+      this->type_.set (type_traits::create (i, f, this));
       continue;
     }
 
@@ -2245,6 +2399,27 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       "");
   }
 
+  if (!epsilon_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "epsilon",
+      "");
+  }
+
+  if (!sigma_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "sigma",
+      "");
+  }
+
+  if (!type_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "type",
+      "");
+  }
+
   if (!v1_.present ())
   {
     throw ::xsd::cxx::tree::expected_attribute< char > (
@@ -2289,6 +2464,9 @@ sphere_t (const x1_type& x1,
           const r_type& r,
           const h_type& h,
           const m_type& m,
+          const epsilon_type& epsilon,
+          const sigma_type& sigma,
+          const type_type& type,
           const v1_type& v1,
           const v2_type& v2,
           const v3_type& v3)
@@ -2299,6 +2477,9 @@ sphere_t (const x1_type& x1,
   r_ (r, ::xml_schema::flags (), this),
   h_ (h, ::xml_schema::flags (), this),
   m_ (m, ::xml_schema::flags (), this),
+  epsilon_ (epsilon, ::xml_schema::flags (), this),
+  sigma_ (sigma, ::xml_schema::flags (), this),
+  type_ (type, ::xml_schema::flags (), this),
   v1_ (v1, ::xml_schema::flags (), this),
   v2_ (v2, ::xml_schema::flags (), this),
   v3_ (v3, ::xml_schema::flags (), this)
@@ -2316,6 +2497,9 @@ sphere_t (const sphere_t& x,
   r_ (x.r_, f, this),
   h_ (x.h_, f, this),
   m_ (x.m_, f, this),
+  epsilon_ (x.epsilon_, f, this),
+  sigma_ (x.sigma_, f, this),
+  type_ (x.type_, f, this),
   v1_ (x.v1_, f, this),
   v2_ (x.v2_, f, this),
   v3_ (x.v3_, f, this)
@@ -2333,6 +2517,9 @@ sphere_t (const ::xercesc::DOMElement& e,
   r_ (f, this),
   h_ (f, this),
   m_ (f, this),
+  epsilon_ (f, this),
+  sigma_ (f, this),
+  type_ (f, this),
   v1_ (f, this),
   v2_ (f, this),
   v3_ (f, this)
@@ -2387,6 +2574,24 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     if (n.name () == "m" && n.namespace_ ().empty ())
     {
       this->m_.set (m_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "epsilon" && n.namespace_ ().empty ())
+    {
+      this->epsilon_.set (epsilon_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "sigma" && n.namespace_ ().empty ())
+    {
+      this->sigma_.set (sigma_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "type" && n.namespace_ ().empty ())
+    {
+      this->type_.set (type_traits::create (i, f, this));
       continue;
     }
 
@@ -2448,6 +2653,27 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
   {
     throw ::xsd::cxx::tree::expected_attribute< char > (
       "m",
+      "");
+  }
+
+  if (!epsilon_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "epsilon",
+      "");
+  }
+
+  if (!sigma_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "sigma",
+      "");
+  }
+
+  if (!type_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "type",
       "");
   }
 
@@ -2690,10 +2916,12 @@ simulation_output_t::
 
 simulation_t::
 simulation_t (const parameter_type& parameter,
+              const force_calculator_type& force_calculator,
               const input_type& input,
               const output_type& output)
 : ::xml_schema::type (),
   parameter_ (parameter, ::xml_schema::flags (), this),
+  force_calculator_ (force_calculator, ::xml_schema::flags (), this),
   input_ (input, ::xml_schema::flags (), this),
   output_ (output, ::xml_schema::flags (), this)
 {
@@ -2701,10 +2929,12 @@ simulation_t (const parameter_type& parameter,
 
 simulation_t::
 simulation_t (::std::auto_ptr< parameter_type >& parameter,
+              ::std::auto_ptr< force_calculator_type >& force_calculator,
               ::std::auto_ptr< input_type >& input,
               ::std::auto_ptr< output_type >& output)
 : ::xml_schema::type (),
   parameter_ (parameter, ::xml_schema::flags (), this),
+  force_calculator_ (force_calculator, ::xml_schema::flags (), this),
   input_ (input, ::xml_schema::flags (), this),
   output_ (output, ::xml_schema::flags (), this)
 {
@@ -2716,6 +2946,7 @@ simulation_t (const simulation_t& x,
               ::xml_schema::container* c)
 : ::xml_schema::type (x, f, c),
   parameter_ (x.parameter_, f, this),
+  force_calculator_ (x.force_calculator_, f, this),
   input_ (x.input_, f, this),
   output_ (x.output_, f, this)
 {
@@ -2727,6 +2958,7 @@ simulation_t (const ::xercesc::DOMElement& e,
               ::xml_schema::container* c)
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
   parameter_ (f, this),
+  force_calculator_ (f, this),
   input_ (f, this),
   output_ (f, this)
 {
@@ -2757,6 +2989,20 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       if (!parameter_.present ())
       {
         this->parameter_.set (r);
+        continue;
+      }
+    }
+
+    // force-calculator
+    //
+    if (n.name () == "force-calculator" && n.namespace_ ().empty ())
+    {
+      ::std::auto_ptr< force_calculator_type > r (
+        force_calculator_traits::create (i, f, this));
+
+      if (!force_calculator_.present ())
+      {
+        this->force_calculator_.set (r);
         continue;
       }
     }
@@ -2796,6 +3042,13 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
   {
     throw ::xsd::cxx::tree::expected_element< char > (
       "parameter",
+      "");
+  }
+
+  if (!force_calculator_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "force-calculator",
       "");
   }
 

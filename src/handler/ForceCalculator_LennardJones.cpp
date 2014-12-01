@@ -10,13 +10,8 @@
 
 #include <cmath>
 
-
-// definition of static members:
-double ForceCalculator_LennardJones::sigma = 1.0;
-double ForceCalculator_LennardJones::epsilon = 5.0;
-
-
 ForceCalculator_LennardJones::ForceCalculator_LennardJones() {
+	ForceCalculator::interaction = true;
 }
 
 ForceCalculator_LennardJones::~ForceCalculator_LennardJones() {
@@ -28,7 +23,7 @@ ForceCalculator_LennardJones::~ForceCalculator_LennardJones() {
  * @param p2 Second interacting particle (at \f$ x_j \f$ )
  *
  * Calculates the forces between two particles caused by the Lennard-Jones potential
- * and adds it to the force acting on the first particle.
+ * and adds it to the force acting on both particles.
  * The force is calculated using the following equation:
  * \f[
  * F_{ij} = \frac{24 \cdot \epsilon}{\left( \left\| x_i - x_j \right\|_2 \right)^2} \cdot
@@ -37,14 +32,23 @@ ForceCalculator_LennardJones::~ForceCalculator_LennardJones() {
  * \f]
  */
 void ForceCalculator_LennardJones::compute(Particle& p1, Particle& p2) {
+
+	//Calculate epsilon and sigma
+	double epsilon = p1.getEpsilon();
+	double sigma = p1.getSigma();
+	if (p1.getType() != p2.getType()) {
+		double epsilon = sqrt(p1.getEpsilon() * p2.getEpsilon());
+		double sigma = (p1.getSigma() + p2.getSigma()) * 0.5;
+	}
+
 	double invDistance = 1.0 / (p1.getX() - p2.getX()).L2Norm();
 
-	double factor = 24 * epsilon * invDistance * invDistance *
-				(pow(sigma * invDistance, 6) - 2 * pow(sigma * invDistance, 12));
+	double factor = 24 * epsilon * invDistance * invDistance
+			* (pow(sigma * invDistance, 6) - 2 * pow(sigma * invDistance, 12));
 
 	utils::Vector<double, 3> force = factor * (p2.getX() - p1.getX());
 
 	p1.getF() = p1.getF() + force;
-	p2.getF() = p2.getF() - force;	// according to Newton's third law: F_P1 = -F_P2
+	p2.getF() = p2.getF() - force;// according to Newton's third law: F_P1 = -F_P2
 }
 

@@ -19,10 +19,18 @@
 class ForceCalculator_Gravity : public ForceCalculator
 {
 public:
-	ForceCalculator_Gravity();
+	double g; //!< Acceleration coefficient.
+	ForceCalculator_Gravity(double arg_g);
 	virtual ~ForceCalculator_Gravity();
 
-	virtual void compute(Particle& p1, Particle& p2);
+	virtual void compute(Particle& p);
+
+	/**
+	 * /brief Function for calculating the force between to particles.
+	 *
+	 * Since this is a non-interacting force, this method does nothing.
+	 */
+	virtual void compute(Particle& p1, Particle& p2) {}
 };
 
 

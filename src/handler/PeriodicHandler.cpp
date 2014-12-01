@@ -1,0 +1,47 @@
+/*
+ * PeriodicHandler.cpp
+ *
+ *  Created on: Dec 1, 2014
+ *      Author: johannes
+ */
+
+#include "PeriodicHandler.h"
+#include "utils/Vector.h"
+#include "Particle.h"
+
+PeriodicHandler::PeriodicHandler(CellContainer* arg_cells, int arg_side, bool arg_move) : cellCont(arg_cells), side(arg_side), move(arg_move) {
+}
+
+PeriodicHandler::~PeriodicHandler() {
+}
+
+/**
+ * \brief Sets the x-Position of the particle to the other end of the domain.
+ * @param p Particle to copy.
+ *
+ * By setting the x-Position of the particle to the other end of the domain,
+ * the particle will be stored in the correct cell during the next cell update.
+ */
+void PeriodicHandler::compute(Particle& p) {
+
+	if (move) { //moves the particle, if it is not virtual
+		if (p.getType() != -1) {
+			//Choose the right side of the particle container for reflection
+			if (side % 2 == 0) {
+				p.getX()[side / 2] += boundary[side / 2];
+			} else {
+				p.getX()[side / 2] -= boundary[side / 2];
+			}
+		}
+	} else { //copies the particle, sets the new particle as a virtual one.
+		double virtV[3] = {0, 0, 0};
+		Particle* virtP = new Particle(p.getX(), virtV, p.getM(), -1, p.getEpsilon(), p.getSigma());
+		if (side % 2 == 0) {
+			virtP->getX()[side / 2] += boundary[side / 2];
+		} else {
+			virtP->getX()[side / 2] -= boundary[side / 2];
+		}
+		cellCont->add(*virtP);
+	}
+}
+

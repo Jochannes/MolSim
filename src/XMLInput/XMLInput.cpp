@@ -12,8 +12,6 @@
 #include "ParticleInput_FileReader.h"
 #include "CuboidGenerator.h"
 #include "ParticleOutput_VTK.h"
-#include "handler/ForceCalculator_Gravity.h"
-#include "handler/ForceCalculator_LennardJones.h"
 #include "handler/PositionCalculator.h"
 #include "handler/VelocityCalculator.h"
 #include "BoundaryCondition/Reflection.h"
@@ -71,52 +69,7 @@ void XMLInput::ReadFile()
 		exit(1);
 	}
 
-	// 1.4: force-calculator
-	const force_calculator_t& fc = param.force_calculator();
-	
-	// 1.4.1: type
-	this->fc_type = fc.type();
-
-	switch( this->fc_type) {
-	case force_calculator_type_t::gravity: {
-			LOG4CXX_DEBUG(xmllogger, "using gravity force calculator.");
-		}
-		break;
-
-	case force_calculator_type_t::lennard_jones: {
-			LOG4CXX_DEBUG(xmllogger, "using Lennard-Jones force calculator.");
-			
-			// 1.4.2: epsilon
-			const force_calculator_t::epsilon_optional& epsilon = fc.epsilon();
-			if (epsilon.present()) {
-				this->epsilon = epsilon.get();
-				LOG4CXX_DEBUG(xmllogger, "reading epsilon=" << this->epsilon);
-			}
-			else {
-				LOG4CXX_DEBUG(xmllogger, "no epsilon specified for force calculation");
-				// using default value
-			}
-			
-			// 1.4.3: sigma
-			const force_calculator_t::sigma_optional& sigma = fc.sigma();
-			if (sigma.present()) {
-				this->sigma = sigma.get();
-				LOG4CXX_DEBUG(xmllogger, "reading sigma=" << this->sigma);
-			}
-			else {
-				LOG4CXX_DEBUG(xmllogger, "no sigma specified for force calculation.");
-				// using default value.
-			}
-		}
-		break;
-	
-	default:
-		LOG4CXX_FATAL(xmllogger, "Error! Invalid value for force calculator type!");
-		exit(1);
-	};
-
-
-	// 1.5: simulation-mode
+	// 1.4: simulation-mode
 	const simulation_mode_t& sm = param.simulation_mode();
 	
 	// 1.4.1: type
@@ -197,6 +150,9 @@ void XMLInput::ReadFile()
 					case boundary_type_t::reflect:
 						str << "reflect ";
 						break;
+					case boundary_type_t::periodic:
+						str << "periodic ";
+						break;
 					}
 				}
 				str << "]";
@@ -215,10 +171,52 @@ void XMLInput::ReadFile()
 		exit(1);
 	};
 
-	// 2: element "input"
+	// 2: element "force-calculator"
+	const simulation_force_calculator_t& fc = s->force_calculator();
+	forceCalcCnt = 0;
+
+	// 2.1: element "lennard_jones"
+	forceCalcCnt += fc.lennard_jones().size();
+	this->lennard_jones.reserve( fc.lennard_jones().size() );
+	for( simulation_force_calculator_t::lennard_jones_const_iterator it = fc.lennard_jones().begin();
+		 it != fc.lennard_jones().end();
+		 it++ )
+	{
+		this->lennard_jones.push_back(ForceCalculator_LennardJones());
+
+		LOG4CXX_DEBUG(xmllogger, "using Lennard-Jones force calculator.");
+	}
+
+	// 2.2: element "lj_cutoff"
+	forceCalcCnt += fc.lj_cutoff().size();
+	this->lj_cutoff.reserve( fc.lj_cutoff().size() );
+	for( simulation_force_calculator_t::lj_cutoff_const_iterator it = fc.lj_cutoff().begin();
+		 it != fc.lj_cutoff().end();
+		 it++ )
+	{
+		double cutoff_factor = it->cutoff_factor();
+		this->lj_cutoff.push_back(ForceCalculator_LJ_cutoff(cutoff_factor));
+
+		LOG4CXX_DEBUG(xmllogger, "using Lennard-Jones force calculator with cutoff radius, cutoff_factor=" << cutoff_factor << ".");
+	}
+
+	// 2.3: element "gravity"
+	forceCalcCnt += fc.gravity().size();
+	this->gravity.reserve( fc.gravity().size() );
+	for( simulation_force_calculator_t::gravity_const_iterator it = fc.gravity().begin();
+		 it != fc.gravity().end();
+		 it++ )
+	{
+		double g_grav = it->g_grav();
+		this->gravity.push_back(ForceCalculator_Gravity(g_grav));
+
+		LOG4CXX_DEBUG(xmllogger, "using gravity force calculator, g_grav=" << g_grav << ".");
+	}
+
+	// 3: element "input"
 	const simulation_input_t& in = s->input();
 
-	// 2.1: element "particle_file"
+	// 3.1: element "particle_file"
 	this->particle_file.reserve( in.particle_file().size() );
 	for( simulation_input_t::particle_file_const_iterator it = in.particle_file().begin();
 		 it != in.particle_file().end();
@@ -230,7 +228,7 @@ void XMLInput::ReadFile()
 		LOG4CXX_DEBUG(xmllogger, "reading particle file " << fr.toString());
 	}
 	
-	// 2.2: element "cuboid"
+	// 3.2: element "cuboid"
 	this->cuboid.reserve( in.cuboid().size() );
 	for( simulation_input_t::cuboid_const_iterator it = in.cuboid().begin();
 		 it != in.cuboid().end();
@@ -240,16 +238,19 @@ void XMLInput::ReadFile()
 		int    num_particles[3]   = {it->n1(), it->n2(), it->n3()};
 		double distance           = it->h();
 		double mass               = it->m();
+		double epsilon            = it->epsilon();
+		double sigma              = it->sigma();
+		int type	              = it->type();
 		double velocity[3]        = {it->v1(), it->v2(), it->v3()};
 		double brown_factor       = 0.1;
 
-		CuboidGenerator c(corner_position, num_particles, distance, mass, velocity, brown_factor);
+		CuboidGenerator c(corner_position, num_particles, distance, mass, velocity, epsilon, sigma, type, brown_factor);
 		this->cuboid.push_back(c);
 
 		LOG4CXX_DEBUG(xmllogger, "reading cuboid " << c.toString());
 	}
 	
-	// 2.3: element "sphere"
+	// 3.3: element "sphere"
 	this->sphere.reserve( in.sphere().size() );
 	for( simulation_input_t::sphere_const_iterator it = in.sphere().begin();
 		 it != in.sphere().end();
@@ -259,25 +260,28 @@ void XMLInput::ReadFile()
 		int    radius             = it->r();
 		double distance           = it->h();
 		double mass               = it->m();
+		double epsilon            = it->epsilon();
+		double sigma              = it->sigma();
+		int type	              = it->type();
 		double velocity[3]        = {it->v1(), it->v2(), it->v3()};
 		bool   use3D              = false;
 		double brown_factor       = 0.1;
 
-		SphereGenerator s(center_position, radius, distance, mass, velocity, use3D, brown_factor);
+		SphereGenerator s(center_position, radius, distance, mass, velocity, use3D, epsilon, sigma, type, brown_factor);
 		this->sphere.push_back(s);
 
 		LOG4CXX_DEBUG(xmllogger, "reading sphere " << s.toString());
 	}
 	
 
-	// 3: element "output"
+	// 4: element "output"
 	const simulation_output_t& out = s->output();
 
-	// 3.1: element "base_filename"
+	// 4.1: element "base_filename"
 	this->base_filename = out.base_filename();
 	LOG4CXX_DEBUG(xmllogger, "reading base_filename=\"" << this->base_filename << "\"");
 
-	// 3.2: element "output_freq"
+	// 4.2: element "output_freq"
 	this->output_freq = out.output_freq();
 	if( this->output_freq > 0 ) {
 		LOG4CXX_DEBUG(xmllogger, "reading output_freq=" << this->output_freq);
@@ -294,18 +298,6 @@ void XMLInput::configureApplication()
 	::start_time = this->start_time;
 	::end_time   = this->end_time;
 	::delta_t    = this->delta_t;
-
-	switch (this->fc_type) {
-	case force_calculator_type_t::gravity:
-		::fcalc = new ForceCalculator_Gravity();
-		break;
-
-	case force_calculator_type_t::lennard_jones:
-		ForceCalculator_LennardJones::epsilon = this->epsilon;
-		ForceCalculator_LennardJones::sigma   = this->sigma;
-		::fcalc = new ForceCalculator_LennardJones();
-		break;
-	}
 
 	switch (this->sm_type) {
 	case simulation_mode_type_t::normal:
@@ -332,6 +324,31 @@ void XMLInput::configureApplication()
 		break;
 	}
 
+	//Force calculators
+	::numForceCalcs = forceCalcCnt;
+	fcalcs = new ForceCalculator*[forceCalcCnt];
+	int i = 0;
+	for( vector<ForceCalculator_LennardJones>::iterator it = this->lennard_jones.begin();
+		 it != this->lennard_jones.end();
+		 it++ )
+	{
+		::fcalcs[i] = new ForceCalculator_LennardJones();
+		i++;
+	}
+	for( vector<ForceCalculator_LJ_cutoff>::iterator it = this->lj_cutoff.begin();
+		 it != this->lj_cutoff.end();
+		 it++ )
+	{
+		::fcalcs[i] = new ForceCalculator_LJ_cutoff(it->cutoff_factor);
+		i++;
+	}
+	for( vector<ForceCalculator_Gravity>::iterator it = this->gravity.begin();
+		 it != this->gravity.end();
+		 it++ )
+	{
+		::fcalcs[i] = new ForceCalculator_Gravity(it->g);
+		i++;
+	}
 
 	// input
 	list<Particle> particleList;

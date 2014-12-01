@@ -174,7 +174,7 @@ void UTest_CellContainer::testImposeBoundCount() {
 
 	//test count for halo cells
 	for (int i = 0; i < 6; i++) {
-		cellCont.boundConds[i] = new BoundCondCount(i, false);
+		cellCont.boundConds[i] = new BoundCondCount(i, false, true);
 	}
 	cellCont.impose_boundConds();
 	for (int i = 0; i < 6; i++) {
@@ -186,7 +186,7 @@ void UTest_CellContainer::testImposeBoundCount() {
 
 	//test count for boundary cells
 	for (int i = 0; i < 6; i++) {
-		cellCont.boundConds[i] = new BoundCondCount(i, true);
+		cellCont.boundConds[i] = new BoundCondCount(i, true, false);
 	}
 	cellCont.impose_boundConds();
 	for (int i = 0; i < 6; i++) {

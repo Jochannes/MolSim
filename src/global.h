@@ -36,7 +36,8 @@ extern ParticleContainer* particles;
 extern ParticleOutput* particleOut;
 extern PositionCalculator* xcalc;
 extern VelocityCalculator* vcalc;
-extern ForceCalculator* fcalc;
+extern ForceCalculator** fcalcs;
+extern int numForceCalcs;
 
 
 #endif /* GLOBAL_H_ */

@@ -36,12 +36,19 @@ private:
 	/** the mass of this particle */
 	double m;
 
-	/** type of the particle. Use it for whatever you want (e.g. to seperate
-	 * molecules belonging to different bodies, matters, and so on)
+	double epsilon; //!< Lennard-Jones parameter epsilon for this particle.
+	double sigma; //!< Lennard-Jones parameter sigma for this particle.
+
+	/** type of the particle.
+	 * -1: virtual particle (e.g. for boundary conditions)
+	 * >=0: real particle
 	 */
 	int type;
 
 public:
+	static double def_sigma;	//!< Default sigma value used for the Lennard-Jones potential
+	static double def_epsilon;	//!< Default epsilon value used for the Lennard-Jones potential
+
 	Particle(int type = 0);
 
 	Particle(const Particle& other);
@@ -50,7 +57,7 @@ public:
 			// for visualization, we need always 3 coordinates
 			// -> in case of 2d, we use only the first and the second
 			utils::Vector<double, 3> x_arg, utils::Vector<double, 3> v_arg,
-			double m_arg, int type = 0);
+			double m_arg, int type = 0, double epsilon_arg = def_epsilon, double sigma_arg = def_sigma);
 
 	virtual ~Particle();
 
@@ -63,6 +70,9 @@ public:
 	utils::Vector<double, 3>& getV();
 
 	double getM();
+
+	double getEpsilon();
+	double getSigma();
 
 	int getType();
 
