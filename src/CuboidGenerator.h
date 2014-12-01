@@ -23,7 +23,6 @@ private:
 	double distance;		//!< Distance between two particles (lattice constant).
 	double mass;			//!< Mass of a single particle.
 	utils::Vector<double, 3> velocity;	//!< Main velocity of all particles. The velocity will be superposed by Brownian motion.
-	double brown_factor;	//!< Mean velocity of the Brownian motion.
 
 public:
 	/**
@@ -31,10 +30,10 @@ public:
 	 *
 	 */
 	CuboidGenerator(utils::Vector<double, 3> param_corner_position, int param_num_particles[3], double param_distance,
-					double param_mass, utils::Vector<double, 3> param_velocity, double param_brown_factor = 0.1 )
+					double param_mass, utils::Vector<double, 3> param_velocity)
 	:
 		corner_position(param_corner_position), distance(param_distance),
-		mass(param_mass), velocity(param_velocity), brown_factor(param_brown_factor)
+		mass(param_mass), velocity(param_velocity)
 	{
 		num_particles[0] = param_num_particles[0];
 		num_particles[1] = param_num_particles[1];

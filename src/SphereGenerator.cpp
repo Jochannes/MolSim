@@ -29,7 +29,6 @@ void SphereGenerator::genParticle(std::list<Particle>& particleList, int x, int 
 	pos[2] = center_position[2] + z*distance;
 
 	Particle P(pos, velocity, mass);
-	MaxwellBoltzmannDistribution(P, brown_factor, (use3D ? 3 : 2));
 
 	particleList.push_back(P);
 }
@@ -161,7 +160,6 @@ std::string SphereGenerator::toString()
 			"; m=" << mass <<
 			"; v=" << velocity.toString() <<
 			"; mode=" << (use3D ? "3D" : "2D") <<
-			"; brown_factor=" << brown_factor <<
 			"]";
 
 	return str.str();

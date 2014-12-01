@@ -5,6 +5,7 @@
 #include "handler/PositionCalculator.h"
 #include "handler/VelocityCalculator.h"
 #include "handler/ForceCalculator.h"
+#include "Thermostat.h"
 
 #include <cstring>
 #include <cstdlib>
@@ -65,6 +66,8 @@ int output_freq = 10;	//!< Output frequency of the simulation.
 bool timing = false;	//!< Specifies if the iteration time will be measured.
 char* timingFile;	//!< Specifies if the iteration time will be measured.
 
+Thermostat* thermostat;	//!< Thermostat controlling the temperatures of the particles.
+
 ParticleContainer* particles;//!< Container for encapsulating the particle list.
 ParticleOutput* particleOut = NULL; //!< Object for defining the output method to be used.
 PositionCalculator* xcalc = NULL; //!< Object for defining the coordinate calculator to be used in the simulation.
@@ -114,6 +117,9 @@ int main(int argc, char* argsv[]) {
 		}
 
 		iteration++;
+
+		thermostat->handle(iteration);
+
 		if (iteration % output_freq == 0) {
 			plotParticles(iteration);
 		}

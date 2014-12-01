@@ -23,7 +23,6 @@ private:
 	double distance;		//!< Distance between two particles (lattice constant).
 	double mass;			//!< Mass of a single particle.
 	utils::Vector<double, 3> velocity;	//!< Main velocity of all particles. The velocity will be superposed by Brownian motion.
-	double brown_factor;	//!< Mean velocity of the Brownian motion.
 
 	bool use3D;		//!< Specifies wheather a 3D sphere should be generated. If set to false, a 2D circle will be generated.
 
@@ -73,7 +72,7 @@ public:
 					double param_mass, utils::Vector<double, 3> param_velocity, bool param_use3D = false, double param_brown_factor = 0.1 )
 	:
 		center_position(param_center_position), radius(param_radius), distance(param_distance),
-		mass(param_mass), velocity(param_velocity), use3D(param_use3D), brown_factor(param_brown_factor)
+		mass(param_mass), velocity(param_velocity), use3D(param_use3D)
 	{
 	}
 

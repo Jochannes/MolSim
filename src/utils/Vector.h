@@ -119,6 +119,14 @@ public:
 		return sqrt(square_sum);
 	}
 
+	double innerProduct(const Vector& rhs) const {
+		double product_sum = 0;
+		for (int i = 0; i < length; i++) {
+			product_sum += (this->content[i] * rhs.content[i]);
+		}
+		return product_sum;
+	}
+
 	bool equals(const Vector& rhs) const {
 		for (int i = 0; i < length; i++) {
 			if (rhs.content[i] != this->content[i]) {
