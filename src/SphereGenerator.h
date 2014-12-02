@@ -20,16 +20,14 @@ private:
 
 	utils::Vector<double, 3> center_position;	//!< Position of the center.
 	int radius;				//!< Number of particles along the radius.
-	double distance;		//!< Distance between two particles (lattice constant).
+	double distance;	//!< Distance between two particles (lattice constant).
 	double mass;			//!< Mass of a single particle.
-	double epsilon; 		//!< Lennard-Jones parameter epsilon for the particles.
-	double sigma; 			//!< Lennard-Jones parameter sigma for the particles.
+	double epsilon; 	//!< Lennard-Jones parameter epsilon for the particles.
+	double sigma; 		//!< Lennard-Jones parameter sigma for the particles.
 	int type;				//!< Type of the particles.
-	utils::Vector<double, 3> velocity;	//!< Main velocity of all particles. The velocity will be superposed by Brownian motion.
-	double brown_factor;	//!< Mean velocity of the Brownian motion.
+	utils::Vector<double, 3> velocity;//!< Main velocity of all particles. The velocity will be superposed by Brownian motion.
 
-	bool use3D;		//!< Specifies wheather a 3D sphere should be generated. If set to false, a 2D circle will be generated.
-
+	bool use3D;	//!< Specifies wheather a 3D sphere should be generated. If set to false, a 2D circle will be generated.
 
 	/**
 	 * \brief Generates a particle in the sphere/circle grid.
@@ -51,7 +49,7 @@ private:
 	 * @param y Normalised Y coordinate in the grid relative to the center.
 	 * @param size Normalised size of the row from the center to one end.
 	 */
-	void genRow(std::list<Particle>& particleList, int x, int y, int size=-1);
+	void genRow(std::list<Particle>& particleList, int x, int y, int size = -1);
 
 	/**
 	 * \brief Generates a 2D circle in the grid.
@@ -72,12 +70,15 @@ public:
 	/**
 	 * \brief Initialize the SphereGenerator with all neccessary parameters needed for generating the sphere/circle.
 	 */
-	SphereGenerator(utils::Vector<double, 3> param_center_position, int param_radius, double param_distance,
-					double param_mass, utils::Vector<double, 3> param_velocity, bool param_use3D = false, double param_epsilon = 5.0, double param_sigma = 1.0, int param_type = 0, double param_brown_factor = 0.1 )
-	:
-		center_position(param_center_position), radius(param_radius), distance(param_distance),
-		mass(param_mass) , epsilon(param_epsilon), sigma(param_sigma), type(param_type), velocity(param_velocity), use3D(param_use3D), brown_factor(param_brown_factor)
-	{
+	SphereGenerator(utils::Vector<double, 3> param_center_position,
+			int param_radius, double param_distance, double param_mass,
+			utils::Vector<double, 3> param_velocity, bool param_use3D = false,
+			double param_epsilon = 5.0, double param_sigma = 1.0,
+			int param_type = 0, double param_brown_factor = 0.1) :
+			center_position(param_center_position), radius(param_radius), distance(
+					param_distance), mass(param_mass), epsilon(param_epsilon), sigma(
+					param_sigma), type(param_type), velocity(param_velocity), use3D(
+					param_use3D) {
 	}
 
 	virtual ~SphereGenerator() {

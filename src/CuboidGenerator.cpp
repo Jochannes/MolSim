@@ -35,13 +35,6 @@ void CuboidGenerator::input(list<Particle>& particleList)
 				// create a new Particle
 				Particle p(x, velocity, mass, epsilon, sigma, type);
 
-				// add brownian motion
-				if (num_particles[2] == 1) {
-					MaxwellBoltzmannDistribution(p, brown_factor, 2);
-				} else {
-					MaxwellBoltzmannDistribution(p, brown_factor, 3);
-				}
-
 				// add particle to the passed particle list
 				particleList.push_back(p);
 
@@ -63,7 +56,6 @@ std::string CuboidGenerator::toString()
 			"]; h=" << distance <<
 			"; m=" << mass <<
 			"; v=" << velocity.toString() <<
-			"; brown_factor=" << brown_factor <<
 			"]";
 
 	return str.str();
