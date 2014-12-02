@@ -11,6 +11,7 @@
 #include "UnitTests/Handler/Check_Reflection.h"
 #include "BoundaryCondition/Reflection.h"
 #include "BoundaryCondition/Periodic.h"
+#include "UnitTests/BoundCondCount.h"
 
 namespace unitTest {
 
@@ -21,6 +22,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION(UTest_BoundaryCondition);
  * \brief Initializes the domainSize, cutoff radius and cell container
  *
  * The domainSize is set to (40, 40, 40) and the cutoff radius to 3.0.
+ *
+ * numParticles has to be divibible by 3.
  */
 UTest_BoundaryCondition::UTest_BoundaryCondition() :
 		numParticles(99), numHalo(10), domainSize(
@@ -73,6 +76,9 @@ void UTest_BoundaryCondition::setUp() {
  * \brief Free the used resources.
  */
 void UTest_BoundaryCondition::tearDown() {
+	for (int i = 0; i < 6; i++) {
+		delete(cellCont.boundConds[i]);
+	}
 }
 
 /**
@@ -120,20 +126,41 @@ void UTest_BoundaryCondition::testReflectionCnt() {
  */
 void UTest_BoundaryCondition::testPeriodicCnt() {
 
+	//Count expected number of virtual particles
+	for (int i = 0; i < 6; i++) {
+		cellCont.boundConds[i] = new BoundCondCount(i, true, true);
+	}
+	cellCont.impose_boundConds();
+	int expVirt = 0;
+	for (int i = 0; i < 6; i++) {
+		expVirt += ((BoundCondCount*)cellCont.boundConds[i])->cntPart;
+		delete(cellCont.boundConds[i]);
+	}
+
 	//Impose boundary conditions
 	for (int i = 0; i < 6; i++) {
 		cellCont.boundConds[i] = new Periodic(&cellCont, i);
 	}
 	cellCont.impose_boundConds();
 
-	//Check if all particles are now inside of the domain
-	std::cout << "Count: " << cellCont.size() << ", expected: " << numParticles + numHalo << "\n";
-	CPPUNIT_ASSERT(numParticles + numHalo == cellCont.size());
+	/* Impose a second time due to interferences between multiple periodic boundaries.
+	 *
+	 * Alternative solution: Change modus of iteration in
+	 * CellContainer to iterate one boundary after the other.
+	 */
+	cellCont.impose_boundConds();
+
 
 	//Check if all boundary particles have virtual particles inside of the domain
 	CountParticles cntPart = CountParticles();
 	cellCont.iterate_halo(cntPart);
-	CPPUNIT_ASSERT(cntPart.cnt == numParticles);
+	CPPUNIT_ASSERT(cntPart.cnt == expVirt);
+
+	//Check if all particles are now inside of the domain
+	CountParticles cntReal = CountParticles(true);
+	cellCont.iterate_halo(cntReal);
+	CPPUNIT_ASSERT(cntReal.cnt == 0);
+	CPPUNIT_ASSERT(numParticles + numHalo == cellCont.size());
 }
 
 }

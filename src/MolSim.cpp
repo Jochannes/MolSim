@@ -283,7 +283,6 @@ void calculateF() {
 void calculateX() {
 	particles->iterate_all(*xcalc);
 	if (typeid(*particles) == typeid(CellContainer)) {
-		((CellContainer*) particles)->remove_halo_virtual();
 		((CellContainer*) particles)->update_cells();
 		((CellContainer*) particles)->impose_boundConds();
 	}

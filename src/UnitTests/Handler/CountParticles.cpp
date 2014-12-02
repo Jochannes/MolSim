@@ -12,8 +12,8 @@ namespace unitTest {
 /**
  * \brief Sets up the handler by setting cnt to 0.
  */
-CountParticles::CountParticles() :
-		cnt(0) {
+CountParticles::CountParticles(bool arg_onlyReal) :
+		cnt(0), onlyReal(arg_onlyReal) {
 }
 
 CountParticles::~CountParticles() {
@@ -24,7 +24,9 @@ CountParticles::~CountParticles() {
  * @param p Particle to count
  */
 void CountParticles::compute(Particle& p) {
-	cnt++;
+	if (!onlyReal || p.getType() >= 0) {
+		cnt++;
+	}
 }
 
 }

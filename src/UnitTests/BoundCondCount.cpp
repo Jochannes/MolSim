@@ -15,6 +15,7 @@ namespace unitTest {
  */
 void BoundCondCount::impose(SimpleContainer* cont) {
 	cnt++;
+	cntPart += cont->size();
 }
 
 }

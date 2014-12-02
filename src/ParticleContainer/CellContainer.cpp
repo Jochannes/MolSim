@@ -487,7 +487,7 @@ void CellContainer::update_cells() {
  */
 void CellContainer::impose_boundConds() {
 
-	//impose conditions on halo cells
+	//first impose conditions on halo cells
 	Vector<int, 3> n;
 	for (int i = 0; i < haloSize; i++) {
 		n = calc3Ind(haloInds[i]);
@@ -507,7 +507,7 @@ void CellContainer::impose_boundConds() {
 		}
 	}
 
-	//impose conditions on boundary cells
+	//impose conditions on boundary cells after halo cells
 	for (int i = 0; i < boundSize; i++) {
 		n = calc3Ind(boundInds[i]);
 		//Find the right boundary

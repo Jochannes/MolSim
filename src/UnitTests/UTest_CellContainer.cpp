@@ -180,7 +180,7 @@ void UTest_CellContainer::testImposeBoundCount() {
 	for (int i = 0; i < 6; i++) {
 		CPPUNIT_ASSERT(
 				((BoundCondCount* )cellCont.boundConds[i])->cnt
-						== 16 * 16);
+						== cellCont.cellCount[0] * cellCont.cellCount[0]);
 		delete(cellCont.boundConds[i]);
 	}
 
@@ -192,7 +192,7 @@ void UTest_CellContainer::testImposeBoundCount() {
 	for (int i = 0; i < 6; i++) {
 		CPPUNIT_ASSERT(
 				((BoundCondCount* )cellCont.boundConds[i])->cnt
-						== 14 * 14);
+						== (cellCont.cellCount[0] - 2) * (cellCont.cellCount[0] - 2));
 		delete(cellCont.boundConds[i]);
 	}
 }

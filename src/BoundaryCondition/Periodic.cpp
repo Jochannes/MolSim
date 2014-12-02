@@ -22,7 +22,12 @@
 void Periodic::impose(SimpleContainer* cont) {
 	PeriodicHandler periodic(BoundaryCondition::cellCont, BoundaryCondition::side, cont->halo);
 	cont->iterate_all(periodic);
+
+	/* Remove all particles. Real particles were copied and virtual
+	 * particles will be updated during the iteration over boundary
+	 * cells, which comes after the iteration over halo cells.
+	 */
 	if(cont->halo){
-		cont->remove_not_virtual();
+		cont->remove_all();
 	}
 }

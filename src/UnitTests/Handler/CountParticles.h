@@ -17,8 +17,9 @@ namespace unitTest {
  */
 class CountParticles: public ParticleHandler {
 public:
-	int cnt;	//!< Number of counted particles
-	CountParticles();
+	int cnt;		//!< Number of counted particles.
+	bool onlyReal; 	//!< If set, this handler only counts no virtual particles.
+	CountParticles(bool arg_onlyReal = false);
 	virtual ~CountParticles();
 
 	virtual void compute(Particle& p);

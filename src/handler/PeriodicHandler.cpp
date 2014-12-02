@@ -24,7 +24,6 @@ PeriodicHandler::~PeriodicHandler() {
  * The cell handler Periodic will then remove the old particle.
  */
 void PeriodicHandler::compute(Particle& p) {
-
 	if (move) { //moves the particle, if it is not virtual
 		if (p.getType() != -1) {
 			//Choose the right side of the particle container for reflection
