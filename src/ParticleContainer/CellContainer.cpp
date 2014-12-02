@@ -243,9 +243,9 @@ CellContainer::CellContainer(const Vector<double, 3> domainSize,
 	//Calculate effective domain size
 	effDomain[0] = (cellCount[0] - 2) * cutoff;
 	effDomain[1] = (cellCount[1] - 2) * cutoff;
-	if(dim3){
+	if (dim3) {
 		effDomain[2] = (cellCount[2] - 2) * cutoff;
-	}else{
+	} else {
 		effDomain[2] = cutoff;
 	}
 
@@ -474,9 +474,6 @@ void CellContainer::update_cells() {
 		remove((*it).first, (*it).second);
 		it++;
 	}
-
-	//impose boundary conditions
-
 }
 
 /**
@@ -490,7 +487,7 @@ void CellContainer::update_cells() {
  */
 void CellContainer::impose_boundConds() {
 
-	//impose boundary conditions
+	//impose conditions on halo cells
 	Vector<int, 3> n;
 	for (int i = 0; i < haloSize; i++) {
 		n = calc3Ind(haloInds[i]);
@@ -509,6 +506,8 @@ void CellContainer::impose_boundConds() {
 			}
 		}
 	}
+
+	//impose conditions on boundary cells
 	for (int i = 0; i < boundSize; i++) {
 		n = calc3Ind(boundInds[i]);
 		//Find the right boundary
@@ -635,7 +634,7 @@ void CellContainer::iterate_pairs(PairHandler& handler) {
  * This way the performance can be improved using Newton's third law.
  */
 void CellContainer::iterate_pairs_half(PairHandler& handler) {
-//iterate over all cells
+	//iterate over all non-halo cells
 	for (int i = 0; i < cellTotal; i++) {
 		if (!cells[i].halo) { //test if this cell is not in the halo region.
 			//iterate inside of cell
@@ -651,7 +650,8 @@ void CellContainer::iterate_pairs_half(PairHandler& handler) {
 							tempN[0] = n[0] + x;
 							tempN[1] = n[1] + y;
 							tempN[2] = n[2] + z;
-							if (calcInd(tempN) < i) { //only iterate over cells before this one
+							if (calcInd(tempN) < i //only iterate over cells before this one
+									|| cells[calcInd(tempN)].halo) { //except halo cells (preventing asymmetry with virtual particles)
 								cells[calcInd(n)].iterate_partner(handler,
 										&cells[calcInd(tempN)]);
 							}
@@ -660,7 +660,8 @@ void CellContainer::iterate_pairs_half(PairHandler& handler) {
 						tempN[0] = n[0] + x;
 						tempN[1] = n[1] + y;
 						tempN[2] = n[2];
-						if (calcInd(tempN) < i) { //only iterate over cells before this one
+						if (calcInd(tempN) < i //only iterate over cells before this one
+								|| cells[calcInd(tempN)].halo) { //except halo cells (preventing asymmetry with virtual particles)
 							cells[calcInd(n)].iterate_partner(handler,
 									&cells[calcInd(tempN)]);
 						}

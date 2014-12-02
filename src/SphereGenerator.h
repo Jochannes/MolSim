@@ -73,8 +73,8 @@ public:
 	SphereGenerator(utils::Vector<double, 3> param_center_position,
 			int param_radius, double param_distance, double param_mass,
 			utils::Vector<double, 3> param_velocity, bool param_use3D = false,
-			double param_epsilon = 5.0, double param_sigma = 1.0,
-			int param_type = 0, double param_brown_factor = 0.1) :
+			int param_type = 0, double param_epsilon = 5.0, double param_sigma =
+					1.0) :
 			center_position(param_center_position), radius(param_radius), distance(
 					param_distance), mass(param_mass), epsilon(param_epsilon), sigma(
 					param_sigma), type(param_type), velocity(param_velocity), use3D(

@@ -119,7 +119,7 @@ int main(int argc, char* argsv[]) {
 
 		iteration++;
 
-		thermostat->handle(iteration);
+		//thermostat->handle(iteration);
 
 		if (iteration % output_freq == 0) {
 			plotParticles(iteration);
@@ -183,6 +183,9 @@ void parseParameters(int argc, char* argsv[]) {
 								"\n" << endl;
 			} else if (strcmp(option, "test") == 0) {
 				LOG4CXX_DEBUG(logger, "starting unit test.");
+
+				//initialize basic simulation parameters
+				delta_t = 0.001;
 
 				int ret_val = runUnitTest(value);
 				exit(ret_val);
@@ -281,8 +284,8 @@ void calculateX() {
 	particles->iterate_all(*xcalc);
 	if (typeid(*particles) == typeid(CellContainer)) {
 		((CellContainer*) particles)->remove_halo_virtual();
-		((CellContainer*) particles)->impose_boundConds();
 		((CellContainer*) particles)->update_cells();
+		((CellContainer*) particles)->impose_boundConds();
 	}
 }
 

@@ -7,9 +7,10 @@
 
 #include "UTest_BoundaryCondition.h"
 #include "UnitTests/Handler/CountParticles.h"
-#include "BoundaryCondition/Reflection.h"
 #include "handler/ForceCalculator_LennardJones.h"
 #include "UnitTests/Handler/Check_Reflection.h"
+#include "BoundaryCondition/Reflection.h"
+#include "BoundaryCondition/Periodic.h"
 
 namespace unitTest {
 
@@ -110,6 +111,29 @@ void UTest_BoundaryCondition::testReflectionCnt() {
 	Check_Reflection check_force(limit, cellCont.effDomain);
 	cellCont.iterate_boundary(check_force);
 	CPPUNIT_ASSERT(check_force.notZero);
+}
+
+/**
+ * \brief Test the periodic boundary condition.
+ *
+ *
+ */
+void UTest_BoundaryCondition::testPeriodicCnt() {
+
+	//Impose boundary conditions
+	for (int i = 0; i < 6; i++) {
+		cellCont.boundConds[i] = new Periodic(&cellCont, i);
+	}
+	cellCont.impose_boundConds();
+
+	//Check if all particles are now inside of the domain
+	std::cout << "Count: " << cellCont.size() << ", expected: " << numParticles + numHalo << "\n";
+	CPPUNIT_ASSERT(numParticles + numHalo == cellCont.size());
+
+	//Check if all boundary particles have virtual particles inside of the domain
+	CountParticles cntPart = CountParticles();
+	cellCont.iterate_halo(cntPart);
+	CPPUNIT_ASSERT(cntPart.cnt == numParticles);
 }
 
 }

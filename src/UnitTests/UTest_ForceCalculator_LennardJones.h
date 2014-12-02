@@ -15,16 +15,17 @@
 #include <cppunit/TestRunner.h>
 #include <cppunit/extensions/HelperMacros.h>
 #include "handler/ForceCalculator_LennardJones.h"
+#include "handler/ForceCalculator_LJ_cutoff.h"
 
 namespace unitTest {
 
 /**
- * \brief Class for testing the force calculator for the Lennard-Jones potential.
+ * \brief Class for testing the force calculator for the Lennard-Jones potential with and without cutoff.
  *
  * This class tests if the potential well is set right and attractive and repulsive regions are right.
  */
 class UTest_ForceCalculator_LennardJones: public CppUnit::TestFixture {
-CPPUNIT_TEST_SUITE( UTest_ForceCalculator_LennardJones );
+	CPPUNIT_TEST_SUITE( UTest_ForceCalculator_LennardJones );
 	CPPUNIT_TEST(testPotentialWell);
 	CPPUNIT_TEST(testAttraction);
 	CPPUNIT_TEST(testRepulsion);
@@ -33,11 +34,16 @@ CPPUNIT_TEST_SUITE( UTest_ForceCalculator_LennardJones );
 
 private:
 	double r_well;							//!< Distance of the potential well
-	Particle p1;							//!< First Particle used for force calculations
-	Particle p2;							//!< Second Particle used for force calculations
-	ForceCalculator_LennardJones fLennard;	//!< ForceCalculator used for force calculation tests
+	Particle p1;				//!< First Particle used for force calculations
+	Particle p2;				//!< Second Particle used for force calculations
+	ForceCalculator_LennardJones fLennard;//!< ForceCalculator used for force calculation tests
+	ForceCalculator_LJ_cutoff fLJ_cutoff;	//!< ForceCalculator with cutoff
 
 public:
+	UTest_ForceCalculator_LennardJones() :
+			fLJ_cutoff(ForceCalculator_LJ_cutoff(3.0)), r_well(
+					Particle::def_sigma * pow(2.0, 1.0 / 6)) { }
+
 	void setUp();
 	void tearDown();
 	void testPotentialWell();

@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="../src/XMLInput/simulation.xsd">
+
+
+  <parameter>
+    <start-time>0</start-time>
+    <end-time>20</end-time>
+    <delta-t>0.0005</delta-t>
+    
+    <simulation-mode>
+      <type>linked-cell</type>
+      <cutoff_radius>3</cutoff_radius>
+      <domain_size_x>180</domain_size_x>
+      <domain_size_y>90</domain_size_y>
+    </simulation-mode>
+  </parameter>
+  
+  <force-calculator>
+    <lj-cutoff cutoff_factor="3.0" />
+  </force-calculator>
+  
+  <input>
+    <cuboid x1="20.0" x2="20.0" x3="0.0" n1="100" n2="20" n3="1" h="1.1225" m="1.0" epsilon="5.0" sigma="1.0" type ="1" v1="0.0" v2="0.0" v3="0.0" />
+    <cuboid x1="70.0" x2="60.0" x3="0.0" n1="20" n2="20" n3="1" h="1.1225" m="1.0" epsilon="5.0" sigma="1.0" type ="2" v1="0.0" v2="-10.0" v3="0.0" />
+  </input>
+  
+  
+  <output>
+    <base_filename>Output/MD_vtk</base_filename>
+    <output_freq>10</output_freq>
+  </output>
+  
+  
+</simulation>
+

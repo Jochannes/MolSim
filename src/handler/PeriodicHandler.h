@@ -38,8 +38,6 @@ public:
 	bool move; //!< Specifies if the particle is moved ore copied.
 	CellContainer* cellCont; //!< Cell container for adding the virtual particle.
 
-	utils::Vector<double, 3> boundary; //!< Boundary of the CellContainer.
-
 	virtual void compute(Particle& p);
 };
 

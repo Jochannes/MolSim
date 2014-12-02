@@ -18,7 +18,7 @@
 class CuboidGenerator: public ParticleInput {
 private:
 
-	utils::Vector<double, 3> corner_position;//!< Position of lower left front-side corner.
+	utils::Vector<double, 3> corner_position; //!< Position of lower left front-side corner.
 	int num_particles[3];	//!< Number of particles in all three dimensions.
 	double distance;	//!< Distance between two particles (lattice constant).
 	double mass;			//!< Mass of a single particle.
@@ -36,11 +36,11 @@ public:
 	CuboidGenerator(utils::Vector<double, 3> param_corner_position,
 			int param_num_particles[3], double param_distance,
 			double param_mass, utils::Vector<double, 3> param_velocity,
-			double param_epsilon = 5.0, double param_sigma = 1.0,
-			int param_type = 0) :
+			int param_type = 0, double param_epsilon = 5.0, double param_sigma =
+					1.0) :
 			corner_position(param_corner_position), distance(param_distance), mass(
-					param_mass), epsilon(param_epsilon), sigma(param_sigma), type(
-					param_type), velocity(param_velocity) {
+					param_mass), type(param_type), epsilon(param_epsilon), sigma(
+					param_sigma), velocity(param_velocity) {
 		num_particles[0] = param_num_particles[0];
 		num_particles[1] = param_num_particles[1];
 		num_particles[2] = param_num_particles[2];

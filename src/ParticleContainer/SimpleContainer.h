@@ -63,6 +63,7 @@ public:
 	void remove(Particle& P);
 	void remove_all();
 	void remove_virtual();
+	void remove_not_virtual();
 
 	void prepare_forces();
 

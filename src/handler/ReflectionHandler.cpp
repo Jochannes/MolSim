@@ -37,7 +37,7 @@ void ReflectionHandler::compute(Particle& p) {
 
 			//create counter particle
 			Particle counter(p);
-			p.getX()[side/2] = 0;
+			counter.getX()[side/2] = 0;
 
 			//do the reflection
 			ForceCalculator_LennardJones reflectionForce;
@@ -48,7 +48,7 @@ void ReflectionHandler::compute(Particle& p) {
 
 			//create counter particle
 			Particle counter(p);
-			p.getX()[side/2] = boundary[side/2];
+			counter.getX()[side/2] = boundary[side/2];
 
 			//do the reflection
 			ForceCalculator_LennardJones reflectionForce;

@@ -33,7 +33,7 @@ void CuboidGenerator::input(list<Particle>& particleList)
 
 			for (int k = 0; k < num_particles[2]; k++) {
 				// create a new Particle
-				Particle p(x, velocity, mass, epsilon, sigma, type);
+				Particle p(x, velocity, mass, type, epsilon, sigma);
 
 				// add particle to the passed particle list
 				particleList.push_back(p);
@@ -56,6 +56,9 @@ std::string CuboidGenerator::toString()
 			"]; h=" << distance <<
 			"; m=" << mass <<
 			"; v=" << velocity.toString() <<
+			"; type=" << type <<
+			"; epsilon=" << epsilon <<
+			"; sigma=" << sigma <<
 			"]";
 
 	return str.str();

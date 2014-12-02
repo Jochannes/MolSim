@@ -16,11 +16,12 @@ PeriodicHandler::~PeriodicHandler() {
 }
 
 /**
- * \brief Sets the x-Position of the particle to the other end of the domain.
+ * \brief Moves or copies the particle to the other end of the domain.
  * @param p Particle to copy.
  *
- * By setting the x-Position of the particle to the other end of the domain,
- * the particle will be stored in the correct cell during the next cell update.
+ * After setting the x-Position of the particle to the other end of the domain,
+ * the particle is updated by adding it to the container with the new coordinates.
+ * The cell handler Periodic will then remove the old particle.
  */
 void PeriodicHandler::compute(Particle& p) {
 
@@ -28,18 +29,19 @@ void PeriodicHandler::compute(Particle& p) {
 		if (p.getType() != -1) {
 			//Choose the right side of the particle container for reflection
 			if (side % 2 == 0) {
-				p.getX()[side / 2] += boundary[side / 2];
+				p.getX()[side / 2] += cellCont->effDomain[side / 2];
 			} else {
-				p.getX()[side / 2] -= boundary[side / 2];
+				p.getX()[side / 2] -= cellCont->effDomain[side / 2];
 			}
+			cellCont->add(p);
 		}
 	} else { //copies the particle, sets the new particle as a virtual one.
 		double virtV[3] = {0, 0, 0};
 		Particle* virtP = new Particle(p.getX(), virtV, p.getM(), -1, p.getEpsilon(), p.getSigma());
 		if (side % 2 == 0) {
-			virtP->getX()[side / 2] += boundary[side / 2];
+			virtP->getX()[side / 2] += cellCont->effDomain[side / 2];
 		} else {
-			virtP->getX()[side / 2] -= boundary[side / 2];
+			virtP->getX()[side / 2] -= cellCont->effDomain[side / 2];
 		}
 		cellCont->add(*virtP);
 	}

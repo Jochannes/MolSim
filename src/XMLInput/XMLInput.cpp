@@ -14,8 +14,10 @@
 #include "ParticleOutput_VTK.h"
 #include "handler/PositionCalculator.h"
 #include "handler/VelocityCalculator.h"
-#include "BoundaryCondition/Reflection.h"
 #include "BoundaryCondition/Outflow.h"
+#include "BoundaryCondition/Reflection.h"
+#include "BoundaryCondition/Periodic.h"
+#include "Thermostat.h"
 #include "global.h"
 #include "utils/Vector.h"
 #include "simulation.h"
@@ -242,9 +244,8 @@ void XMLInput::ReadFile()
 		double sigma              = it->sigma();
 		int type	              = it->type();
 		double velocity[3]        = {it->v1(), it->v2(), it->v3()};
-		double brown_factor       = 0.1;
 
-		CuboidGenerator c(corner_position, num_particles, distance, mass, velocity, epsilon, sigma, type, brown_factor);
+		CuboidGenerator c(corner_position, num_particles, distance, mass, velocity, type, epsilon, sigma);
 		this->cuboid.push_back(c);
 
 		LOG4CXX_DEBUG(xmllogger, "reading cuboid " << c.toString());
@@ -265,9 +266,8 @@ void XMLInput::ReadFile()
 		int type	              = it->type();
 		double velocity[3]        = {it->v1(), it->v2(), it->v3()};
 		bool   use3D              = false;
-		double brown_factor       = 0.1;
 
-		SphereGenerator s(center_position, radius, distance, mass, velocity, use3D, epsilon, sigma, type, brown_factor);
+		SphereGenerator s(center_position, radius, distance, mass, velocity, use3D, type, epsilon, sigma);
 		this->sphere.push_back(s);
 
 		LOG4CXX_DEBUG(xmllogger, "reading sphere " << s.toString());
@@ -316,6 +316,10 @@ void XMLInput::configureApplication()
 
 			case boundary_type_t::reflect:
 				tmp_particles->boundConds[i] = new Reflection(tmp_particles, i);
+				break;
+
+			case boundary_type_t::periodic:
+				tmp_particles->boundConds[i] = new Periodic(tmp_particles, i);
 				break;
 			}
 		}

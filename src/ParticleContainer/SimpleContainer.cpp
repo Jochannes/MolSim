@@ -80,6 +80,24 @@ void SimpleContainer::remove_virtual() {
 }
 
 /**
+ * \brief Removes all non-virtual particles from the particle container.
+ *
+ * This function removes all particles that match the
+ * properties of the specified particle from the container.
+ */
+void SimpleContainer::remove_not_virtual() {
+	std::list<Particle>::iterator it = particleList.begin();
+
+	while (it != particleList.end()) {
+		if (it->getType() >= 0) {
+			it = particleList.erase(it);
+		} else {
+			it++;
+		}
+	}
+}
+
+/**
  * \brief Function for iterating over all particles.
  * @param handler Object providing the compute function, which is called for every particle.
  *

@@ -42,7 +42,7 @@
 #include <xsd/cxx/config.hxx>
 
 #if (XSD_INT_VERSION != 3030000L)
-#error XSD runtime version mismatch
+//#error XSD runtime version mismatch
 #endif
 
 #include <xsd/cxx/pre.hxx>

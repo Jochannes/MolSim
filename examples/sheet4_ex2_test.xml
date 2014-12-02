@@ -13,11 +13,11 @@
       <cutoff_radius>2.5</cutoff_radius>
       <domain_size_x>63</domain_size_x>
       <domain_size_y>36</domain_size_y>
-      <boundary x_0="outflow" x_max="outflow" y_0="reflect" y_max="outflow" z_0="outflow" z_max="outflow" />
+      <boundary x_0="periodic" x_max="periodic" y_0="reflect" y_max="outflow" z_0="outflow" z_max="outflow" />
     </simulation-mode>
   </parameter>
   
-  <force-calculator>
+  <force-calculator>	
     <lj-cutoff cutoff_factor="2.5" />
     <gravity g_grav="-12.44" />
   </force-calculator>

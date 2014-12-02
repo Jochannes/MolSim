@@ -26,6 +26,7 @@ class UTest_BoundaryCondition: public CppUnit::TestFixture {
 	CPPUNIT_TEST_SUITE (UTest_BoundaryCondition);
 	CPPUNIT_TEST(testOutflow);
 	CPPUNIT_TEST(testReflectionCnt);
+	CPPUNIT_TEST(testPeriodicCnt);
 	CPPUNIT_TEST_SUITE_END();
 
 private:
@@ -42,6 +43,7 @@ public:
 
 	void testOutflow();
 	void testReflectionCnt();
+	void testPeriodicCnt();
 };
 
 }

@@ -28,7 +28,7 @@ void SphereGenerator::genParticle(std::list<Particle>& particleList, int x, int 
 	pos[1] = center_position[1] + y*distance;
 	pos[2] = center_position[2] + z*distance;
 
-	Particle P(pos, velocity, mass, epsilon, sigma, type);
+	Particle P(pos, velocity, mass, type, epsilon, sigma);
 
 	particleList.push_back(P);
 }
@@ -159,6 +159,9 @@ std::string SphereGenerator::toString()
 			"; h=" << distance <<
 			"; m=" << mass <<
 			"; v=" << velocity.toString() <<
+			"; type=" << type <<
+			"; epsilon=" << epsilon <<
+			"; sigma=" << sigma <<
 			"; mode=" << (use3D ? "3D" : "2D") <<
 			"]";
 
