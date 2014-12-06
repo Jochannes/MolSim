@@ -111,6 +111,9 @@ int main(int argc, char* argsv[]) {
 		calculateF(); // calculate new forces
 		calculateV(); // calculate new velocities
 
+		if (thermostat != NULL) {
+			thermostat->handle(iteration);
+		}
 		if (timing) {
 			end = clock();
 			elapsed_secs.push_back(double(end - begin) / CLOCKS_PER_SEC);
@@ -118,8 +121,6 @@ int main(int argc, char* argsv[]) {
 		}
 
 		iteration++;
-
-		//thermostat->handle(iteration);
 
 		if (iteration % output_freq == 0) {
 			plotParticles(iteration);

@@ -28,14 +28,13 @@
   
   <xs:complexType name="simulation_force-calculator_t">
     <xs:sequence>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="lennard-jones" type="xs:string"/>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="lj-cutoff" type="lj_cutoff_t"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="lennard-jones" type="lj_cutoff_t"/>
       <xs:element maxOccurs="unbounded" minOccurs="0" name="gravity" type="gravity_t"/>
     </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="lj_cutoff_t">
-  	<xs:attribute name="cutoff_factor" type="xs:double" use="required"/>
+  	<xs:attribute name="cutoff_factor" type="xs:double" use="optional"/>
   </xs:complexType>
 
   <xs:complexType name="gravity_t">
@@ -54,12 +53,23 @@
     </xs:sequence>
   </xs:complexType>
   
+  <xs:complexType name="thermostat_t">
+    <xs:attribute name="dim" type="xs:unsignedInt" use="required"/>
+    <xs:attribute name="init_temp" type="xs:double" use="required"/>
+    <xs:attribute name="steps" type="xs:unsignedInt" use="required"/>
+    <xs:attribute name="target_temp" type="xs:double" use="optional"/>
+    <xs:attribute name="delta_temp" type="xs:double" use="optional"/>
+    <xs:attribute name="steps_changetemp" type="xs:unsignedInt" use="optional"/>
+    <xs:attribute name="apply_brown" type="xs:boolean" use="optional"/>
+  </xs:complexType>
+
   <xs:complexType name="simulation_parameters_t">
     <xs:sequence>
       <xs:element name="start-time" type="xs:double"/>
       <xs:element name="end-time" type="xs:double"/>
       <xs:element name="delta-t" type="xs:double"/>
       <xs:element name="simulation-mode" type="simulation-mode_t"/>
+      <xs:element name="thermostat" type="thermostat_t" minOccurs="0" />
     </xs:sequence>
   </xs:complexType>
   
@@ -126,3 +136,4 @@
 
 
 </xs:schema>
+

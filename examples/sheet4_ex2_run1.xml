@@ -15,10 +15,13 @@
       <domain_size_y>36</domain_size_y>
       <boundary x_0="periodic" x_max="periodic" y_0="reflect" y_max="outflow" z_0="outflow" z_max="outflow" />
     </simulation-mode>
+    
+    <thermostat dim="2" steps="1000" init_temp="40" />
+    
   </parameter>
   
-  <force-calculator>	
-    <lj-cutoff cutoff_factor="2.5" />
+  <force-calculator>
+    <lennard-jones cutoff_factor="2.5" />
     <gravity g_grav="-12.44" />
   </force-calculator>
   

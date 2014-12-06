@@ -9,61 +9,52 @@
 #include "handler/MaxwellBoltzmannHandler.h"
 #include <cmath>
 
+#include <iostream>
+using namespace std;
 
-Thermostat::Thermostat(ParticleContainer& param_particles, int param_num_dimensions, double param_init_temp, int param_steps_thermostat,
-		bool applyBrown)
-	:
-		particles(param_particles), num_dimensions(param_num_dimensions), steps_thermostat(param_steps_thermostat),
-		target_temp(0.0), next_temp(param_init_temp), delta_temp(0.0), steps_tempchange(0), constant(true)
+
+double Thermostat::calculateKineticEnergy()
 {
-	double E_kin = calculateKineticEnergy();
-	int num_particles = particles.size();
-
-	if(applyBrown) {
-		double v_init = sqrt( 2 * E_kin / (num_particles * num_dimensions * mass) );
-
-		MaxwellBoltzmannHandler h(v_init, num_dimensions);
-		particles.iterate_all(h);
-	}
-
-	adjustParticleTemperatures();
+	KineticEnergyHandler h;
+	particles.iterate_all(h);
+	return h.getKineticEnergy();
 }
 
 
-Thermostat::Thermostat(ParticleContainer& param_particles, int param_num_dimensions, double param_init_temp, int param_steps_thermostat,
-						double param_target_temp, double param_delta_temp, int param_steps_tempchange, bool applyBrown)
-	:
-		particles(param_particles), num_dimensions(param_num_dimensions), steps_thermostat(param_steps_thermostat),
-		target_temp(param_target_temp), next_temp(param_init_temp), delta_temp(param_delta_temp), steps_tempchange(param_steps_tempchange), constant(false)
+void Thermostat::applyBrown()
 {
 	double E_kin = calculateKineticEnergy();
 	int num_particles = particles.size();
 
-	if(applyBrown) {
-		double v_init = sqrt( 2 * E_kin / (num_particles * num_dimensions * mass) );
+	double v_init = sqrt( 2 * E_kin / (num_particles * num_dimensions * mass) );
 
-		MaxwellBoltzmannHandler h(v_init, num_dimensions);
-		particles.iterate_all(h);
-	}
-
-	adjustParticleTemperatures();
+	MaxwellBoltzmannHandler h(v_init, num_dimensions);
+	particles.iterate_all(h);
 }
 
 
 void Thermostat::adjustParticleTemperatures()
 {
 	double E_kin = calculateKineticEnergy();
-	int num_particles = particles.size();
 
-	// targeted kinetic energy
-	double E_kin_D = num_dimensions * num_particles * 0.5 * k_B * next_temp;
+	if (E_kin > 0.0) {
+		int num_particles = particles.size();
 
-	// calculate scaling factor
-	double beta = sqrt( E_kin_D / E_kin );
+		// targeted kinetic energy
+		double E_kin_D = num_dimensions * num_particles * 0.5 * k_B * next_temp;
 
-	// scale the temperatures of all particles
-	TemperatureAdjustHandler h(beta);
-	particles.iterate_all(h);
+		// calculate scaling factor
+		double beta = sqrt( E_kin_D / E_kin );
+
+		// scale the temperatures of all particles
+		TemperatureAdjustHandler h(beta);
+		particles.iterate_all(h);
+
+		cout << "temp-adjust: E_kin_D=" << E_kin_D << "; E_kin=" << E_kin << "; beta=" << beta << endl;
+	}
+	else {
+		cout << "temp-adjust: too small kinetic energy!" << endl;
+	}
 }
 
 

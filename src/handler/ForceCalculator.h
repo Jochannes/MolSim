@@ -31,7 +31,7 @@ public:
 	bool interaction; //!< Defines whether this force is a direct interaction between two particles.
 
 	/**
-	 * /brief Function for calculating the force between to particles.
+	 * /brief Function for calculating the force between two particles.
 	 */
 	virtual void compute(Particle& p1, Particle& p2) = 0;
 

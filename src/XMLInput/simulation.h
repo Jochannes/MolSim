@@ -228,6 +228,7 @@ class simulation_force_calculator_t;
 class lj_cutoff_t;
 class gravity_t;
 class simulation_mode_t;
+class thermostat_t;
 class simulation_parameters_t;
 class cuboid_t;
 class sphere_t;
@@ -511,7 +512,7 @@ class simulation_force_calculator_t: public ::xml_schema::type
   public:
   // lennard-jones
   // 
-  typedef ::xml_schema::string lennard_jones_type;
+  typedef ::lj_cutoff_t lennard_jones_type;
   typedef ::xsd::cxx::tree::sequence< lennard_jones_type > lennard_jones_sequence;
   typedef lennard_jones_sequence::iterator lennard_jones_iterator;
   typedef lennard_jones_sequence::const_iterator lennard_jones_const_iterator;
@@ -525,23 +526,6 @@ class simulation_force_calculator_t: public ::xml_schema::type
 
   void
   lennard_jones (const lennard_jones_sequence& s);
-
-  // lj-cutoff
-  // 
-  typedef ::lj_cutoff_t lj_cutoff_type;
-  typedef ::xsd::cxx::tree::sequence< lj_cutoff_type > lj_cutoff_sequence;
-  typedef lj_cutoff_sequence::iterator lj_cutoff_iterator;
-  typedef lj_cutoff_sequence::const_iterator lj_cutoff_const_iterator;
-  typedef ::xsd::cxx::tree::traits< lj_cutoff_type, char > lj_cutoff_traits;
-
-  const lj_cutoff_sequence&
-  lj_cutoff () const;
-
-  lj_cutoff_sequence&
-  lj_cutoff ();
-
-  void
-  lj_cutoff (const lj_cutoff_sequence& s);
 
   // gravity
   // 
@@ -588,7 +572,6 @@ class simulation_force_calculator_t: public ::xml_schema::type
 
   protected:
   lennard_jones_sequence lennard_jones_;
-  lj_cutoff_sequence lj_cutoff_;
   gravity_sequence gravity_;
 };
 
@@ -598,20 +581,24 @@ class lj_cutoff_t: public ::xml_schema::type
   // cutoff_factor
   // 
   typedef ::xml_schema::double_ cutoff_factor_type;
+  typedef ::xsd::cxx::tree::optional< cutoff_factor_type > cutoff_factor_optional;
   typedef ::xsd::cxx::tree::traits< cutoff_factor_type, char, ::xsd::cxx::tree::schema_type::double_ > cutoff_factor_traits;
 
-  const cutoff_factor_type&
+  const cutoff_factor_optional&
   cutoff_factor () const;
 
-  cutoff_factor_type&
+  cutoff_factor_optional&
   cutoff_factor ();
 
   void
   cutoff_factor (const cutoff_factor_type& x);
 
+  void
+  cutoff_factor (const cutoff_factor_optional& x);
+
   // Constructors.
   //
-  lj_cutoff_t (const cutoff_factor_type&);
+  lj_cutoff_t ();
 
   lj_cutoff_t (const ::xercesc::DOMElement& e,
                ::xml_schema::flags f = 0,
@@ -636,7 +623,7 @@ class lj_cutoff_t: public ::xml_schema::type
          ::xml_schema::flags);
 
   protected:
-  ::xsd::cxx::tree::one< cutoff_factor_type > cutoff_factor_;
+  cutoff_factor_optional cutoff_factor_;
 };
 
 class gravity_t: public ::xml_schema::type
@@ -834,6 +821,161 @@ class simulation_mode_t: public ::xml_schema::type
   boundary_optional boundary_;
 };
 
+class thermostat_t: public ::xml_schema::type
+{
+  public:
+  // dim
+  // 
+  typedef ::xml_schema::unsigned_int dim_type;
+  typedef ::xsd::cxx::tree::traits< dim_type, char > dim_traits;
+
+  const dim_type&
+  dim () const;
+
+  dim_type&
+  dim ();
+
+  void
+  dim (const dim_type& x);
+
+  // init_temp
+  // 
+  typedef ::xml_schema::double_ init_temp_type;
+  typedef ::xsd::cxx::tree::traits< init_temp_type, char, ::xsd::cxx::tree::schema_type::double_ > init_temp_traits;
+
+  const init_temp_type&
+  init_temp () const;
+
+  init_temp_type&
+  init_temp ();
+
+  void
+  init_temp (const init_temp_type& x);
+
+  // steps
+  // 
+  typedef ::xml_schema::unsigned_int steps_type;
+  typedef ::xsd::cxx::tree::traits< steps_type, char > steps_traits;
+
+  const steps_type&
+  steps () const;
+
+  steps_type&
+  steps ();
+
+  void
+  steps (const steps_type& x);
+
+  // target_temp
+  // 
+  typedef ::xml_schema::double_ target_temp_type;
+  typedef ::xsd::cxx::tree::optional< target_temp_type > target_temp_optional;
+  typedef ::xsd::cxx::tree::traits< target_temp_type, char, ::xsd::cxx::tree::schema_type::double_ > target_temp_traits;
+
+  const target_temp_optional&
+  target_temp () const;
+
+  target_temp_optional&
+  target_temp ();
+
+  void
+  target_temp (const target_temp_type& x);
+
+  void
+  target_temp (const target_temp_optional& x);
+
+  // delta_temp
+  // 
+  typedef ::xml_schema::double_ delta_temp_type;
+  typedef ::xsd::cxx::tree::optional< delta_temp_type > delta_temp_optional;
+  typedef ::xsd::cxx::tree::traits< delta_temp_type, char, ::xsd::cxx::tree::schema_type::double_ > delta_temp_traits;
+
+  const delta_temp_optional&
+  delta_temp () const;
+
+  delta_temp_optional&
+  delta_temp ();
+
+  void
+  delta_temp (const delta_temp_type& x);
+
+  void
+  delta_temp (const delta_temp_optional& x);
+
+  // steps_changetemp
+  // 
+  typedef ::xml_schema::unsigned_int steps_changetemp_type;
+  typedef ::xsd::cxx::tree::optional< steps_changetemp_type > steps_changetemp_optional;
+  typedef ::xsd::cxx::tree::traits< steps_changetemp_type, char > steps_changetemp_traits;
+
+  const steps_changetemp_optional&
+  steps_changetemp () const;
+
+  steps_changetemp_optional&
+  steps_changetemp ();
+
+  void
+  steps_changetemp (const steps_changetemp_type& x);
+
+  void
+  steps_changetemp (const steps_changetemp_optional& x);
+
+  // apply_brown
+  // 
+  typedef ::xml_schema::boolean apply_brown_type;
+  typedef ::xsd::cxx::tree::optional< apply_brown_type > apply_brown_optional;
+  typedef ::xsd::cxx::tree::traits< apply_brown_type, char > apply_brown_traits;
+
+  const apply_brown_optional&
+  apply_brown () const;
+
+  apply_brown_optional&
+  apply_brown ();
+
+  void
+  apply_brown (const apply_brown_type& x);
+
+  void
+  apply_brown (const apply_brown_optional& x);
+
+  // Constructors.
+  //
+  thermostat_t (const dim_type&,
+                const init_temp_type&,
+                const steps_type&);
+
+  thermostat_t (const ::xercesc::DOMElement& e,
+                ::xml_schema::flags f = 0,
+                ::xml_schema::container* c = 0);
+
+  thermostat_t (const thermostat_t& x,
+                ::xml_schema::flags f = 0,
+                ::xml_schema::container* c = 0);
+
+  virtual thermostat_t*
+  _clone (::xml_schema::flags f = 0,
+          ::xml_schema::container* c = 0) const;
+
+  virtual 
+  ~thermostat_t ();
+
+  // Implementation.
+  //
+  protected:
+  void
+  parse (::xsd::cxx::xml::dom::parser< char >&,
+         ::xml_schema::flags);
+
+  protected:
+  ::xsd::cxx::tree::one< dim_type > dim_;
+  ::xsd::cxx::tree::one< init_temp_type > init_temp_;
+  ::xsd::cxx::tree::one< steps_type > steps_;
+  target_temp_optional target_temp_;
+  delta_temp_optional delta_temp_;
+  steps_changetemp_optional steps_changetemp_;
+  apply_brown_optional apply_brown_;
+};
+
 class simulation_parameters_t: public ::xml_schema::type
 {
   public:
@@ -896,6 +1038,27 @@ class simulation_parameters_t: public ::xml_schema::type
   void
   simulation_mode (::std::auto_ptr< simulation_mode_type > p);
 
+  // thermostat
+  // 
+  typedef ::thermostat_t thermostat_type;
+  typedef ::xsd::cxx::tree::optional< thermostat_type > thermostat_optional;
+  typedef ::xsd::cxx::tree::traits< thermostat_type, char > thermostat_traits;
+
+  const thermostat_optional&
+  thermostat () const;
+
+  thermostat_optional&
+  thermostat ();
+
+  void
+  thermostat (const thermostat_type& x);
+
+  void
+  thermostat (const thermostat_optional& x);
+
+  void
+  thermostat (::std::auto_ptr< thermostat_type > p);
+
   // Constructors.
   //
   simulation_parameters_t (const start_time_type&,
@@ -935,6 +1098,7 @@ class simulation_parameters_t: public ::xml_schema::type
   ::xsd::cxx::tree::one< end_time_type > end_time_;
   ::xsd::cxx::tree::one< delta_t_type > delta_t_;
   ::xsd::cxx::tree::one< simulation_mode_type > simulation_mode_;
+  thermostat_optional thermostat_;
 };
 
 class cuboid_t: public ::xml_schema::type

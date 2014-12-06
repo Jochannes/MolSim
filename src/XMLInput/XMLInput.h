@@ -14,6 +14,7 @@
 #include "handler/ForceCalculator_Gravity.h"
 #include "handler/ForceCalculator_LennardJones.h"
 #include "handler/ForceCalculator_LJ_cutoff.h"
+#include "Thermostat.h"
 #include "XMLInput/simulation.h"
 
 #include <string>
@@ -43,6 +44,14 @@ private:
 	double domain_size[3];
 	boundary_type_t::value boundary[6];
 
+	int dim;
+	double init_temp;
+	int steps;
+	double target_temp;
+	double delta_temp;
+	int steps_changetemp;
+	bool applyBrown;
+
 	std::vector<ParticleInput_FileReader> particle_file;
 	std::vector<CuboidGenerator> cuboid;
 	std::vector<SphereGenerator> sphere;
@@ -67,12 +76,11 @@ public:
 	 * @param param_xmlfilename Name of the XML file to read.
 	 */
 	XMLInput(const char* param_xmlfilename) :
-			xmlfilename(param_xmlfilename), start_time(0), end_time(1000), delta_t(
-					0.014), sm_type(
-					simulation_mode_type_t::linked_cell), cutoff_radius(
-					3), output_freq(10) {
-		std::string temp = "MD_vtk";
-		base_filename = temp.c_str();
+			xmlfilename(param_xmlfilename), start_time(0), end_time(1000), delta_t(0.014), forceCalcCnt(0),
+			sm_type(simulation_mode_type_t::linked_cell), cutoff_radius(3),
+			dim(0), init_temp(0), steps(0), target_temp(0), delta_temp(0), steps_changetemp(0), applyBrown(true),
+			output_freq(10), base_filename("MD_vtk")
+	{
 		domain_size[0] = 1;
 		domain_size[1] = 1;
 		domain_size[2] = 0;
@@ -82,7 +90,6 @@ public:
 	}
 
 	~XMLInput() {
-
 	}
 
 	/**

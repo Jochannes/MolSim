@@ -299,24 +299,6 @@ lennard_jones (const lennard_jones_sequence& s)
   this->lennard_jones_ = s;
 }
 
-const simulation_force_calculator_t::lj_cutoff_sequence& simulation_force_calculator_t::
-lj_cutoff () const
-{
-  return this->lj_cutoff_;
-}
-
-simulation_force_calculator_t::lj_cutoff_sequence& simulation_force_calculator_t::
-lj_cutoff ()
-{
-  return this->lj_cutoff_;
-}
-
-void simulation_force_calculator_t::
-lj_cutoff (const lj_cutoff_sequence& s)
-{
-  this->lj_cutoff_ = s;
-}
-
 const simulation_force_calculator_t::gravity_sequence& simulation_force_calculator_t::
 gravity () const
 {
@@ -339,22 +321,28 @@ gravity (const gravity_sequence& s)
 // lj_cutoff_t
 // 
 
-const lj_cutoff_t::cutoff_factor_type& lj_cutoff_t::
+const lj_cutoff_t::cutoff_factor_optional& lj_cutoff_t::
 cutoff_factor () const
 {
-  return this->cutoff_factor_.get ();
+  return this->cutoff_factor_;
 }
 
-lj_cutoff_t::cutoff_factor_type& lj_cutoff_t::
+lj_cutoff_t::cutoff_factor_optional& lj_cutoff_t::
 cutoff_factor ()
 {
-  return this->cutoff_factor_.get ();
+  return this->cutoff_factor_;
 }
 
 void lj_cutoff_t::
 cutoff_factor (const cutoff_factor_type& x)
 {
   this->cutoff_factor_.set (x);
+}
+
+void lj_cutoff_t::
+cutoff_factor (const cutoff_factor_optional& x)
+{
+  this->cutoff_factor_ = x;
 }
 
 
@@ -534,6 +522,160 @@ boundary (::std::auto_ptr< boundary_type > x)
 }
 
 
+// thermostat_t
+// 
+
+const thermostat_t::dim_type& thermostat_t::
+dim () const
+{
+  return this->dim_.get ();
+}
+
+thermostat_t::dim_type& thermostat_t::
+dim ()
+{
+  return this->dim_.get ();
+}
+
+void thermostat_t::
+dim (const dim_type& x)
+{
+  this->dim_.set (x);
+}
+
+const thermostat_t::init_temp_type& thermostat_t::
+init_temp () const
+{
+  return this->init_temp_.get ();
+}
+
+thermostat_t::init_temp_type& thermostat_t::
+init_temp ()
+{
+  return this->init_temp_.get ();
+}
+
+void thermostat_t::
+init_temp (const init_temp_type& x)
+{
+  this->init_temp_.set (x);
+}
+
+const thermostat_t::steps_type& thermostat_t::
+steps () const
+{
+  return this->steps_.get ();
+}
+
+thermostat_t::steps_type& thermostat_t::
+steps ()
+{
+  return this->steps_.get ();
+}
+
+void thermostat_t::
+steps (const steps_type& x)
+{
+  this->steps_.set (x);
+}
+
+const thermostat_t::target_temp_optional& thermostat_t::
+target_temp () const
+{
+  return this->target_temp_;
+}
+
+thermostat_t::target_temp_optional& thermostat_t::
+target_temp ()
+{
+  return this->target_temp_;
+}
+
+void thermostat_t::
+target_temp (const target_temp_type& x)
+{
+  this->target_temp_.set (x);
+}
+
+void thermostat_t::
+target_temp (const target_temp_optional& x)
+{
+  this->target_temp_ = x;
+}
+
+const thermostat_t::delta_temp_optional& thermostat_t::
+delta_temp () const
+{
+  return this->delta_temp_;
+}
+
+thermostat_t::delta_temp_optional& thermostat_t::
+delta_temp ()
+{
+  return this->delta_temp_;
+}
+
+void thermostat_t::
+delta_temp (const delta_temp_type& x)
+{
+  this->delta_temp_.set (x);
+}
+
+void thermostat_t::
+delta_temp (const delta_temp_optional& x)
+{
+  this->delta_temp_ = x;
+}
+
+const thermostat_t::steps_changetemp_optional& thermostat_t::
+steps_changetemp () const
+{
+  return this->steps_changetemp_;
+}
+
+thermostat_t::steps_changetemp_optional& thermostat_t::
+steps_changetemp ()
+{
+  return this->steps_changetemp_;
+}
+
+void thermostat_t::
+steps_changetemp (const steps_changetemp_type& x)
+{
+  this->steps_changetemp_.set (x);
+}
+
+void thermostat_t::
+steps_changetemp (const steps_changetemp_optional& x)
+{
+  this->steps_changetemp_ = x;
+}
+
+const thermostat_t::apply_brown_optional& thermostat_t::
+apply_brown () const
+{
+  return this->apply_brown_;
+}
+
+thermostat_t::apply_brown_optional& thermostat_t::
+apply_brown ()
+{
+  return this->apply_brown_;
+}
+
+void thermostat_t::
+apply_brown (const apply_brown_type& x)
+{
+  this->apply_brown_.set (x);
+}
+
+void thermostat_t::
+apply_brown (const apply_brown_optional& x)
+{
+  this->apply_brown_ = x;
+}
+
+
 // simulation_parameters_t
 // 
 
@@ -613,6 +755,36 @@ void simulation_parameters_t::
 simulation_mode (::std::auto_ptr< simulation_mode_type > x)
 {
   this->simulation_mode_.set (x);
+}
+
+const simulation_parameters_t::thermostat_optional& simulation_parameters_t::
+thermostat () const
+{
+  return this->thermostat_;
+}
+
+simulation_parameters_t::thermostat_optional& simulation_parameters_t::
+thermostat ()
+{
+  return this->thermostat_;
+}
+
+void simulation_parameters_t::
+thermostat (const thermostat_type& x)
+{
+  this->thermostat_.set (x);
+}
+
+void simulation_parameters_t::
+thermostat (const thermostat_optional& x)
+{
+  this->thermostat_ = x;
+}
+
+void simulation_parameters_t::
+thermostat (::std::auto_ptr< thermostat_type > x)
+{
+  this->thermostat_.set (x);
 }
 
 
@@ -1620,7 +1792,6 @@ simulation_force_calculator_t::
 simulation_force_calculator_t ()
 : ::xml_schema::type (),
   lennard_jones_ (::xml_schema::flags (), this),
-  lj_cutoff_ (::xml_schema::flags (), this),
   gravity_ (::xml_schema::flags (), this)
 {
 }
@@ -1631,7 +1802,6 @@ simulation_force_calculator_t (const simulation_force_calculator_t& x,
                                ::xml_schema::container* c)
 : ::xml_schema::type (x, f, c),
   lennard_jones_ (x.lennard_jones_, f, this),
-  lj_cutoff_ (x.lj_cutoff_, f, this),
   gravity_ (x.gravity_, f, this)
 {
 }
@@ -1642,7 +1812,6 @@ simulation_force_calculator_t (const ::xercesc::DOMElement& e,
                                ::xml_schema::container* c)
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
   lennard_jones_ (f, this),
-  lj_cutoff_ (f, this),
   gravity_ (f, this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
@@ -1670,17 +1839,6 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
         lennard_jones_traits::create (i, f, this));
 
       this->lennard_jones_.push_back (r);
-      continue;
-    }
-
-    // lj-cutoff
-    //
-    if (n.name () == "lj-cutoff" && n.namespace_ ().empty ())
-    {
-      ::std::auto_ptr< lj_cutoff_type > r (
-        lj_cutoff_traits::create (i, f, this));
-
-      this->lj_cutoff_.push_back (r);
       continue;
     }
 
@@ -1715,9 +1873,9 @@ simulation_force_calculator_t::
 //
 
 lj_cutoff_t::
-lj_cutoff_t (const cutoff_factor_type& cutoff_factor)
+lj_cutoff_t ()
 : ::xml_schema::type (),
-  cutoff_factor_ (cutoff_factor, ::xml_schema::flags (), this)
+  cutoff_factor_ (::xml_schema::flags (), this)
 {
 }
 
@@ -1759,13 +1917,6 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       this->cutoff_factor_.set (cutoff_factor_traits::create (i, f, this));
       continue;
     }
-  }
-
-  if (!cutoff_factor_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_attribute< char > (
-      "cutoff_factor",
-      "");
   }
 }
 
@@ -2004,6 +2155,146 @@ simulation_mode_t::
 {
 }
 
+// thermostat_t
+//
+
+thermostat_t::
+thermostat_t (const dim_type& dim,
+              const init_temp_type& init_temp,
+              const steps_type& steps)
+: ::xml_schema::type (),
+  dim_ (dim, ::xml_schema::flags (), this),
+  init_temp_ (init_temp, ::xml_schema::flags (), this),
+  steps_ (steps, ::xml_schema::flags (), this),
+  target_temp_ (::xml_schema::flags (), this),
+  delta_temp_ (::xml_schema::flags (), this),
+  steps_changetemp_ (::xml_schema::flags (), this),
+  apply_brown_ (::xml_schema::flags (), this)
+{
+}
+
+thermostat_t::
+thermostat_t (const thermostat_t& x,
+              ::xml_schema::flags f,
+              ::xml_schema::container* c)
+: ::xml_schema::type (x, f, c),
+  dim_ (x.dim_, f, this),
+  init_temp_ (x.init_temp_, f, this),
+  steps_ (x.steps_, f, this),
+  target_temp_ (x.target_temp_, f, this),
+  delta_temp_ (x.delta_temp_, f, this),
+  steps_changetemp_ (x.steps_changetemp_, f, this),
+  apply_brown_ (x.apply_brown_, f, this)
+{
+}
+
+thermostat_t::
+thermostat_t (const ::xercesc::DOMElement& e,
+              ::xml_schema::flags f,
+              ::xml_schema::container* c)
+: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  dim_ (f, this),
+  init_temp_ (f, this),
+  steps_ (f, this),
+  target_temp_ (f, this),
+  delta_temp_ (f, this),
+  steps_changetemp_ (f, this),
+  apply_brown_ (f, this)
+{
+  if ((f & ::xml_schema::flags::base) == 0)
+  {
+    ::xsd::cxx::xml::dom::parser< char > p (e, false, true);
+    this->parse (p, f);
+  }
+}
+
+void thermostat_t::
+parse (::xsd::cxx::xml::dom::parser< char >& p,
+       ::xml_schema::flags f)
+{
+  while (p.more_attributes ())
+  {
+    const ::xercesc::DOMAttr& i (p.next_attribute ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    if (n.name () == "dim" && n.namespace_ ().empty ())
+    {
+      this->dim_.set (dim_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "init_temp" && n.namespace_ ().empty ())
+    {
+      this->init_temp_.set (init_temp_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "steps" && n.namespace_ ().empty ())
+    {
+      this->steps_.set (steps_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "target_temp" && n.namespace_ ().empty ())
+    {
+      this->target_temp_.set (target_temp_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "delta_temp" && n.namespace_ ().empty ())
+    {
+      this->delta_temp_.set (delta_temp_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "steps_changetemp" && n.namespace_ ().empty ())
+    {
+      this->steps_changetemp_.set (steps_changetemp_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "apply_brown" && n.namespace_ ().empty ())
+    {
+      this->apply_brown_.set (apply_brown_traits::create (i, f, this));
+      continue;
+    }
+  }
+
+  if (!dim_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "dim",
+      "");
+  }
+
+  if (!init_temp_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "init_temp",
+      "");
+  }
+
+  if (!steps_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "steps",
+      "");
+  }
+}
+
+thermostat_t* thermostat_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class thermostat_t (*this, f, c);
+}
+
+thermostat_t::
+~thermostat_t ()
+{
+}
+
 // simulation_parameters_t
 //
 
@@ -2016,7 +2307,8 @@ simulation_parameters_t (const start_time_type& start_time,
   start_time_ (start_time, ::xml_schema::flags (), this),
   end_time_ (end_time, ::xml_schema::flags (), this),
   delta_t_ (delta_t, ::xml_schema::flags (), this),
-  simulation_mode_ (simulation_mode, ::xml_schema::flags (), this)
+  simulation_mode_ (simulation_mode, ::xml_schema::flags (), this),
+  thermostat_ (::xml_schema::flags (), this)
 {
 }
 
@@ -2029,7 +2321,8 @@ simulation_parameters_t (const start_time_type& start_time,
   start_time_ (start_time, ::xml_schema::flags (), this),
   end_time_ (end_time, ::xml_schema::flags (), this),
   delta_t_ (delta_t, ::xml_schema::flags (), this),
-  simulation_mode_ (simulation_mode, ::xml_schema::flags (), this)
+  simulation_mode_ (simulation_mode, ::xml_schema::flags (), this),
+  thermostat_ (::xml_schema::flags (), this)
 {
 }
 
@@ -2041,7 +2334,8 @@ simulation_parameters_t (const simulation_parameters_t& x,
   start_time_ (x.start_time_, f, this),
   end_time_ (x.end_time_, f, this),
   delta_t_ (x.delta_t_, f, this),
-  simulation_mode_ (x.simulation_mode_, f, this)
+  simulation_mode_ (x.simulation_mode_, f, this),
+  thermostat_ (x.thermostat_, f, this)
 {
 }
 
@@ -2053,7 +2347,8 @@ simulation_parameters_t (const ::xercesc::DOMElement& e,
   start_time_ (f, this),
   end_time_ (f, this),
   delta_t_ (f, this),
-  simulation_mode_ (f, this)
+  simulation_mode_ (f, this),
+  thermostat_ (f, this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
   {
@@ -2115,6 +2410,20 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       if (!simulation_mode_.present ())
       {
         this->simulation_mode_.set (r);
+        continue;
+      }
+    }
+
+    // thermostat
+    //
+    if (n.name () == "thermostat" && n.namespace_ ().empty ())
+    {
+      ::std::auto_ptr< thermostat_type > r (
+        thermostat_traits::create (i, f, this));
+
+      if (!this->thermostat_)
+      {
+        this->thermostat_.set (r);
         continue;
       }
     }

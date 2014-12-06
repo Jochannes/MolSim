@@ -173,36 +173,78 @@ void XMLInput::ReadFile()
 		exit(1);
 	};
 
+	// 1.5: thermostat
+	const simulation_parameters_t::thermostat_optional therm = param.thermostat();
+	if (therm.present()) {
+		this->dim = therm.get().dim();
+		if (this->dim < 2  ||  this->dim > 3) {
+			LOG4CXX_FATAL(xmllogger, "Error! Invalid value for thermostat's \"dim\".");
+			exit(1);
+		}
+
+		this->init_temp = therm.get().init_temp();
+
+		this->steps = therm.get().steps();
+		if (this->steps <= 0) {
+			LOG4CXX_FATAL(xmllogger, "Error! Invalid value for thermostat's \"steps\".");
+			exit(1);
+		}
+
+		if( therm.get().apply_brown().present() ) {
+			this->applyBrown = therm.get().apply_brown().get();
+		}
+
+		if ( therm.get().target_temp().present() &&
+			 therm.get().delta_temp().present() &&
+			 therm.get().steps_changetemp().present() )
+		{
+			this->target_temp      = therm.get().target_temp().get();
+			this->delta_temp       = therm.get().delta_temp().get();
+
+			this->steps_changetemp = therm.get().steps_changetemp().get();
+			if (this->steps_changetemp <= 0) {
+				LOG4CXX_FATAL(xmllogger, "Error! Invalid value for thermostat's \"steps_changetemp\".");
+				exit(1);
+			}
+
+			LOG4CXX_DEBUG(xmllogger, "using variable thermostat: dim=" << this->dim <<
+					"; init_temp=" << this->init_temp << "; steps=" << this->steps <<
+					"; target_temp=" << this->target_temp << "; delta_temp=" << this->delta_temp <<
+					"; steps_changetemp=" << this->steps_changetemp <<
+					"; applyBrown=" << (applyBrown ? "true" : "false") );
+		}
+		else {
+			LOG4CXX_DEBUG(xmllogger, "using constant thermostat: dim=" << this->dim <<
+					"; init_temp=" << this->init_temp << "; steps=" << this->steps <<
+					"; applyBrown=" << (applyBrown ? "true" : "false") );
+		}
+	}
+
+
 	// 2: element "force-calculator"
 	const simulation_force_calculator_t& fc = s->force_calculator();
 	forceCalcCnt = 0;
 
 	// 2.1: element "lennard_jones"
-	forceCalcCnt += fc.lennard_jones().size();
-	this->lennard_jones.reserve( fc.lennard_jones().size() );
 	for( simulation_force_calculator_t::lennard_jones_const_iterator it = fc.lennard_jones().begin();
 		 it != fc.lennard_jones().end();
 		 it++ )
 	{
-		this->lennard_jones.push_back(ForceCalculator_LennardJones());
+		if( it->cutoff_factor().present() ) {
+			const double cutoff_factor = it->cutoff_factor().get();
+			this->lj_cutoff.push_back(ForceCalculator_LJ_cutoff(cutoff_factor));
 
-		LOG4CXX_DEBUG(xmllogger, "using Lennard-Jones force calculator.");
+			LOG4CXX_DEBUG(xmllogger, "using Lennard-Jones force calculator with cutoff radius, cutoff_factor=" << cutoff_factor << ".");
+		}
+		else {
+			this->lennard_jones.push_back(ForceCalculator_LennardJones());
+
+			LOG4CXX_DEBUG(xmllogger, "using Lennard-Jones force calculator.");
+		}
+		forceCalcCnt++;
 	}
 
-	// 2.2: element "lj_cutoff"
-	forceCalcCnt += fc.lj_cutoff().size();
-	this->lj_cutoff.reserve( fc.lj_cutoff().size() );
-	for( simulation_force_calculator_t::lj_cutoff_const_iterator it = fc.lj_cutoff().begin();
-		 it != fc.lj_cutoff().end();
-		 it++ )
-	{
-		double cutoff_factor = it->cutoff_factor();
-		this->lj_cutoff.push_back(ForceCalculator_LJ_cutoff(cutoff_factor));
-
-		LOG4CXX_DEBUG(xmllogger, "using Lennard-Jones force calculator with cutoff radius, cutoff_factor=" << cutoff_factor << ".");
-	}
-
-	// 2.3: element "gravity"
+	// 2.2: element "gravity"
 	forceCalcCnt += fc.gravity().size();
 	this->gravity.reserve( fc.gravity().size() );
 	for( simulation_force_calculator_t::gravity_const_iterator it = fc.gravity().begin();
@@ -328,9 +370,10 @@ void XMLInput::configureApplication()
 		break;
 	}
 
+
 	//Force calculators
-	::numForceCalcs = forceCalcCnt;
-	fcalcs = new ForceCalculator*[forceCalcCnt];
+	::numForceCalcs = this->forceCalcCnt;
+	fcalcs = new ForceCalculator*[this->forceCalcCnt];
 	int i = 0;
 	for( vector<ForceCalculator_LennardJones>::iterator it = this->lennard_jones.begin();
 		 it != this->lennard_jones.end();
@@ -380,6 +423,21 @@ void XMLInput::configureApplication()
 
 	::particles->add(particleList);
 
+
+	// Thermostat
+	if (this->dim > 0) {
+		if (this->delta_temp == 0.0) {		// use a constant temperature
+			::thermostat = new Thermostat(*::particles, this->dim, this->init_temp, this->steps, this->applyBrown);
+		}
+		else {								// use a variable temperature
+			::thermostat = new Thermostat(*::particles, this->dim, this->init_temp, this->steps,
+											this->target_temp, this->delta_temp, this->steps_changetemp,
+											this->applyBrown);
+		}
+	}
+	else {
+		::thermostat = NULL;
+	}
 
 	// output
 	::particleOut = new ParticleOutput_VTK(*::particles, this->base_filename);

@@ -14,7 +14,7 @@
 
 
 /**
- * \brief Class for calculating the gravitational force between two particles.
+ * \brief Class for adding gravitational force to particles.
  */
 class ForceCalculator_Gravity : public ForceCalculator
 {
@@ -23,10 +23,13 @@ public:
 	ForceCalculator_Gravity(double arg_g);
 	virtual ~ForceCalculator_Gravity();
 
+	/**
+	 * /brief Function for adding the gravitational force to a particle.
+	 */
 	virtual void compute(Particle& p);
 
 	/**
-	 * /brief Function for calculating the force between to particles.
+	 * /brief Function for calculating the force between two particles.
 	 *
 	 * Since this is a non-interacting force, this method does nothing.
 	 */
