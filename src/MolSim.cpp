@@ -15,6 +15,7 @@
 #include <log4cxx/propertyconfigurator.h>
 #include <log4cxx/stream.h>
 #include <typeinfo>
+#include <sys/time.h>
 
 //UnitTests
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -63,8 +64,6 @@ double start_time = 0.0;	//!< Starting time of the simulation.
 double end_time = 1000; 	//!< End time of the simulation.
 double delta_t = 0.014; 	//!< Time step size of the simulation.
 int output_freq = 10;	//!< Output frequency of the simulation.
-bool timing = false;	//!< Specifies if the iteration time will be measured.
-char* timingFile;	//!< Specifies if the iteration time will be measured.
 
 Thermostat* thermostat;	//!< Thermostat controlling the temperatures of the particles.
 
@@ -75,7 +74,12 @@ VelocityCalculator* vcalc = NULL; //!< Object for defining the velocity calculat
 ForceCalculator** fcalcs; //!< Object for defining the force calculators used in the simulation.
 int numForceCalcs;			//!< Number of force calculators.
 
+bool timing = false;	//!< Specifies if the iteration time will be measured.
+char* timingFile;	//!< Name of the file to store the timing results.
+const int timingCount = 20;	//!< Number of iterations to messure.
+
 LoggerPtr logger(Logger::getLogger("MolSim")); //!< Object for handling general logs.
+
 
 int main(int argc, char* argsv[]) {
 
@@ -93,31 +97,31 @@ int main(int argc, char* argsv[]) {
 
 	int iteration = 0;
 
-	ofstream time;
-	list<double> elapsed_secs;
-	clock_t begin, end;
-	if (timing) {
-		time.open(timingFile);
-	}
+	timeval timing_diff[timingCount];
+	int timing_it = 0;
 
 	// for this loop, we assume: current x, current f and current v are known
 	while (current_time < end_time) {
+		timeval begin;
 
 		if (timing) {
-			begin = clock();
+			gettimeofday(&begin, NULL);
 		}
 
 		calculateX(); // calculate new coordinates
 		calculateF(); // calculate new forces
 		calculateV(); // calculate new velocities
 
+		// control temperatures (if activated)
 		if (thermostat != NULL) {
 			thermostat->handle(iteration);
 		}
-		if (timing) {
-			end = clock();
-			elapsed_secs.push_back(double(end - begin) / CLOCKS_PER_SEC);
-			time << elapsed_secs.back() << "\n";
+
+		if (timing  &&  (timing_it < timingCount)) {
+			timeval end;
+			gettimeofday(&end, NULL);
+			timersub(&end, &begin, &timing_diff[timing_it]);
+			timing_it++;
 		}
 
 		iteration++;
@@ -129,16 +133,22 @@ int main(int argc, char* argsv[]) {
 
 		current_time += delta_t;
 	}
+
 	if (timing) {
-		list<double>::iterator it = elapsed_secs.begin();
-		double avg = 0;
-		while (it != elapsed_secs.end()) {
-			avg += (*it);
-			it++;
+		timeval sum;
+		timerclear(&sum);
+		for(int i=0; i<timing_it; i++) {
+			timeradd(&timing_diff[i], &sum, &sum);
 		}
-		avg /= elapsed_secs.size();
-		time << "Average: " << avg << "\n";
-		time.close();
+
+		double avg_secs = (double(sum.tv_sec) + double(sum.tv_usec)/1000000.0) / double(timing_it);
+
+		ofstream ofs;
+		ofs.open(timingFile);
+		ofs << "Average time (" << timing_it << " iterations): " << avg_secs << " seconds" << endl;
+		ofs.close();
+
+		LOG4CXX_INFO(logger, "timing output written.");
 	}
 
 	LOG4CXX_INFO(logger, "output written. Terminating...");
@@ -217,7 +227,7 @@ void parseParameters(int argc, char* argsv[]) {
 				}
 
 				timing = true;
-				timingFile = new char[strlen(value)];
+				timingFile = new char[strlen(value)+1];
 				strcpy(timingFile, value);
 			}
 		} else {
