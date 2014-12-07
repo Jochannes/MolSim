@@ -26,6 +26,8 @@
  */
 class Thermostat
 {
+	friend class unitTest::UTest_Thermostat;
+
 private:
 	ParticleContainer& particles;	//!< ParticleContainer which temperatures the thermostat should control.
 
@@ -120,7 +122,8 @@ public:
 	}
 
 
-	~Thermostat();
+	~Thermostat() {
+	}
 
 	/**
 	 * /brief Changes the next temperature and adjusts the particle temperatures when the right time has come.
