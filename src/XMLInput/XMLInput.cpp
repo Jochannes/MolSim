@@ -9,9 +9,10 @@
 
 #include "ParticleContainer/CellContainer.h"
 #include "ParticleContainer/SimpleContainer.h"
-#include "ParticleInput_FileReader.h"
+#include "ParticleFileReader.h"
 #include "CuboidGenerator.h"
 #include "ParticleOutput_VTK.h"
+#include "ResultOutput.h"
 #include "handler/PositionCalculator.h"
 #include "handler/VelocityCalculator.h"
 #include "BoundaryCondition/Outflow.h"
@@ -266,7 +267,7 @@ void XMLInput::ReadFile()
 		 it != in.particle_file().end();
 		 it++ )
 	{
-		ParticleInput_FileReader fr(*it);
+		ParticleFileReader fr(*it);
 		this->particle_file.push_back(fr);
 
 		LOG4CXX_DEBUG(xmllogger, "reading particle file " << fr.toString());
@@ -319,17 +320,29 @@ void XMLInput::ReadFile()
 	// 4: element "output"
 	const simulation_output_t& out = s->output();
 
-	// 4.1: element "base_filename"
-	this->base_filename = out.base_filename();
-	LOG4CXX_DEBUG(xmllogger, "reading base_filename=\"" << this->base_filename << "\"");
+	// 4.1: element "iteration"
+	if( out.iteration().present() ) {
+		const iteration_output_t out_it = out.iteration().get();
 
-	// 4.2: element "output_freq"
-	this->output_freq = out.output_freq();
-	if( this->output_freq > 0 ) {
-		LOG4CXX_DEBUG(xmllogger, "reading output_freq=" << this->output_freq);
-	} else {
-		LOG4CXX_FATAL(xmllogger, "Error! Invalid value for output_freq.");
-		exit(1);
+		this->base_filename = out_it.base_filename();
+
+		this->output_freq   = out_it.output_freq();
+		if( this->output_freq <= 0 ) {
+			LOG4CXX_FATAL(xmllogger, "Error! In iteration output: invalid value for output_freq.");
+			exit(1);
+		}
+
+		LOG4CXX_DEBUG(xmllogger, "reading iteration output: base_filename=\"" << this->base_filename <<
+									"\"; output_freq=" << this->output_freq );
+	}
+
+	// 4.2: element "result"
+	if( out.result().present() ) {
+		const result_output_t out_res = out.result().get();
+
+		this->res_filename = out_res.filename();
+
+		LOG4CXX_DEBUG(xmllogger, "reading result output: filename=\"" << this->res_filename << "\"");
 	}
 }
 
@@ -400,7 +413,7 @@ void XMLInput::configureApplication()
 	// input
 	list<Particle> particleList;
 
-	for( vector<ParticleInput_FileReader>::iterator it = this->particle_file.begin();
+	for( vector<ParticleFileReader>::iterator it = this->particle_file.begin();
 		 it != this->particle_file.end();
 		 it++ )
 	{
@@ -440,8 +453,13 @@ void XMLInput::configureApplication()
 	}
 
 	// output
-	::particleOut = new ParticleOutput_VTK(*::particles, this->base_filename);
-	::output_freq = this->output_freq;
+	if( !this->base_filename.empty() ) {
+		::particleOut = new ParticleOutput_VTK(*::particles, this->base_filename);
+		::output_freq = this->output_freq;
+	}
+	if( !this->res_filename.empty() ) {
+		::resultOut = new ResultOutput(*::particles, this->res_filename);
+	}
 
 
 	// create default position and velocity calculators

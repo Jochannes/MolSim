@@ -59,6 +59,10 @@ public:
 			utils::Vector<double, 3> x_arg, utils::Vector<double, 3> v_arg,
 			double m_arg, int type = 0, double epsilon_arg = def_epsilon, double sigma_arg = def_sigma);
 
+	Particle(utils::Vector<double, 3> x_arg, utils::Vector<double, 3> v_arg,
+			 utils::Vector<double, 3> f_arg, utils::Vector<double, 3> old_f_arg,
+			 double m_arg, double epsilon_arg = def_epsilon, double sigma_arg = def_sigma, int type_arg = 0);
+
 	virtual ~Particle();
 
 	utils::Vector<double, 3>& getX();

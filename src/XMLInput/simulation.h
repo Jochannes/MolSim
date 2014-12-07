@@ -233,6 +233,8 @@ class simulation_parameters_t;
 class cuboid_t;
 class sphere_t;
 class simulation_input_t;
+class iteration_output_t;
+class result_output_t;
 class simulation_output_t;
 class simulation_t;
 
@@ -1665,7 +1667,7 @@ class simulation_input_t: public ::xml_schema::type
   sphere_sequence sphere_;
 };
 
-class simulation_output_t: public ::xml_schema::type
+class iteration_output_t: public ::xml_schema::type
 {
   public:
   // base_filename
@@ -1701,8 +1703,134 @@ class simulation_output_t: public ::xml_schema::type
 
   // Constructors.
   //
-  simulation_output_t (const base_filename_type&,
-                       const output_freq_type&);
+  iteration_output_t (const base_filename_type&,
+                      const output_freq_type&);
+
+  iteration_output_t (const ::xercesc::DOMElement& e,
+                      ::xml_schema::flags f = 0,
+                      ::xml_schema::container* c = 0);
+
+  iteration_output_t (const iteration_output_t& x,
+                      ::xml_schema::flags f = 0,
+                      ::xml_schema::container* c = 0);
+
+  virtual iteration_output_t*
+  _clone (::xml_schema::flags f = 0,
+          ::xml_schema::container* c = 0) const;
+
+  virtual 
+  ~iteration_output_t ();
+
+  // Implementation.
+  //
+  protected:
+  void
+  parse (::xsd::cxx::xml::dom::parser< char >&,
+         ::xml_schema::flags);
+
+  protected:
+  ::xsd::cxx::tree::one< base_filename_type > base_filename_;
+  ::xsd::cxx::tree::one< output_freq_type > output_freq_;
+};
+
+class result_output_t: public ::xml_schema::type
+{
+  public:
+  // filename
+  // 
+  typedef ::xml_schema::string filename_type;
+  typedef ::xsd::cxx::tree::traits< filename_type, char > filename_traits;
+
+  const filename_type&
+  filename () const;
+
+  filename_type&
+  filename ();
+
+  void
+  filename (const filename_type& x);
+
+  void
+  filename (::std::auto_ptr< filename_type > p);
+
+  // Constructors.
+  //
+  result_output_t (const filename_type&);
+
+  result_output_t (const ::xercesc::DOMElement& e,
+                   ::xml_schema::flags f = 0,
+                   ::xml_schema::container* c = 0);
+
+  result_output_t (const result_output_t& x,
+                   ::xml_schema::flags f = 0,
+                   ::xml_schema::container* c = 0);
+
+  virtual result_output_t*
+  _clone (::xml_schema::flags f = 0,
+          ::xml_schema::container* c = 0) const;
+
+  virtual 
+  ~result_output_t ();
+
+  // Implementation.
+  //
+  protected:
+  void
+  parse (::xsd::cxx::xml::dom::parser< char >&,
+         ::xml_schema::flags);
+
+  protected:
+  ::xsd::cxx::tree::one< filename_type > filename_;
+};
+
+class simulation_output_t: public ::xml_schema::type
+{
+  public:
+  // iteration
+  // 
+  typedef ::iteration_output_t iteration_type;
+  typedef ::xsd::cxx::tree::optional< iteration_type > iteration_optional;
+  typedef ::xsd::cxx::tree::traits< iteration_type, char > iteration_traits;
+
+  const iteration_optional&
+  iteration () const;
+
+  iteration_optional&
+  iteration ();
+
+  void
+  iteration (const iteration_type& x);
+
+  void
+  iteration (const iteration_optional& x);
+
+  void
+  iteration (::std::auto_ptr< iteration_type > p);
+
+  // result
+  // 
+  typedef ::result_output_t result_type;
+  typedef ::xsd::cxx::tree::optional< result_type > result_optional;
+  typedef ::xsd::cxx::tree::traits< result_type, char > result_traits;
+
+  const result_optional&
+  result () const;
+
+  result_optional&
+  result ();
+
+  void
+  result (const result_type& x);
+
+  void
+  result (const result_optional& x);
+
+  void
+  result (::std::auto_ptr< result_type > p);
+
+  // Constructors.
+  //
+  simulation_output_t ();
 
   simulation_output_t (const ::xercesc::DOMElement& e,
                        ::xml_schema::flags f = 0,
@@ -1727,8 +1855,8 @@ class simulation_output_t: public ::xml_schema::type
          ::xml_schema::flags);
 
   protected:
-  ::xsd::cxx::tree::one< base_filename_type > base_filename_;
-  ::xsd::cxx::tree::one< output_freq_type > output_freq_;
+  iteration_optional iteration_;
+  result_optional result_;
 };
 
 class simulation_t: public ::xml_schema::type

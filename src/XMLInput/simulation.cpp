@@ -1322,49 +1322,141 @@ sphere (const sphere_sequence& s)
 }
 
 
-// simulation_output_t
+// iteration_output_t
 // 
 
-const simulation_output_t::base_filename_type& simulation_output_t::
+const iteration_output_t::base_filename_type& iteration_output_t::
 base_filename () const
 {
   return this->base_filename_.get ();
 }
 
-simulation_output_t::base_filename_type& simulation_output_t::
+iteration_output_t::base_filename_type& iteration_output_t::
 base_filename ()
 {
   return this->base_filename_.get ();
 }
 
-void simulation_output_t::
+void iteration_output_t::
 base_filename (const base_filename_type& x)
 {
   this->base_filename_.set (x);
 }
 
-void simulation_output_t::
+void iteration_output_t::
 base_filename (::std::auto_ptr< base_filename_type > x)
 {
   this->base_filename_.set (x);
 }
 
-const simulation_output_t::output_freq_type& simulation_output_t::
+const iteration_output_t::output_freq_type& iteration_output_t::
 output_freq () const
 {
   return this->output_freq_.get ();
 }
 
-simulation_output_t::output_freq_type& simulation_output_t::
+iteration_output_t::output_freq_type& iteration_output_t::
 output_freq ()
 {
   return this->output_freq_.get ();
 }
 
-void simulation_output_t::
+void iteration_output_t::
 output_freq (const output_freq_type& x)
 {
   this->output_freq_.set (x);
+}
+
+
+// result_output_t
+// 
+
+const result_output_t::filename_type& result_output_t::
+filename () const
+{
+  return this->filename_.get ();
+}
+
+result_output_t::filename_type& result_output_t::
+filename ()
+{
+  return this->filename_.get ();
+}
+
+void result_output_t::
+filename (const filename_type& x)
+{
+  this->filename_.set (x);
+}
+
+void result_output_t::
+filename (::std::auto_ptr< filename_type > x)
+{
+  this->filename_.set (x);
+}
+
+
+// simulation_output_t
+// 
+
+const simulation_output_t::iteration_optional& simulation_output_t::
+iteration () const
+{
+  return this->iteration_;
+}
+
+simulation_output_t::iteration_optional& simulation_output_t::
+iteration ()
+{
+  return this->iteration_;
+}
+
+void simulation_output_t::
+iteration (const iteration_type& x)
+{
+  this->iteration_.set (x);
+}
+
+void simulation_output_t::
+iteration (const iteration_optional& x)
+{
+  this->iteration_ = x;
+}
+
+void simulation_output_t::
+iteration (::std::auto_ptr< iteration_type > x)
+{
+  this->iteration_.set (x);
+}
+
+const simulation_output_t::result_optional& simulation_output_t::
+result () const
+{
+  return this->result_;
+}
+
+simulation_output_t::result_optional& simulation_output_t::
+result ()
+{
+  return this->result_;
+}
+
+void simulation_output_t::
+result (const result_type& x)
+{
+  this->result_.set (x);
+}
+
+void simulation_output_t::
+result (const result_optional& x)
+{
+  this->result_ = x;
+}
+
+void simulation_output_t::
+result (::std::auto_ptr< result_type > x)
+{
+  this->result_.set (x);
 }
 
 
@@ -3118,15 +3210,177 @@ simulation_input_t::
 {
 }
 
+// iteration_output_t
+//
+
+iteration_output_t::
+iteration_output_t (const base_filename_type& base_filename,
+                    const output_freq_type& output_freq)
+: ::xml_schema::type (),
+  base_filename_ (base_filename, ::xml_schema::flags (), this),
+  output_freq_ (output_freq, ::xml_schema::flags (), this)
+{
+}
+
+iteration_output_t::
+iteration_output_t (const iteration_output_t& x,
+                    ::xml_schema::flags f,
+                    ::xml_schema::container* c)
+: ::xml_schema::type (x, f, c),
+  base_filename_ (x.base_filename_, f, this),
+  output_freq_ (x.output_freq_, f, this)
+{
+}
+
+iteration_output_t::
+iteration_output_t (const ::xercesc::DOMElement& e,
+                    ::xml_schema::flags f,
+                    ::xml_schema::container* c)
+: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  base_filename_ (f, this),
+  output_freq_ (f, this)
+{
+  if ((f & ::xml_schema::flags::base) == 0)
+  {
+    ::xsd::cxx::xml::dom::parser< char > p (e, false, true);
+    this->parse (p, f);
+  }
+}
+
+void iteration_output_t::
+parse (::xsd::cxx::xml::dom::parser< char >& p,
+       ::xml_schema::flags f)
+{
+  while (p.more_attributes ())
+  {
+    const ::xercesc::DOMAttr& i (p.next_attribute ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    if (n.name () == "base_filename" && n.namespace_ ().empty ())
+    {
+      ::std::auto_ptr< base_filename_type > r (
+        base_filename_traits::create (i, f, this));
+
+      this->base_filename_.set (r);
+      continue;
+    }
+
+    if (n.name () == "output_freq" && n.namespace_ ().empty ())
+    {
+      this->output_freq_.set (output_freq_traits::create (i, f, this));
+      continue;
+    }
+  }
+
+  if (!base_filename_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "base_filename",
+      "");
+  }
+
+  if (!output_freq_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "output_freq",
+      "");
+  }
+}
+
+iteration_output_t* iteration_output_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class iteration_output_t (*this, f, c);
+}
+
+iteration_output_t::
+~iteration_output_t ()
+{
+}
+
+// result_output_t
+//
+
+result_output_t::
+result_output_t (const filename_type& filename)
+: ::xml_schema::type (),
+  filename_ (filename, ::xml_schema::flags (), this)
+{
+}
+
+result_output_t::
+result_output_t (const result_output_t& x,
+                 ::xml_schema::flags f,
+                 ::xml_schema::container* c)
+: ::xml_schema::type (x, f, c),
+  filename_ (x.filename_, f, this)
+{
+}
+
+result_output_t::
+result_output_t (const ::xercesc::DOMElement& e,
+                 ::xml_schema::flags f,
+                 ::xml_schema::container* c)
+: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  filename_ (f, this)
+{
+  if ((f & ::xml_schema::flags::base) == 0)
+  {
+    ::xsd::cxx::xml::dom::parser< char > p (e, false, true);
+    this->parse (p, f);
+  }
+}
+
+void result_output_t::
+parse (::xsd::cxx::xml::dom::parser< char >& p,
+       ::xml_schema::flags f)
+{
+  while (p.more_attributes ())
+  {
+    const ::xercesc::DOMAttr& i (p.next_attribute ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    if (n.name () == "filename" && n.namespace_ ().empty ())
+    {
+      ::std::auto_ptr< filename_type > r (
+        filename_traits::create (i, f, this));
+
+      this->filename_.set (r);
+      continue;
+    }
+  }
+
+  if (!filename_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "filename",
+      "");
+  }
+}
+
+result_output_t* result_output_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class result_output_t (*this, f, c);
+}
+
+result_output_t::
+~result_output_t ()
+{
+}
+
 // simulation_output_t
 //
 
 simulation_output_t::
-simulation_output_t (const base_filename_type& base_filename,
-                     const output_freq_type& output_freq)
+simulation_output_t ()
 : ::xml_schema::type (),
-  base_filename_ (base_filename, ::xml_schema::flags (), this),
-  output_freq_ (output_freq, ::xml_schema::flags (), this)
+  iteration_ (::xml_schema::flags (), this),
+  result_ (::xml_schema::flags (), this)
 {
 }
 
@@ -3135,8 +3389,8 @@ simulation_output_t (const simulation_output_t& x,
                      ::xml_schema::flags f,
                      ::xml_schema::container* c)
 : ::xml_schema::type (x, f, c),
-  base_filename_ (x.base_filename_, f, this),
-  output_freq_ (x.output_freq_, f, this)
+  iteration_ (x.iteration_, f, this),
+  result_ (x.result_, f, this)
 {
 }
 
@@ -3145,8 +3399,8 @@ simulation_output_t (const ::xercesc::DOMElement& e,
                      ::xml_schema::flags f,
                      ::xml_schema::container* c)
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
-  base_filename_ (f, this),
-  output_freq_ (f, this)
+  iteration_ (f, this),
+  result_ (f, this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
   {
@@ -3165,46 +3419,35 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     const ::xsd::cxx::xml::qualified_name< char > n (
       ::xsd::cxx::xml::dom::name< char > (i));
 
-    // base_filename
+    // iteration
     //
-    if (n.name () == "base_filename" && n.namespace_ ().empty ())
+    if (n.name () == "iteration" && n.namespace_ ().empty ())
     {
-      ::std::auto_ptr< base_filename_type > r (
-        base_filename_traits::create (i, f, this));
+      ::std::auto_ptr< iteration_type > r (
+        iteration_traits::create (i, f, this));
 
-      if (!base_filename_.present ())
+      if (!this->iteration_)
       {
-        this->base_filename_.set (r);
+        this->iteration_.set (r);
         continue;
       }
     }
 
-    // output_freq
+    // result
     //
-    if (n.name () == "output_freq" && n.namespace_ ().empty ())
+    if (n.name () == "result" && n.namespace_ ().empty ())
     {
-      if (!output_freq_.present ())
+      ::std::auto_ptr< result_type > r (
+        result_traits::create (i, f, this));
+
+      if (!this->result_)
       {
-        this->output_freq_.set (output_freq_traits::create (i, f, this));
+        this->result_.set (r);
         continue;
       }
     }
 
     break;
-  }
-
-  if (!base_filename_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "base_filename",
-      "");
-  }
-
-  if (!output_freq_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "output_freq",
-      "");
   }
 }
 

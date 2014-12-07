@@ -114,11 +114,20 @@
     </xs:sequence>
   </xs:complexType>
   
-
+  
+  <xs:complexType name="iteration_output_t">
+    <xs:attribute name="base_filename" type="xs:string" use="required" />
+    <xs:attribute name="output_freq" type="xs:unsignedInt" use="required" />
+  </xs:complexType>
+  
+  <xs:complexType name="result_output_t">
+    <xs:attribute name="filename" type="xs:string" use="required" />
+  </xs:complexType>
+  
   <xs:complexType name="simulation_output_t">
     <xs:sequence>
-      <xs:element name="base_filename" type="xs:string"/>
-      <xs:element name="output_freq" type="xs:unsignedInt"/>
+      <xs:element name="iteration" type="iteration_output_t" minOccurs="0" />
+      <xs:element name="result" type="result_output_t" minOccurs="0" />
     </xs:sequence>
   </xs:complexType>
   

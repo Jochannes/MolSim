@@ -36,6 +36,7 @@ extern Thermostat* thermostat;
 
 extern ParticleContainer* particles;
 extern ParticleOutput* particleOut;
+extern ResultOutput* resultOut;
 extern PositionCalculator* xcalc;
 extern VelocityCalculator* vcalc;
 extern ForceCalculator** fcalcs;

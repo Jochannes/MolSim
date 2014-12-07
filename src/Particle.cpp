@@ -49,9 +49,32 @@ Particle::Particle(const Particle& other) :
  */
 Particle::Particle(utils::Vector<double, 3> x_arg,
 		utils::Vector<double, 3> v_arg, double m_arg, int type_arg,
-		double epsilon_arg, double sigma_arg) :
-		x(x_arg), v(v_arg), m(m_arg), epsilon(epsilon_arg), sigma(sigma_arg), type(
-				type_arg), f(0.0), old_f(0.0) {
+		double epsilon_arg, double sigma_arg)
+	:
+		x(x_arg), v(v_arg), m(m_arg), epsilon(epsilon_arg), sigma(sigma_arg),
+		type(type_arg), f(0.0), old_f(0.0)
+{
+	LOG4CXX_TRACE(Particlelogger, "Particle generated!");
+}
+
+/**
+ * \brief Initializes the particle with values.
+ * @param x_arg Initial particle position
+ * @param v_arg Initial particle velocity
+ * @param f_arg Current force
+ * @param old_f_arg Old force
+ * @param m_arg Particle mass
+ * @param epsilon_arg Lennard-Jones parameter epsilon for this particle
+ * @param sigma_arg Lennard-Jones parameter sigma for this particle
+ * @param type_arg Type of the particle
+ */
+Particle::Particle(utils::Vector<double, 3> x_arg, utils::Vector<double, 3> v_arg,
+		utils::Vector<double, 3> f_arg, utils::Vector<double, 3> old_f_arg,
+		double m_arg, double epsilon_arg, double sigma_arg, int type_arg)
+	:
+		x(x_arg), v(v_arg), f(f_arg), old_f(old_f_arg), m(m_arg),
+		epsilon(epsilon_arg), sigma(sigma_arg), type(type_arg)
+{
 	LOG4CXX_TRACE(Particlelogger, "Particle generated!");
 }
 
@@ -133,12 +156,11 @@ std::string Particle::toString() {
  * @param other Particle to compare to
  */
 bool Particle::operator ==(Particle& other) {
-	if ((x == other.x) && (v == other.v) && (f == other.f)
-			&& (type == other.type) && (m == other.m)
-			&& (old_f == other.old_f)) {
+	if(	(x == other.x) && (v == other.v) && (f == other.f) && (old_f == other.old_f) &&
+		(m == other.m) && (epsilon == other.epsilon) && (sigma == other.sigma) &&
+		(type == other.type) ) {
 		return true;
 	}
-
 	return false;
 }
 

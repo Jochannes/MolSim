@@ -8,7 +8,7 @@
 #ifndef XMLINPUT_H_
 #define XMLINPUT_H_
 
-#include "ParticleInput_FileReader.h"
+#include "ParticleFileReader.h"
 #include "CuboidGenerator.h"
 #include "SphereGenerator.h"
 #include "handler/ForceCalculator_Gravity.h"
@@ -52,12 +52,13 @@ private:
 	int steps_changetemp;
 	bool applyBrown;
 
-	std::vector<ParticleInput_FileReader> particle_file;
+	std::vector<ParticleFileReader> particle_file;
 	std::vector<CuboidGenerator> cuboid;
 	std::vector<SphereGenerator> sphere;
 
 	std::string base_filename;
 	int output_freq;
+	std::string res_filename;
 
 	/**
 	 * \brief Reads the XML file specified by 'xmlfilename' and sets the member variables accordingly.
@@ -79,7 +80,7 @@ public:
 			xmlfilename(param_xmlfilename), start_time(0), end_time(1000), delta_t(0.014), forceCalcCnt(0),
 			sm_type(simulation_mode_type_t::linked_cell), cutoff_radius(3),
 			dim(0), init_temp(0), steps(0), target_temp(0), delta_temp(0), steps_changetemp(0), applyBrown(true),
-			output_freq(10), base_filename("MD_vtk")
+			output_freq(10), base_filename(""), res_filename("")
 	{
 		domain_size[0] = 1;
 		domain_size[1] = 1;

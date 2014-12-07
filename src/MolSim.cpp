@@ -2,6 +2,7 @@
 #include "ParticleContainer/CellContainer.h"
 #include "XMLInput/XMLInput.h"
 #include "ParticleOutput.h"
+#include "ResultOutput.h"
 #include "handler/PositionCalculator.h"
 #include "handler/VelocityCalculator.h"
 #include "handler/ForceCalculator.h"
@@ -69,6 +70,7 @@ Thermostat* thermostat;	//!< Thermostat controlling the temperatures of the part
 
 ParticleContainer* particles;//!< Container for encapsulating the particle list.
 ParticleOutput* particleOut = NULL; //!< Object for defining the output method to be used.
+ResultOutput* resultOut = NULL;	//!< Object for defining the result output method.
 PositionCalculator* xcalc = NULL; //!< Object for defining the coordinate calculator used in the simulation.
 VelocityCalculator* vcalc = NULL; //!< Object for defining the velocity calculator used in the simulation.
 ForceCalculator** fcalcs; //!< Object for defining the force calculators used in the simulation.
@@ -135,6 +137,8 @@ int main(int argc, char* argsv[]) {
 	}
 
 	if (timing) {
+		LOG4CXX_INFO(logger, "writing timing output...");
+
 		timeval sum;
 		timerclear(&sum);
 		for(int i=0; i<timing_it; i++) {
@@ -147,12 +151,14 @@ int main(int argc, char* argsv[]) {
 		ofs.open(timingFile);
 		ofs << "Average time (" << timing_it << " iterations): " << avg_secs << " seconds" << endl;
 		ofs.close();
+	}
 
-		LOG4CXX_INFO(logger, "timing output written.");
+	if (resultOut != NULL) {
+		LOG4CXX_INFO(logger, "saving result...");
+		resultOut->output();
 	}
 
 	LOG4CXX_INFO(logger, "output written. Terminating...");
-
 	return 0;
 }
 

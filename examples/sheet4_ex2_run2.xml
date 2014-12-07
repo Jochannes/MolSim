@@ -5,14 +5,14 @@
 
   <parameter>
     <start-time>0</start-time>
-    <end-time>25</end-time>
+    <end-time>50</end-time>
     <delta-t>0.0005</delta-t>
     
     <simulation-mode>
       <type>linked-cell</type>
       <cutoff_radius>2.5</cutoff_radius>
-      <domain_size_x>63</domain_size_x>
-      <domain_size_y>36</domain_size_y>
+      <domain_size_x>300</domain_size_x>
+      <domain_size_y>54</domain_size_y>
       <boundary x_0="periodic" x_max="periodic" y_0="reflect" y_max="outflow" z_0="outflow" z_max="outflow" />
     </simulation-mode>
     
@@ -25,13 +25,13 @@
   </force-calculator>
   
   <input>
-    <cuboid x1="0.6" x2="2.0" x3="0.0" n1="50" n2="14" n3="1" h="1.2" m="1.0" epsilon="1.0" sigma="1.0" type="1" v1="0.0" v2="0.0" v3="0.0" />
-    <cuboid x1="0.6" x2="19.0" x3="0.0" n1="50" n2="14" n3="1" h="1.2" m="2.0" epsilon="1.0" sigma="0.9412" type="2" v1="0.0" v2="0.0" v3="0.0" />
+    <cuboid x1="0.6" x2="2.0" x3="0.0" n1="250" n2="20" n3="1" h="1.2" m="1.0" epsilon="1.0" sigma="1.2" type="1" v1="0.0" v2="0.0" v3="0.0" />
+    <cuboid x1="0.6" x2="27.0" x3="0.0" n1="250" n2="20" n3="1" h="1.2" m="2.0" epsilon="1.0" sigma="1.1" type="2" v1="0.0" v2="0.0" v3="0.0" />
   </input>
   
   
   <output>
-    <iteration base_filename="Output/MD_vtk" output_freq="10" />
+    <iteration base_filename="Output/MD_vtk" output_freq="100" />
   </output>
   
   

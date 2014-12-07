@@ -12,6 +12,7 @@
 #include "ParticleContainer/ParticleContainer.h"
 #include "handler/TemperatureAdjustHandler.h"
 #include "handler/KineticEnergyHandler.h"
+#include "UnitTests/UTest_Thermostat.h"
 
 #include <cmath>
 
