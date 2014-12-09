@@ -9,8 +9,15 @@
 #include "handler/MaxwellBoltzmannHandler.h"
 #include <cmath>
 
-#include <iostream>
+#include <log4cxx/logger.h>
+#include <log4cxx/propertyconfigurator.h>
+#include <log4cxx/stream.h>
+
 using namespace std;
+using namespace log4cxx;
+
+
+LoggerPtr thermlogger(Logger::getLogger("MolSim.Thermostat"));
 
 
 double Thermostat::calculateKineticEnergy()
@@ -23,10 +30,7 @@ double Thermostat::calculateKineticEnergy()
 
 void Thermostat::applyBrown()
 {
-	double E_kin = calculateKineticEnergy();
-	int num_particles = particles.size();
-
-	double v_init = sqrt( 2 * E_kin / (num_particles * num_dimensions * mass) );
+	double v_init = sqrt( k_B * next_temp / mass );
 
 	MaxwellBoltzmannHandler h(v_init, num_dimensions);
 	particles.iterate_all(h);
@@ -50,10 +54,10 @@ void Thermostat::adjustParticleTemperatures()
 		TemperatureAdjustHandler h(beta);
 		particles.iterate_all(h);
 
-		cout << "temp-adjust: E_kin_D=" << E_kin_D << "; E_kin=" << E_kin << "; beta=" << beta << endl;
+		LOG4CXX_DEBUG(thermlogger, "temp-adjust: E_kin_D=" << E_kin_D << "; E_kin=" << E_kin << "; beta=" << beta);
 	}
 	else {
-		cout << "temp-adjust: too small kinetic energy!" << endl;
+		LOG4CXX_DEBUG(thermlogger, "temp-adjust: too small kinetic energy!");
 	}
 }
 
