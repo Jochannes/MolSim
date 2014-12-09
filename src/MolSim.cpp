@@ -99,16 +99,13 @@ int main(int argc, char* argsv[]) {
 
 	int iteration = 0;
 
-	timeval timing_diff[timingCount];
-	int timing_it = 0;
+	timeval timer_begin, timer_end;
+	if (timing) {
+		gettimeofday(&timer_begin, NULL);
+	}
 
 	// for this loop, we assume: current x, current f and current v are known
 	while (current_time < end_time) {
-		timeval begin;
-
-		if (timing) {
-			gettimeofday(&begin, NULL);
-		}
 
 		calculateX(); // calculate new coordinates
 		calculateF(); // calculate new forces
@@ -119,13 +116,6 @@ int main(int argc, char* argsv[]) {
 			thermostat->handle(iteration);
 		}
 
-		if (timing  &&  (timing_it < timingCount)) {
-			timeval end;
-			gettimeofday(&end, NULL);
-			timersub(&end, &begin, &timing_diff[timing_it]);
-			timing_it++;
-		}
-
 		iteration++;
 
 		if (iteration % output_freq == 0) {
@@ -134,23 +124,34 @@ int main(int argc, char* argsv[]) {
 		LOG4CXX_DEBUG(logger, "Iteration " << iteration << " finished.");
 
 		current_time += delta_t;
+
+		if (timing  &&  (iteration == timingCount)) {
+			gettimeofday(&timer_end, NULL);
+		}
 	}
 
 	if (timing) {
-		LOG4CXX_INFO(logger, "writing timing output...");
+		int count = timingCount;
 
-		timeval sum;
-		timerclear(&sum);
-		for(int i=0; i<timing_it; i++) {
-			timeradd(&timing_diff[i], &sum, &sum);
+		if (iteration < timingCount) {
+			gettimeofday(&timer_end, NULL);
+			count = iteration;
+			LOG4CXX_DEBUG(logger, "the timer could not measure enough iterations...");
 		}
 
-		double avg_secs = (double(sum.tv_sec) + double(sum.tv_usec)/1000000.0) / double(timing_it);
+		if (count > 0) {
+			timeval diff;
+			timersub(&timer_end, &timer_begin, &diff);
 
-		ofstream ofs;
-		ofs.open(timingFile);
-		ofs << "Average time (" << timing_it << " iterations): " << avg_secs << " seconds" << endl;
-		ofs.close();
+			double avg_secs = (double(diff.tv_sec) + double(diff.tv_usec)/1000000.0) / double(count);
+
+			LOG4CXX_INFO(logger, "writing timing output...");
+
+			ofstream ofs;
+			ofs.open(timingFile);
+			ofs << "Average time (" << count << " iterations): " << avg_secs << " seconds" << endl;
+			ofs.close();
+		}
 	}
 
 	if (resultOut != NULL) {
@@ -318,5 +319,6 @@ void calculateV() {
  * the function defined in the object particleOut.
  */
 void plotParticles(int iteration) {
-	particleOut->output(iteration);
+	if (particleOut != NULL)
+		particleOut->output(iteration);
 }
