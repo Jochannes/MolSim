@@ -78,7 +78,7 @@ int numForceCalcs;			//!< Number of force calculators.
 
 bool timing = false;	//!< Specifies if the iteration time will be measured.
 char* timingFile;	//!< Name of the file to store the timing results.
-const int timingCount = 100;	//!< Number of iterations to measure.
+int timingCount = 100;	//!< Number of iterations to measure.
 
 LoggerPtr logger(Logger::getLogger("MolSim")); //!< Object for handling general logs.
 
@@ -131,13 +131,16 @@ int main(int argc, char* argsv[]) {
 			timeval diff;
 			timersub(&timer_end, &timer_begin, &diff);
 
-			double avg_secs = (double(diff.tv_sec)
-					+ double(diff.tv_usec) / 1000000.0) / double(timingCount);
+			double secs = (double(diff.tv_sec)
+					+ double(diff.tv_usec) / 1000000.0);
+			double avg_secs = secs / double(timingCount);
 
 			LOG4CXX_INFO(logger, "writing timing output...");
 
 			ofstream ofs;
 			ofs.open(timingFile);
+			ofs << "Total time (" << timingCount << " iterations): "
+					<< secs << " seconds" << endl;
 			ofs << "Average time (" << timingCount << " iterations): "
 					<< avg_secs << " seconds" << endl;
 			ofs.close();
@@ -194,11 +197,16 @@ void parseParameters(int argc, char* argsv[]) {
 		if (argsv[i][0] == '-') {
 			const char* option = argsv[i] + 1;
 			const char* value = NULL;
+			const char* value2 = NULL;
 
 			// if a value for the option is given, set the variable
 			// accordingly. Otherwise the variable is NULL.
 			if ((argc > i + 1) && (argsv[i + 1][0] != '-')) {
 				value = argsv[i + 1];
+				i++;
+			}
+			if ((argc > i + 1) && (argsv[i + 1][0] != '-')) {
+				value2 = argsv[i + 1];
 				i++;
 			}
 
@@ -207,10 +215,10 @@ void parseParameters(int argc, char* argsv[]) {
 						<< "usage: MolSim OPTIONS...\n"
 								"\n"
 								"Options:\n"
-								"  -help				Prints this information.\n"
-								"  -sim XMLFILE			Starts a simulation with parameters read from XMLFILE.\n"
-								"  -test [NAME]			Runs a unit test. Optionally the name of the test suite can be specified by NAME.\n"
-								"  -timing TXTFILE	Activates time measurement for the iterations with output written to TXTFILE.\n"
+								"  -help					Prints this information.\n"
+								"  -sim XMLFILE				Starts a simulation with parameters read from XMLFILE.\n"
+								"  -test [NAME]				Runs a unit test. Optionally the name of the test suite can be specified by NAME.\n"
+								"  -timing TXTFILE [CNT] 	Activates time measurement for the first CNT iterations with output written to TXTFILE.\n"
 								"\n" << endl;
 			} else if (strcmp(option, "test") == 0) {
 				LOG4CXX_DEBUG(logger, "starting unit test.");
@@ -244,6 +252,9 @@ void parseParameters(int argc, char* argsv[]) {
 				if (value == NULL) {
 					LOG4CXX_FATAL(logger, "Error! No output file specified.");
 					exit(1);
+				}
+				if (value2 != NULL) {
+					timingCount = atoi(value2);
 				}
 
 				timing = true;
