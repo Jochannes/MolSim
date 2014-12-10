@@ -10,12 +10,20 @@
 
 #include "ForceCalculator.h"
 #include "Particle.h"
+
+#include <vector>
+
 /**
  * \brief Class for calculating the force between two particles caused by the Lennard-Jones potential.
  */
 class ForceCalculator_LennardJones: public ForceCalculator {
+private:
+	double cutoff_factor2; //!< Squared cutoff_factor.
+
 public:
-	ForceCalculator_LennardJones();
+	double cutoff_factor; //!< Multiple of sigma at which the interaction starts. 0 if no cutoff is used.
+
+	ForceCalculator_LennardJones(double arg_cutoff = 0.0);
 
 	virtual ~ForceCalculator_LennardJones();
 

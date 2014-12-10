@@ -22,8 +22,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(UTest_BoundaryCondition);
  * \brief Initializes the domainSize, cutoff radius and cell container
  *
  * The domainSize is set to (40, 40, 40) and the cutoff radius to 3.0.
- *
- * numParticles has to be divibible by 3.
+ * numParticles has to be a multiple of 3.
  */
 UTest_BoundaryCondition::UTest_BoundaryCondition() :
 		numParticles(99), numHalo(10), domainSize(
@@ -43,33 +42,30 @@ void UTest_BoundaryCondition::setUp() {
 	double x[] = { 1, 1, 1 };
 	double v[] = { 0, 0, 0 };
 	double m = 1;
+	Particle p;
 
 	cellCont = CellContainer(domainSize, cutoff);
-	std::list<Particle> initialParticleList;
 	for (int dim = 0; dim < 3; dim++) {
 		for (int i = 0; i < numParticles / 3; i++) {
 			x[dim] += 3 * (cellCont.effDomain[dim]-2) / numParticles;
-			Particle p(x, v, m);
-			initialParticleList.push_back(p);
+			p = Particle(x, v, m);
+			cellCont.add(p);
 		}
 	}
-	cellCont.add(initialParticleList);
 
 	//Add particles in halo region
 	for (int j = 0; j < 3; j++) {
 		x[j] = -cutoff * 0.5;
 	}
-	std::list<Particle> haloParticleList;
 	for (int i = 0; i < numHalo; i++) {
-		Particle p(x, v, m);
 		if (i >= numHalo / 2) {
 			for (int j = 0; j < 3; j++) {
 				x[j] = cellCont.effDomain[j] + cutoff / 2;
 			}
 		}
-		haloParticleList.push_back(p);
+		p = Particle(x, v, m);
+		cellCont.add(p);
 	}
-	cellCont.add(haloParticleList);
 }
 
 /**

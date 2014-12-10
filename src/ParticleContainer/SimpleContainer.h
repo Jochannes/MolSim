@@ -15,6 +15,7 @@
 #include "ParticleContainer/ParticleContainer.h"
 
 #include <list>
+#include <vector>
 
 //Forward declaration of unit test class
 namespace unitTest {
@@ -32,17 +33,16 @@ namespace unitTest {
  * a certain function.
  */
 class SimpleContainer: public ParticleContainer {
-
 	friend class unitTest::UTest_SimpleContainer;
 
 private:
-	std::list<Particle> particleList;
+	std::vector<Particle> particleList; //!< List with all particles.
 
 public:
 	SimpleContainer() :
 			halo(false) {
 	}
-	SimpleContainer(const std::list<Particle>& initialParticleList);
+	SimpleContainer(const std::vector<Particle>& initialParticleList);
 
 	~SimpleContainer() {
 	}
@@ -58,7 +58,7 @@ public:
 	}
 
 	void add(Particle& P);
-	void add(std::list<Particle>& list);
+	void add(std::vector<Particle>& list);
 
 	void remove(Particle& P);
 	void remove_all();

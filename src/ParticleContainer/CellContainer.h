@@ -16,6 +16,7 @@
 #include "handler/ForcePrepareHandler.h"
 
 #include <list>
+#include <vector>
 
 using namespace std;
 using namespace utils;
@@ -82,7 +83,7 @@ public:
 	int cellTotal;					//!< Total number of cells \f$ N \f$.
 
 	CellContainer(const Vector<double, 3> domainSize, const double cutoff,
-			list<Particle>* initialParticleList = NULL);
+			std::vector<Particle>* initialParticleList = NULL);
 
 	Vector<int, 3> calc3Ind(int n);
 	int calcInd(Vector<int, 3> n);
@@ -92,7 +93,7 @@ public:
 	int size();
 
 	void add(Particle& p);
-	void add(list<Particle>& list);
+	void add(vector<Particle>& list);
 
 	void remove(Particle& p);
 	void remove(Particle& p, int contInd);

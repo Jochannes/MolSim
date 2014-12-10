@@ -37,7 +37,7 @@ CPPUNIT_TEST_SUITE( UTest_ParticleFile );
 
 private:
 	std::string filename;	//!< Name of the testfile
-	std::list<Particle> pList;	//!< List of particles to start the test with
+	std::vector<Particle> pList;	//!< List of particles to start the test with
 
 public:
 	UTest_ParticleFile()

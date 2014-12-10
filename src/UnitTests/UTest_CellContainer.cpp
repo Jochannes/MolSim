@@ -38,37 +38,35 @@ void UTest_CellContainer::setUp() {
 	double x[] = { 0, 0, 0 };
 	double v[] = { 1, 1, 1 };
 	double m = 1;
+	Particle p;
 
 	double test[] = { 0, 0, 0 };
 	for (int j = 0; j < 3; j++) {
 		test[j] += floor(numParticles / 2) * domainSize[j] / numParticles;
 	}
 
-	std::list<Particle> initialParticleList;
+	cellCont = CellContainer(domainSize, cutoff);
 	for (int i = 0; i < numParticles; i++) {
-		Particle p(x, v, m);
 		for (int j = 0; j < 3; j++) {
 			x[j] += domainSize[j] / numParticles;
 		}
-		initialParticleList.push_back(p);
+		p = Particle(x, v, m);
+		cellCont.add(p);
 	}
-	cellCont = CellContainer(domainSize, cutoff, &initialParticleList);
 
 	//Add particles in halo region
 	for (int j = 0; j < 3; j++) {
 		x[j] = -cutoff * 0.5;
 	}
-	std::list<Particle> haloParticleList;
 	for (int i = 0; i < numHalo; i++) {
-		Particle p(x, v, m);
 		if (i >= numHalo / 2) {
 			for (int j = 0; j < 3; j++) {
 				x[j] = domainSize[j] + cutoff;
 			}
 		}
-		haloParticleList.push_back(p);
+		p = Particle(x, v, m);
+		cellCont.add(p);
 	}
-	cellCont.add(haloParticleList);
 }
 
 /**
@@ -112,18 +110,18 @@ void UTest_CellContainer::testAddSize() {
 	double x[] = { 0, 0, 0 };
 	double v[] = { 1, 1, 1 };
 	double m = 1;
-	Particle p(x, v, m);
+	Particle p;
 
 	//Test the addition of a single particle
+	p = Particle(x, v, m);
 	cellCont.add(p);
 	CPPUNIT_ASSERT(numParticles + 1 == cellCont.size());
 
 	//Test the addition of a particle list
-	std::list<Particle> lsPart;
 	for (int i = 0; i < numParticles; i++) {
-		lsPart.push_back(p);
+		p = Particle(x, v, m);
+		cellCont.add(p);
 	}
-	cellCont.add(lsPart);
 	CPPUNIT_ASSERT(2 * numParticles + 1 == cellCont.size());
 }
 
@@ -136,24 +134,24 @@ void UTest_CellContainer::testRemoveSize() {
 	double x[] = { 0, 0, 0 };
 	double v[] = { 1, 1, 1 };
 	double m = 1;
-	Particle p(x, v, m);
+	Particle p = Particle(x, v, m);
 
 	//Test the removal of a particle
+	cellCont.add(p);
 	cellCont.remove(p);
-	CPPUNIT_ASSERT(numParticles - 1 == cellCont.size());
+	CPPUNIT_ASSERT(numParticles == cellCont.size());
 
 	//Test the removal of a particle from a specific container
 	//Add particle
 	for (int j = 0; j < 3; j++) {
-		x[j] += floor(numParticles / 2) * domainSize[j] / numParticles;
+		p.getX()[j] += floor(numParticles / 2) * domainSize[j] / numParticles;
 	}
-	p = Particle(x, v, m);
 	cellCont.add(p);
-	CPPUNIT_ASSERT(numParticles == cellCont.size());
+	CPPUNIT_ASSERT(numParticles + 1 == cellCont.size());
 
 	//Remove particle
-	cellCont.remove(p, cellCont.calcCell(x));
-	CPPUNIT_ASSERT(numParticles - 1 == cellCont.size());
+	cellCont.remove(p, cellCont.calcCell(p.getX()));
+	CPPUNIT_ASSERT(numParticles == cellCont.size());
 }
 
 /**

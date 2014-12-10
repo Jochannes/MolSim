@@ -30,8 +30,8 @@
   
   
   <output>
-    <iteration base_filename="Output/MD_vtk" output_freq="100" />
-    <result filename="Output/result.txt" />
+    <iteration base_filename="Output/sheet4_ex3_run1/MD_vtk" output_freq="100" />
+    <result filename="examples/sheet4_ex3_run1_result.txt" />
   </output>
   
   

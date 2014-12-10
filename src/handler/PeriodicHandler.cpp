@@ -25,8 +25,8 @@ PeriodicHandler::~PeriodicHandler() {
  */
 void PeriodicHandler::compute(Particle& p) {
 	if (move) { //moves the particle, if it is not virtual
-		if (p.getType() != -1) {
-			//Choose the right side of the particle container for reflection
+		if (!p.getVirtual()) {
+			//Choose the right side of the particle container
 			if (side % 2 == 0) {
 				p.getX()[side / 2] += cellCont->effDomain[side / 2];
 			} else {
@@ -36,13 +36,13 @@ void PeriodicHandler::compute(Particle& p) {
 		}
 	} else { //copies the particle, sets the new particle as a virtual one.
 		double virtV[3] = {0, 0, 0};
-		Particle* virtP = new Particle(p.getX(), virtV, p.getM(), -1, p.getEpsilon(), p.getSigma());
+		Particle virtP = Particle(p.getX(), virtV, p.getM(), p.getType(), p.getEpsilon(), p.getSigma(), true);
 		if (side % 2 == 0) {
-			virtP->getX()[side / 2] += cellCont->effDomain[side / 2];
+			virtP.getX()[side / 2] += cellCont->effDomain[side / 2];
 		} else {
-			virtP->getX()[side / 2] -= cellCont->effDomain[side / 2];
+			virtP.getX()[side / 2] -= cellCont->effDomain[side / 2];
 		}
-		cellCont->add(*virtP);
+		cellCont->add(virtP);
 	}
 }
 

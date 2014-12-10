@@ -24,7 +24,7 @@ CountParticles::~CountParticles() {
  * @param p Particle to count
  */
 void CountParticles::compute(Particle& p) {
-	if (!onlyReal || p.getType() >= 0) {
+	if (!onlyReal || !p.getVirtual()) {
 		cnt++;
 	}
 }

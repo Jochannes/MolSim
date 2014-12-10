@@ -48,7 +48,7 @@ void UTest_ParticleFile::setUp() {
 		double sigma = r();
 		int type = i;
 
-		Particle p(x, v, f, old_f, m, epsilon, sigma, type);
+		Particle p = Particle(x, v, f, old_f, m, epsilon, sigma, type);
 		pList.push_back(p);
 	}
 }
@@ -77,7 +77,7 @@ void UTest_ParticleFile::testIO() {
 	// check
 	CPPUNIT_ASSERT(pList.size() == pList2.size());
 
-	for( list<Particle>::iterator it1 = pList.begin(); it1 != pList.end(); it1++) {
+	for( vector<Particle>::iterator it1 = pList.begin(); it1 != pList.end(); it1++) {
 		bool found_equal_particle = false;
 
 		for( list<Particle>::iterator it2 = pList2.begin(); it2 != pList2.end(); it2++) {

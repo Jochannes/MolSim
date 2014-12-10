@@ -28,7 +28,7 @@ void Check_Reflection::compute(Particle& p) {
 				|| (boundary[dim] - p.getX()[dim]) < range;
 	}
 	if (check) {
-		notZero &= p.getF().L2Norm() != 0;
+		notZero &= p.getF().L2Norm2() != 0;
 		count++;
 	}
 }

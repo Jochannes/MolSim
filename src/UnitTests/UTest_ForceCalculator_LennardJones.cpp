@@ -18,6 +18,7 @@ void UTest_ForceCalculator_LennardJones::setUp() {
 	double m = 1;
 	p1 = Particle(x, v, m, 1);
 	p2 = Particle(x, v, m, 2);
+	fLJ_cutoff = ForceCalculator_LennardJones(3.0);
 }
 
 /**

@@ -26,6 +26,7 @@
 #include <log4cxx/logger.h>
 #include <auto_ptr.h>
 #include <list>
+#include <vector>
 #include <string>
 #include <sstream>
 
@@ -233,14 +234,14 @@ void XMLInput::ReadFile()
 	{
 		if( it->cutoff_factor().present() ) {
 			const double cutoff_factor = it->cutoff_factor().get();
-			this->lj_cutoff.push_back(ForceCalculator_LJ_cutoff(cutoff_factor));
+			this->lennard_jones.push_back(ForceCalculator_LennardJones(cutoff_factor));
 
 			LOG4CXX_DEBUG(xmllogger, "using Lennard-Jones force calculator with cutoff radius, cutoff_factor=" << cutoff_factor << ".");
 		}
 		else {
 			this->lennard_jones.push_back(ForceCalculator_LennardJones());
 
-			LOG4CXX_DEBUG(xmllogger, "using Lennard-Jones force calculator.");
+			LOG4CXX_DEBUG(xmllogger, "using Lennard-Jones force calculator without cutoff.");
 		}
 		forceCalcCnt++;
 	}
@@ -392,14 +393,7 @@ void XMLInput::configureApplication()
 		 it != this->lennard_jones.end();
 		 it++ )
 	{
-		::fcalcs[i] = new ForceCalculator_LennardJones();
-		i++;
-	}
-	for( vector<ForceCalculator_LJ_cutoff>::iterator it = this->lj_cutoff.begin();
-		 it != this->lj_cutoff.end();
-		 it++ )
-	{
-		::fcalcs[i] = new ForceCalculator_LJ_cutoff(it->cutoff_factor);
+		::fcalcs[i] = new ForceCalculator_LennardJones(it->cutoff_factor);
 		i++;
 	}
 	for( vector<ForceCalculator_Gravity>::iterator it = this->gravity.begin();
@@ -411,7 +405,7 @@ void XMLInput::configureApplication()
 	}
 
 	// input
-	list<Particle> particleList;
+	std::list<Particle> particleList;
 
 	for( vector<ParticleFileReader>::iterator it = this->particle_file.begin();
 		 it != this->particle_file.end();
@@ -434,7 +428,13 @@ void XMLInput::configureApplication()
 		it->input(particleList);
 	}
 
-	::particles->add(particleList);
+	//Add particles
+	for( list<Particle>::iterator it = particleList.begin();
+		 it != particleList.end();
+		 it++ )
+	{
+		::particles->add(*it);
+	}
 
 
 	// Thermostat

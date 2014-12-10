@@ -13,7 +13,7 @@
 #include "PairHandler.h"
 #include "handler/ForcePrepareHandler.h"
 
-#include <list>
+#include <vector>
 
 //Forward declaration of unit test class
 
@@ -21,10 +21,6 @@
  * \brief Abstract class for defining an interface for particle storage.
  */
 class ParticleContainer {
-
-private:
-	std::list<Particle> particleList;
-
 public:
 
 	virtual ~ParticleContainer() {
@@ -35,7 +31,7 @@ public:
 	virtual int size() = 0;
 
 	virtual void add(Particle& P) = 0;
-	virtual void add(std::list<Particle>& list) = 0;
+	virtual void add(std::vector<Particle>& list) = 0;
 
 	virtual void remove(Particle& P) = 0;
 

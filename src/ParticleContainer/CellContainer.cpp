@@ -223,7 +223,7 @@ void CellContainer::setHaloBoundary() {
  * @param cutoff Cutoff radius of pairHandler interactions.
  */
 CellContainer::CellContainer(const Vector<double, 3> domainSize,
-		const double cutoff, list<Particle>* initialParticleList) :
+		const double cutoff, std::vector<Particle>* initialParticleList) :
 		domainSize(domainSize), cutoff(cutoff) {
 
 	LOG4CXX_DEBUG(CellLogger,
@@ -396,8 +396,8 @@ void CellContainer::add(Particle& p) {
  * \brief Adds particles from a list to the particle containers.
  * @param list List of the particles to add.
  */
-void CellContainer::add(list<Particle>& addList) {
-	list<Particle>::iterator it = addList.begin();
+void CellContainer::add(std::vector<Particle>& addList) {
+	std::vector<Particle>::iterator it = addList.begin();
 	while (it != addList.end()) {
 		add(*it);
 		it++;

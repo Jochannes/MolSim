@@ -78,10 +78,9 @@ int numForceCalcs;			//!< Number of force calculators.
 
 bool timing = false;	//!< Specifies if the iteration time will be measured.
 char* timingFile;	//!< Name of the file to store the timing results.
-const int timingCount = 20;	//!< Number of iterations to messure.
+const int timingCount = 100;	//!< Number of iterations to measure.
 
 LoggerPtr logger(Logger::getLogger("MolSim")); //!< Object for handling general logs.
-
 
 int main(int argc, char* argsv[]) {
 
@@ -94,6 +93,7 @@ int main(int argc, char* argsv[]) {
 
 	// the forces are needed to calculate x, but are not given in the input file.
 	calculateF();
+
 
 	double current_time = start_time;
 
@@ -125,31 +125,44 @@ int main(int argc, char* argsv[]) {
 
 		current_time += delta_t;
 
-		if (timing  &&  (iteration == timingCount)) {
+		if (timing && (iteration == timingCount)) {
 			gettimeofday(&timer_end, NULL);
-		}
-	}
 
-	if (timing) {
-		int count = timingCount;
-
-		if (iteration < timingCount) {
-			gettimeofday(&timer_end, NULL);
-			count = iteration;
-			LOG4CXX_DEBUG(logger, "the timer could not measure enough iterations...");
-		}
-
-		if (count > 0) {
 			timeval diff;
 			timersub(&timer_end, &timer_begin, &diff);
 
-			double avg_secs = (double(diff.tv_sec) + double(diff.tv_usec)/1000000.0) / double(count);
+			double avg_secs = (double(diff.tv_sec)
+					+ double(diff.tv_usec) / 1000000.0) / double(timingCount);
 
 			LOG4CXX_INFO(logger, "writing timing output...");
 
 			ofstream ofs;
 			ofs.open(timingFile);
-			ofs << "Average time (" << count << " iterations): " << avg_secs << " seconds" << endl;
+			ofs << "Average time (" << timingCount << " iterations): "
+					<< avg_secs << " seconds" << endl;
+			ofs.close();
+		}
+	}
+
+	if (timing && iteration < timingCount) {
+
+		gettimeofday(&timer_end, NULL);
+		LOG4CXX_DEBUG(logger,
+				"the timer could not measure enough iterations...");
+
+		if (iteration > 0) {
+			timeval diff;
+			timersub(&timer_end, &timer_begin, &diff);
+
+			double avg_secs = (double(diff.tv_sec)
+					+ double(diff.tv_usec) / 1000000.0) / double(iteration);
+
+			LOG4CXX_INFO(logger, "writing timing output...");
+
+			ofstream ofs;
+			ofs.open(timingFile);
+			ofs << "Average time (" << iteration << " iterations): " << avg_secs
+					<< " seconds" << endl;
 			ofs.close();
 		}
 	}
@@ -197,7 +210,7 @@ void parseParameters(int argc, char* argsv[]) {
 								"  -help				Prints this information.\n"
 								"  -sim XMLFILE			Starts a simulation with parameters read from XMLFILE.\n"
 								"  -test [NAME]			Runs a unit test. Optionally the name of the test suite can be specified by NAME.\n"
-								"  -timing OUTPUTFILE	Activates time measurement for the iterations with output written to OUTPUTFILE.\n"
+								"  -timing TXTFILE	Activates time measurement for the iterations with output written to TXTFILE.\n"
 								"\n" << endl;
 			} else if (strcmp(option, "test") == 0) {
 				LOG4CXX_DEBUG(logger, "starting unit test.");
@@ -234,7 +247,7 @@ void parseParameters(int argc, char* argsv[]) {
 				}
 
 				timing = true;
-				timingFile = new char[strlen(value)+1];
+				timingFile = new char[strlen(value) + 1];
 				strcpy(timingFile, value);
 			}
 		} else {
@@ -285,7 +298,7 @@ void calculateF() {
 	particles->prepare_forces();
 
 	// calculate forces
-	for(int i = 0; i < numForceCalcs; i++) {
+	for (int i = 0; i < numForceCalcs; i++) {
 		if (fcalcs[i]->interaction) {
 			particles->iterate_pairs_half(*fcalcs[i]);
 		} else {

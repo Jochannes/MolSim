@@ -31,7 +31,7 @@
   
   
   <output>
-    <iteration base_filename="Output/MD_vtk" output_freq="100" />
+    <iteration base_filename="Output/sheet4_ex2_run2/MD_vtk" output_freq="100" />
   </output>
   
   

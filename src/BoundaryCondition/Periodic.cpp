@@ -17,7 +17,7 @@
  *
  * For boundary cells, PeriodicHandler copies the particles to the halo
  * cells at the other end of the container by setting the x-Position
- * accordingly. The copied particles are set as being virtual (type = -1).
+ * accordingly. The copied particles are set as being virtual (virt = true).
  */
 void Periodic::impose(SimpleContainer* cont) {
 	PeriodicHandler periodic(BoundaryCondition::cellCont, BoundaryCondition::side, cont->halo);

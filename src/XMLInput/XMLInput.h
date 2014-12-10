@@ -13,7 +13,6 @@
 #include "SphereGenerator.h"
 #include "handler/ForceCalculator_Gravity.h"
 #include "handler/ForceCalculator_LennardJones.h"
-#include "handler/ForceCalculator_LJ_cutoff.h"
 #include "Thermostat.h"
 #include "XMLInput/simulation.h"
 
@@ -35,9 +34,9 @@ private:
 	double delta_t;
 
 	std::vector<ForceCalculator_LennardJones> lennard_jones;
-	std::vector<ForceCalculator_LJ_cutoff> lj_cutoff;
 	std::vector<ForceCalculator_Gravity> gravity;
 	int forceCalcCnt;
+	int typesCnt;
 
 	simulation_mode_type_t::value sm_type;
 	double cutoff_radius;

@@ -30,9 +30,10 @@ void UTest_SimpleContainer::setUp() {
 	double x[] = { 0, 0, 0 };
 	double v[] = { 1, 1, 1 };
 	double m = 1;
-	std::list<Particle> initialParticleList;
+	Particle p;
+	std::vector<Particle> initialParticleList;
 	for (int i = 0; i < numParticles; i++) {
-		Particle p(x, v, m);
+		p = Particle(x, v, m);
 		initialParticleList.push_back(p);
 	}
 	partContainer = SimpleContainer(initialParticleList);
@@ -60,15 +61,17 @@ void UTest_SimpleContainer::testAddSize() {
 	double x[] = { 0, 0, 0 };
 	double v[] = { 1, 1, 1 };
 	double m = 1;
-	Particle p(x, v, m);
+	Particle p;
 
 	//Test the addition of a single particle
+	p = Particle(x, v, m);
 	partContainer.add(p);
 	CPPUNIT_ASSERT(numParticles + 1 == partContainer.size());
 
 	//Test the addition of a particle list
-	std::list<Particle> lsPart;
+	std::vector<Particle> lsPart;
 	for (int i = 0; i < numParticles; i++) {
+		p = Particle(x, v, m);
 		lsPart.push_back(p);
 	}
 	partContainer.add(lsPart);
@@ -81,9 +84,9 @@ void UTest_SimpleContainer::testAddSize() {
 void UTest_SimpleContainer::testIterateAll() {
 	Marker marker = Marker();
 	partContainer.iterate_all(marker);
-	std::list<Particle>::iterator it = partContainer.particleList.begin();
+	std::vector<Particle>::iterator it = partContainer.particleList.begin();
 	while (it != partContainer.particleList.end()) {
-		CPPUNIT_ASSERT((*it).getV() == 1000);
+		CPPUNIT_ASSERT(it->getV() == 1000);
 		it++;
 	}
 }

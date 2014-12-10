@@ -119,6 +119,14 @@ public:
 		return sqrt(square_sum);
 	}
 
+	double L2Norm2() const {
+		double square_sum = 0;
+		for (int i = 0; i < length; i++) {
+			square_sum += (this->content[i] * this->content[i]);
+		}
+		return square_sum;
+	}
+
 	double innerProduct(const Vector& rhs) const {
 		double product_sum = 0;
 		for (int i = 0; i < length; i++) {

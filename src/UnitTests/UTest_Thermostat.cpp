@@ -81,7 +81,17 @@ void UTest_Thermostat::testTemperatureControl() {
 	// initialize
 	list<Particle> particleList;
 	input->input(particleList);
-	SimpleContainer particles(particleList);
+
+	//Convert from List to Vector of pointers
+	vector<Particle> particleVector;
+	for( list<Particle>::iterator it = particleList.begin();
+		 it != particleList.end();
+		 it++ )
+	{
+		particleVector.push_back(*it);
+	}
+
+	SimpleContainer particles(particleVector);
 	Thermostat thermostat(particles, num_dimensions, init_temp, steps_thermostat, target_temp, delta_temp, steps_changetemp);
 
 	particles.iterate_all(gfcalc);

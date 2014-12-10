@@ -13,9 +13,9 @@
  * @param initialParticleList ParticleList which is copied into the ParticleContainer.
  */
 SimpleContainer::SimpleContainer(
-		const std::list<Particle>& initialParticleList) :
+		const std::vector<Particle>& initialParticleList) :
 		particleList(
-				std::list<Particle>(initialParticleList.begin(),
+				std::vector<Particle>(initialParticleList.begin(),
 						initialParticleList.end())), halo(false) {
 }
 
@@ -31,8 +31,8 @@ void SimpleContainer::add(Particle& p) {
  * \brief Adds particles from a list to the particle container.
  * @param list List of the particles to add.
  */
-void SimpleContainer::add(std::list<Particle>& list) {
-	particleList.splice(particleList.end(), list);
+void SimpleContainer::add(std::vector<Particle>& list) {
+	particleList.insert( particleList.end(), list.begin(), list.end() );
 }
 
 /**
@@ -43,7 +43,7 @@ void SimpleContainer::add(std::list<Particle>& list) {
  * properties of the specified particle from the container.
  */
 void SimpleContainer::remove(Particle& p) {
-	std::list<Particle>::iterator it = particleList.begin();
+	std::vector<Particle>::iterator it = particleList.begin();
 
 	while (it != particleList.end()) {
 		if (*it == p) {
@@ -68,10 +68,10 @@ void SimpleContainer::remove_all() {
  * properties of the specified particle from the container.
  */
 void SimpleContainer::remove_virtual() {
-	std::list<Particle>::iterator it = particleList.begin();
+	std::vector<Particle>::iterator it = particleList.begin();
 
 	while (it != particleList.end()) {
-		if (it->getType() == -1) {
+		if (it->getVirtual()) {
 			it = particleList.erase(it);
 		} else {
 			it++;
@@ -86,10 +86,10 @@ void SimpleContainer::remove_virtual() {
  * properties of the specified particle from the container.
  */
 void SimpleContainer::remove_not_virtual() {
-	std::list<Particle>::iterator it = particleList.begin();
+	std::vector<Particle>::iterator it = particleList.begin();
 
 	while (it != particleList.end()) {
-		if (it->getType() >= 0) {
+		if (!it->getVirtual()) {
 			it = particleList.erase(it);
 		} else {
 			it++;
@@ -105,10 +105,9 @@ void SimpleContainer::remove_not_virtual() {
  * each by calling the provided function.
  */
 void SimpleContainer::iterate_all(ParticleHandler& handler) {
-	std::list<Particle>::iterator it = particleList.begin();
+	std::vector<Particle>::iterator it = particleList.begin();
 
 	while (it != particleList.end()) {
-		int len = size();
 		handler.compute(*it);
 		it++;
 	}
@@ -126,10 +125,10 @@ void SimpleContainer::iterate_all(ParticleHandler& handler) {
  * wrong outputs with this method. Use SimpleContainer::iterate_pairs_half instead.
  */
 void SimpleContainer::iterate_pairs(PairHandler& handler) {
-	std::list<Particle>::iterator it_outer = particleList.begin();
+	std::vector<Particle>::iterator it_outer = particleList.begin();
 
 	while (it_outer != particleList.end()) {
-		std::list<Particle>::iterator it_inner = particleList.begin();
+		std::vector<Particle>::iterator it_inner = particleList.begin();
 
 		while (it_inner != particleList.end()) {
 			if (it_outer != it_inner)
@@ -153,10 +152,10 @@ void SimpleContainer::iterate_pairs(PairHandler& handler) {
  * This way the performance can be improved using Newton's third law.
  */
 void SimpleContainer::iterate_pairs_half(PairHandler& handler) {
-	std::list<Particle>::iterator it_outer = particleList.begin();
+	std::vector<Particle>::iterator it_outer = particleList.begin();
 
 	while (it_outer != particleList.end()) {
-		std::list<Particle>::iterator it_inner = it_outer;
+		std::vector<Particle>::iterator it_inner = it_outer;
 		it_inner++;
 
 		while (it_inner != particleList.end()) {
@@ -181,7 +180,7 @@ void SimpleContainer::iterate_pairs_half(PairHandler& handler) {
  */
 void SimpleContainer::iterate_partner(PairHandler& handler,
 		ParticleContainer *partner) {
-	std::list<Particle>::iterator it = particleList.begin();
+	std::vector<Particle>::iterator it = particleList.begin();
 	PairHandlerConverter convHandler = PairHandlerConverter(&handler);
 
 	while (it != particleList.end()) {

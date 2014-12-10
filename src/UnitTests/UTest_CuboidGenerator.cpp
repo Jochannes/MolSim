@@ -40,7 +40,17 @@ void UTest_CuboidGenerator::setUp() {
 	std::list<Particle> partList;
 	CuboidGenerator cubGen = CuboidGenerator(corner_position, num_particles, distance, mass, velocity);
 	cubGen.input(partList);
-	partContainer = SimpleContainer(partList);
+
+	//Convert from List to Vector of pointers
+	vector<Particle> particleVector;
+	for( list<Particle>::iterator it = partList.begin();
+		 it != partList.end();
+		 it++ )
+	{
+		particleVector.push_back(*it);
+	}
+
+	partContainer = SimpleContainer(particleVector);
 }
 
 /**
