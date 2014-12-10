@@ -50,9 +50,9 @@ void ForceCalculator_LennardJones::compute(Particle& p1, Particle& p2) {
 	if (distance2 < cutoff2 || cutoff2 == 0) {
 		double invDistance2 = 1.0 / distance2;
 
-		double factor = 24 * epsilon * invDistance2
-				* (pow(sigma2 * invDistance2, 3)
-						- 2 * pow(sigma2 * invDistance2, 6));
+		double factor = pow(sigma2 * invDistance2, 3);
+		factor *= 1 - 2 * factor;
+		factor *= 24 * epsilon * invDistance2;
 
 		utils::Vector<double, 3> force = factor * (p2.getX() - p1.getX());
 

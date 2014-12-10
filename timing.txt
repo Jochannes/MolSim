@@ -5,3 +5,4 @@ deleted call to size(): 0.0254836 seconds
 replaced unnecessary sqrts, L2norm2: 0.0234478 seconds
 Particles: Vectors of pointers instead of Lists: 0.023656 seconds
 Particles: direct vectors: 0.023248 seconds
+Reuse (Sigma*invDistance)^6: 0.016488 seconds
