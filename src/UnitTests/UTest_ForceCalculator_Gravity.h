@@ -18,6 +18,12 @@
 
 namespace unitTest {
 
+
+/**
+ * \brief Class for testing the gravity calculation.
+ *
+ * This class tests if the proportionalities of the gravity to mass, position and velocity are right.
+ */
 class UTest_ForceCalculator_Gravity : public CppUnit::TestFixture {
 	CPPUNIT_TEST_SUITE( UTest_ForceCalculator_Gravity );
 	CPPUNIT_TEST(testForce);

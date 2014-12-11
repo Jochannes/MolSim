@@ -26,7 +26,7 @@ ForceCalculator_Gravity::~ForceCalculator_Gravity() {
  * and adds it to the overall force acting on that particle.
  * The force is calculated using the following equation:
  * \f[
- * G = m \cdot g_\mbox{grav}
+ * G = m \cdot g_{\mbox{grav}}
  * \f]
  */
 void ForceCalculator_Gravity::compute(Particle& p) {

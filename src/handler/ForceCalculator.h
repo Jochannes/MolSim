@@ -15,10 +15,11 @@
 /**
  * \brief Abstract class for defining the interface used for force calculation.
  *
- * This class defines the inteface used for force calculation and therefore
+ * This class defines the interface used for force calculation and therefore
  * enables the calculation method to be changed easily.
- * An inheriting function has to implement either PairHandler::compute or
- * ParticleHandler::compute, based on the value of ineraction.
+ * An inheriting function has to have a meaningful implementation of
+ * either PairHandler::compute or ParticleHandler::compute, based
+ * on the boolian value of interaction.
  */
 class ForceCalculator: public PairHandler, public ParticleHandler {
 public:
