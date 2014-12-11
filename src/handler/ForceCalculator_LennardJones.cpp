@@ -10,6 +10,9 @@
 
 #include <cmath>
 
+using namespace utils;
+
+
 ForceCalculator_LennardJones::ForceCalculator_LennardJones(double arg_cutoff) :
 		cutoff_factor(arg_cutoff), cutoff_factor2(arg_cutoff * arg_cutoff) {
 	ForceCalculator::interaction = true;
@@ -45,8 +48,10 @@ void ForceCalculator_LennardJones::compute(Particle& p1, Particle& p2) {
 		sigma2 = pow((p1.getSigma() + p2.getSigma()) * 0.5, 2);
 	}
 
+	Vector<double, 3> xdiff = p2.getX() - p1.getX();
 	double cutoff2 = cutoff_factor2 * sigma2;
-	double distance2 = (p1.getX() - p2.getX()).L2Norm2();
+	double distance2 = xdiff.L2Norm2();
+
 	if (distance2 < cutoff2 || cutoff2 == 0) {
 		double invDistance2 = 1.0 / distance2;
 
@@ -54,7 +59,7 @@ void ForceCalculator_LennardJones::compute(Particle& p1, Particle& p2) {
 		factor *= 1 - 2 * factor;
 		factor *= 24 * epsilon * invDistance2;
 
-		utils::Vector<double, 3> force = factor * (p2.getX() - p1.getX());
+		Vector<double, 3> force = factor * xdiff;
 
 		p1.getF() = p1.getF() + force;
 		p2.getF() = p2.getF() - force; // according to Newton's third law: F_P1 = -F_P2

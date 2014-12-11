@@ -205,8 +205,8 @@ void parseParameters(int argc, char* argsv[]) {
 				value = argsv[i + 1];
 				i++;
 			}
-			if ((argc > i + 1) && (argsv[i + 1][0] != '-')) {
-				value2 = argsv[i + 1];
+			if ((argc > i + 2) && (argsv[i + 2][0] != '-')) {
+				value2 = argsv[i + 2];
 				i++;
 			}
 
