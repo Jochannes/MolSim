@@ -204,10 +204,10 @@ void parseParameters(int argc, char* argsv[]) {
 			if ((argc > i + 1) && (argsv[i + 1][0] != '-')) {
 				value = argsv[i + 1];
 				i++;
-			}
-			if ((argc > i + 2) && (argsv[i + 2][0] != '-')) {
-				value2 = argsv[i + 2];
-				i++;
+				if ((argc > i + 1) && (argsv[i + 1][0] != '-')) {
+					value2 = argsv[i + 1];
+					i++;
+				}
 			}
 
 			if (strcmp(option, "help") == 0) {

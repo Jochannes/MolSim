@@ -10,7 +10,7 @@
     
     <simulation-mode>
       <type>linked-cell</type>
-      <cutoff_radius>2.5</cutoff_radius>
+      <cutoff_radius>3</cutoff_radius>
       <domain_size_x>303</domain_size_x>
       <domain_size_y>180</domain_size_y>
       <boundary x_0="periodic" x_max="periodic" y_0="reflect" y_max="outflow" z_0="outflow" z_max="outflow" />
