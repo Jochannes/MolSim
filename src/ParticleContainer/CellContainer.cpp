@@ -10,13 +10,10 @@
 #include "BoundaryCondition/BoundaryCondition.h"
 #include "BoundaryCondition/Outflow.h"
 
+#include <omp.h>
 #include <log4cxx/logger.h>
 #include <stdlib.h>
 using namespace log4cxx;
-
-#ifdef _OPENMP
-#include <omp.h>
-#endif
 
 LoggerPtr CellLogger(Logger::getLogger("MolSim.CellContainer"));
 
@@ -26,7 +23,7 @@ LoggerPtr CellLogger(Logger::getLogger("MolSim.CellContainer"));
  * This methods iterates over the cube surface for reaching all halo cells and over the
  * inner cube surface for reaching all boundary cells.
  */
-void CellContainer::setHaloBoundary() {
+inline void CellContainer::setHaloBoundary() {
 	//set halo cells
 	//iterate over cube surface
 	Vector<int, 3> n;
@@ -257,17 +254,19 @@ CellContainer::CellContainer(const Vector<double, 3> domainSize,
 #ifdef _OPENMP
 	subDomsCnt = omp_get_max_threads();
 #endif
-	for(int i = 0; i < 3; i++){
-		if(cellCount[i] > cellCount[splitDim]){
+	for (int i = 0; i < 3; i++) {
+		if (cellCount[i] > cellCount[splitDim]) {
 			splitDim = i;
 		}
 	}
 	int remainder = cellCount[splitDim] % subDomsCnt;
 	subDomsLen = new int[subDomsCnt];
-	for(int i = 0; i < subDomsCnt; i++){
-		subDomsLen[i] = cellCount[splitDim] / subDomsCnt + remainder;
+	for (int i = 0; i < subDomsCnt; i++) {
 		if(remainder > 0){
+			subDomsLen[i] = cellCount[splitDim] / subDomsCnt + 1;
 			remainder--;
+		} else{
+			subDomsLen[i] = cellCount[splitDim] / subDomsCnt;
 		}
 	}
 
@@ -281,26 +280,34 @@ CellContainer::CellContainer(const Vector<double, 3> domainSize,
 	cellTotal = N;
 
 	subDoms = new SimpleContainer*[subDomsCnt];
+	subDomsNum = new int[subDomsCnt];
 #ifdef _OPENMP
 	int tid;
-	#pragma omp parallel private(tid)
+#pragma omp parallel private(tid)
 	{
 		tid = omp_get_thread_num();
-		int count;
 		if (dim3) {
-			count = subDomsLen[tid] * cellCount[(splitDim + 1)%3] * cellCount[(splitDim + 2)%3];
+			subDomsNum[tid] = subDomsLen[tid] * cellCount[(splitDim + 1)%3] * cellCount[(splitDim + 2)%3];
 		} else {
-			count = subDomsLen[tid] * cellCount[(splitDim + 1)%2];
+			subDomsNum[tid] = subDomsLen[tid] * cellCount[(splitDim + 1)%2];
 		}
-		subDoms[tid] = new SimpleContainer[count];
+		subDoms[tid] = new SimpleContainer[subDomsNum[tid]];
 	}
 #else
-	subDoms[0] = new SimpleContainer[cellTotal];
+	for(int i = 0; i < subDomsCnt; i++){
+		if (dim3) {
+			subDomsNum[i] = subDomsLen[i] * cellCount[(splitDim + 1)%3] * cellCount[(splitDim + 2)%3];
+		} else {
+			subDomsNum[i] = subDomsLen[i] * cellCount[(splitDim + 1)%2];
+		}
+		subDoms[i] = new SimpleContainer[subDomsNum[i]];
+	}
 #endif
 
 	//Set positions of all cells
-	for(int i = 0; i < cellTotal; i++){
-		getCell(calc3Ind(i))->pos = calc3Ind(i);
+	for (int i = 0; i < cellTotal; i++) {
+		Vector<int, 3> ind3 = calc3Ind(i);
+		getCell(ind3)->pos = ind3;
 	}
 
 	//Set halo and boundary cells
@@ -311,7 +318,7 @@ CellContainer::CellContainer(const Vector<double, 3> domainSize,
 		boundConds[i] = new Outflow(i);
 	}
 
-	//copy particles into the right subDoms
+	//copy particles into the right cells
 	if (initialParticleList != NULL) {
 		add(*initialParticleList);
 	}
@@ -339,60 +346,6 @@ Vector<int, 3> CellContainer::calc3Ind(int n) {
 	ind[2] = floor(n / (1.0 * cellCount[0] * cellCount[1]));
 
 	return ind;
-}
-
-/**
- * \brief Auxiliary function for referencing a cell.
- * @param n Three-dimensional index.
- * @return Pointer to the specified cell.
- */
-SimpleContainer* CellContainer::getCell(Vector<int, 3> n) {
-	//Calculate subdomain
-	int subDom = subDomsCnt - 1;
-	int start = 0;
-	for(int i = 0; i < subDomsCnt; i++){
-		start += subDomsLen[i];
-		if(n[splitDim] < start){
-			subDom =  i;
-			break;
-		}
-	}
-
-	//Calculate linearized index in subdomain
-	n[splitDim] -= start - subDomsLen[subDom];
-	int subCnt[2] = {cellCount[0], cellCount[1]};
-	if(splitDim != 3){
-			subCnt[splitDim] = subDomsLen[subDom];
-	}
-	return subDoms[subDom] + n[0] + subCnt[0] * n[1] + dim3 * subCnt[0] * subCnt[1] * n[2];
-}
-
-/**
- * \brief Auxiliary function for referencing a cell.
- * @param x Coordinates for which the cell is calculated
- * @return Pointer to the specified cell.
- *
- * The cell is calculated using the following equation:
- * \f[
- * n = \left \lfloor \frac{x_0}{r_{cutoff}} + 1 \right \rfloor
- * 	+ N_0 \cdot \left \lfloor \frac{x_1}{r_{cutoff}} + 1 \right \rfloor
- * 	+ N_0 N_1 \cdot \left \lfloor \frac{x_2}{r_{cutoff}} + 1 \right \rfloor
- * \f]
- *
- * With \f$ x_i \f$ being the coordinate and
- * \f$ N_i \f$ being the cellCount in the respective dimension.
- * The addition by 1 is necessary due to the halo region.
- */
-SimpleContainer* CellContainer::getCell(Vector<double, 3> x) {
-
-	//Calculate 3D index
-	Vector<double, 3> inds = x * (1 / cutoff);
-	Vector<int, 3> n;
-	n[0] = floor(inds[0]) + 1;
-	n[1] = floor(inds[1]) + 1;
-	n[2] = floor(inds[2]) + 1 * dim3;
-
-	return getCell(n);
 }
 
 /**
@@ -430,12 +383,70 @@ int CellContainer::calcInd(Vector<int, 3> n) {
 }
 
 /**
+ * \brief Auxiliary function for referencing a cell.
+ * @param n Three-dimensional index.
+ * @return Pointer to the specified cell.
+ */
+SimpleContainer* CellContainer::getCell(Vector<int, 3> n) {
+	//Calculate subdomain
+	int subDom = subDomsCnt - 1;
+	int start = 0;
+	for (int i = 0; i < subDomsCnt; i++) {
+		start += subDomsLen[i];
+		if (n[splitDim] < start) {
+			subDom = i;
+			break;
+		}
+	}
+
+	//Calculate linearized index in subdomain
+	n[splitDim] -= start - subDomsLen[subDom];
+	int subCnt[2] = { cellCount[0], cellCount[1] };
+	if (splitDim != 3) {
+		subCnt[splitDim] = subDomsLen[subDom];
+	}
+	int linInd = n[0] + subCnt[0] * n[1] + dim3 * subCnt[0] * subCnt[1] * n[2];
+	return subDoms[subDom] + n[0] + subCnt[0] * n[1]
+			+ dim3 * subCnt[0] * subCnt[1] * n[2];
+}
+
+/**
+ * \brief Auxiliary function for referencing a cell.
+ * @param x Coordinates for which the cell is calculated
+ * @return Pointer to the specified cell.
+ *
+ * The cell is calculated using the following equation:
+ * \f[
+ * n = \left \lfloor \frac{x_0}{r_{cutoff}} + 1 \right \rfloor
+ * 	+ N_0 \cdot \left \lfloor \frac{x_1}{r_{cutoff}} + 1 \right \rfloor
+ * 	+ N_0 N_1 \cdot \left \lfloor \frac{x_2}{r_{cutoff}} + 1 \right \rfloor
+ * \f]
+ *
+ * With \f$ x_i \f$ being the coordinate and
+ * \f$ N_i \f$ being the cellCount in the respective dimension.
+ * The addition by 1 is necessary due to the halo region.
+ */
+SimpleContainer* CellContainer::getCell(Vector<double, 3> x) {
+
+	//Calculate 3D index
+	Vector<double, 3> inds = x * (1 / cutoff);
+	Vector<int, 3> n;
+	n[0] = floor(inds[0]) + 1;
+	n[1] = floor(inds[1]) + 1;
+	n[2] = floor(inds[2]) + 1 * dim3;
+
+	return getCell(n);
+}
+
+/**
  * \brief Returns if the container stores any particles.
  */
 bool CellContainer::empty() {
 	bool empty = true;
-	for (int i = 0; i < cellTotal; i++) {
-		empty &= getCell(calc3Ind(i))->empty();
+	for (int i = 0; i < subDomsCnt; i++) {
+		for (int j = 0; j < subDomsNum[i]; j++) {
+			empty &= subDoms[i][j].empty();
+		}
 	}
 	return empty;
 }
@@ -445,9 +456,11 @@ bool CellContainer::empty() {
  */
 int CellContainer::size() {
 	int cnt = 0;
-	for (int i = 0; i < cellTotal; i++) {
-		if (!getCell(calc3Ind(i))->halo) {
-			cnt += getCell(calc3Ind(i))->size();
+	for (int i = 0; i < subDomsCnt; i++) {
+		for (int j = 0; j < subDomsNum[i]; j++) {
+			if (!subDoms[i][j].halo) {
+				cnt += subDoms[i][j].size();
+			}
 		}
 	}
 	return cnt;
@@ -481,8 +494,10 @@ void CellContainer::add(std::vector<Particle>& addList) {
  * properties of the specified particle from all containers.
  */
 void CellContainer::remove(Particle& p) {
-	for (int i = 0; i < cellTotal; i++) {
-		getCell(calc3Ind(i))->remove(p);
+	for (int i = 0; i < subDomsCnt; i++) {
+		for (int j = 0; j < subDomsNum[i]; j++) {
+			subDoms[i][j].remove(p);
+		}
 	}
 }
 
@@ -502,20 +517,20 @@ void CellContainer::remove(Particle& p, SimpleContainer* cont) {
 }
 
 /**
- * \brief Removes all particles from the halo subDoms.
+ * \brief Removes all particles from the halo cells.
  */
 void CellContainer::remove_halo() {
-//iterate over all halo subDoms
+//iterate over all halo cells
 	for (int i = 0; i < haloSize; i++) {
 		haloInds[i]->remove_all();
 	}
 }
 
 /**
- * \brief Removes all virtual particles from the halo subDoms.
+ * \brief Removes all virtual particles from the halo cells.
  */
 void CellContainer::remove_halo_virtual() {
-//iterate over all halo subDoms
+//iterate over all halo cells
 	for (int i = 0; i < haloSize; i++) {
 		haloInds[i]->remove_virtual();
 	}
@@ -530,17 +545,20 @@ void CellContainer::remove_halo_virtual() {
 void CellContainer::update_cells() {
 	CellUpdater updater = CellUpdater(this);
 
-	//iterate over all subDoms
+	//iterate over all cells
 	SimpleContainer* cont;
-	for (int i = 0; i < cellTotal; i++) {
-		cont = getCell(calc3Ind(i));
-		if (!cont->halo) { //test if this cell is not in the halo region
-			updater.oldContainer = cont;
-			cont->iterate_all(updater);
+	for (int i = 0; i < subDomsCnt; i++) {
+		for (int j = 0; j < subDomsNum[i]; j++) {
+			cont = &subDoms[i][j];
+			if (!cont->halo) { //test if this cell is not in the halo region
+				updater.oldContainer = cont;
+				cont->iterate_all(updater);
+			}
 		}
 	}
 
-	std::list<pair<Particle, SimpleContainer*> >::iterator it = updater.toRemove.begin();
+	std::list<pair<Particle, SimpleContainer*> >::iterator it =
+			updater.toRemove.begin();
 	while (it != updater.toRemove.end()) {
 		remove((*it).first, (*it).second);
 		it++;
@@ -558,19 +576,19 @@ void CellContainer::update_cells() {
  */
 void CellContainer::impose_boundConds() {
 
-	//first impose conditions on halo subDoms
+	//first impose conditions on halo cells
 	Vector<int, 3> n;
 	for (int i = 0; i < haloSize; i++) {
 		n = haloInds[i]->pos;
 		//Find the right boundary
 		for (int dim = 0; dim < 2 + dim3; dim++) {
 			if (n[dim] == 0) {
-				//check if the condition acts on halo subDoms
+				//check if the condition acts on halo cells
 				if (boundConds[2 * dim]->haloCells) {
 					boundConds[2 * dim]->impose(haloInds[i]);
 				}
 			} else if (n[dim] == cellCount[dim] - 1) {
-				//check if the condition acts on halo subDoms
+				//check if the condition acts on halo cells
 				if (boundConds[2 * dim + 1]->haloCells) {
 					boundConds[2 * dim + 1]->impose(haloInds[i]);
 				}
@@ -578,20 +596,20 @@ void CellContainer::impose_boundConds() {
 		}
 	}
 
-	//impose conditions on boundary subDoms after halo subDoms
+	//impose conditions on boundary cells after halo cells
 	for (int i = 0; i < boundSize; i++) {
 		n = boundInds[i]->pos;
 		//Find the right boundary
 		for (int dim = 0; dim < 2 + dim3; dim++) {
 			if (n[dim] == 1) {
 
-				//check if the condition acts on boundary subDoms
+				//check if the condition acts on boundary cells
 				if (boundConds[2 * dim]->boundCells) {
 					boundConds[2 * dim]->impose(boundInds[i]);
 				}
 			} else if (n[dim] == cellCount[dim] - 2) {
 
-				//check if the condition acts on boundary subDoms
+				//check if the condition acts on boundary cells
 				if (boundConds[2 * dim + 1]->boundCells) {
 					boundConds[2 * dim + 1]->impose(boundInds[i]);
 				}
@@ -608,7 +626,7 @@ void CellContainer::impose_boundConds() {
  * and processes each by calling the provided function.
  */
 void CellContainer::iterate_halo(ParticleHandler& handler) {
-//iterate over all halo subDoms
+//iterate over all halo cells
 	for (int i = 0; i < haloSize; i++) {
 		haloInds[i]->iterate_all(handler);
 	}
@@ -622,7 +640,7 @@ void CellContainer::iterate_halo(ParticleHandler& handler) {
  * and processes each by calling the provided function.
  */
 void CellContainer::iterate_boundary(ParticleHandler& handler) {
-//iterate over all boundary subDoms
+//iterate over all boundary cells
 	for (int i = 0; i < boundSize; i++) {
 		boundInds[i]->iterate_all(handler);
 	}
@@ -634,15 +652,33 @@ void CellContainer::iterate_boundary(ParticleHandler& handler) {
  *
  * This function iterates over all particles except for those in
  * the halo cells and processes each by calling the provided function.
+ *
+ * Due to the parallelization, all handlers have to watch out for
+ * critical sections (e.g. file writing).
  */
 void CellContainer::iterate_all(ParticleHandler& handler) {
 
-//iterate over all subDoms
-	for (int i = 0; i < cellTotal; i++) {
-		if (!getCell(calc3Ind(i))->halo) { //test if this cell is not in the halo region
-			getCell(calc3Ind(i))->iterate_all(handler);
+//iterate over all cells
+#ifdef _OPENMP
+	int tid;
+#pragma omp parallel private(tid)
+	{
+		tid = omp_get_thread_num();
+		for (int j = 0; j < subDomsNum[tid]; j++) {
+			if (!subDoms[tid][j].halo) { //test if this cell is not in the halo region
+				subDoms[tid][j].iterate_all(handler);
+			}
 		}
 	}
+#else
+	for (int i = 0; i < subDomsCnt; i++) {
+		for (int j = 0; j < subDomsNum[i]; j++) {
+			if (!subDoms[i][j].halo) { //test if this cell is not in the halo region
+				subDoms[i][j].iterate_all(handler);
+			}
+		}
+	}
+#endif
 }
 
 /**
@@ -657,16 +693,16 @@ void CellContainer::iterate_all(ParticleHandler& handler) {
  * wrong outputs with this method. Use ParticleContainer::iterate_pairs_half instead.
  */
 void CellContainer::iterate_pairs(PairHandler& handler) {
-//iterate over all subDoms
-	int cnt = 0;
+	//iterate over all non-halo cells
 	for (int i = 0; i < cellTotal; i++) {
-		if (!getCell(calc3Ind(i))->halo) { //test if this cell is not in the halo region.
+		Vector<int, 3> n = calc3Ind(i);
+		SimpleContainer* cell1 = getCell(n);
+		if (!cell1->halo) { //test if this cell is not in the halo region.
 			//iterate inside of cell
-			getCell(calc3Ind(i))->iterate_pairs(handler);
+			cell1->iterate_pairs(handler);
 
-			Vector<int, 3> n = calc3Ind(i);
 			Vector<int, 3> tempN;
-			//iterate over surrounding subDoms, including halo subDoms.
+			//iterate over surrounding cells, including halo cells.
 			for (int x = -1; x <= 1; x++) {
 				for (int y = -1; y <= 1; y++) {
 					if (dim3) {
@@ -675,8 +711,7 @@ void CellContainer::iterate_pairs(PairHandler& handler) {
 							tempN[1] = n[1] + y;
 							tempN[2] = n[2] + z;
 							if (!(x == 0 && y == 0 && z == 0)) { //do not iterate over the cell itself
-								getCell(n)->iterate_partner(handler,
-										getCell(tempN));
+								cell1->iterate_partner(handler, getCell(tempN));
 							}
 						}
 					} else {
@@ -684,10 +719,52 @@ void CellContainer::iterate_pairs(PairHandler& handler) {
 						tempN[1] = n[1] + y;
 						tempN[2] = n[2];
 						if (!(x == 0 && y == 0)) { //do not iterate over the cell itself
-							getCell(n)->iterate_partner(handler,
-									getCell(tempN));
+							cell1->iterate_partner(handler, getCell(tempN));
 						}
 					}
+				}
+			}
+		}
+	}
+}
+
+/**
+ * \brief Auxiliary function for iterating over particle pairs of one cell and its neighbours.
+ * @param handler Object providing the compute function, which is called for every particle pair.
+ * @param cell1 Main cell whose particles are iterated over.
+ * @param nCell1 Three dimensional index of the main cell.
+ * @param iCell1 Linearized index of the main cell.
+ */
+inline void CellContainer::iterate_cell_half(PairHandler& handler,
+		SimpleContainer* cell1) {
+
+	//iterate inside of cell
+	cell1->iterate_pairs_half(handler);
+
+	SimpleContainer* cell2;
+	Vector<int, 3> nCell2;
+	//iterate over surrounding cells, including halo cells.
+	for (int x = -1; x <= 1; x++) {
+		for (int y = -1; y <= 1; y++) {
+			if (dim3) {
+				for (int z = -1; z <= 1; z++) {
+					nCell2[0] = cell1->pos[0] + x;
+					nCell2[1] = cell1->pos[1] + y;
+					nCell2[2] = cell1->pos[2] + z;
+					cell2 = getCell(nCell2);
+					if (calcInd(nCell2) < calcInd(cell1->pos) //only iterate over cells before this one
+					|| cell2->halo) { //except halo cells (preventing asymmetry with virtual particles)
+						cell1->iterate_partner(handler, cell2);
+					}
+				}
+			} else {
+				nCell2[0] = cell1->pos[0] + x;
+				nCell2[1] = cell1->pos[1] + y;
+				nCell2[2] = cell1->pos[2];
+				cell2 = getCell(nCell2);
+				if (calcInd(nCell2) < calcInd(cell1->pos) //only iterate over cells before this one
+				|| cell2->halo) { //except halo cells (preventing asymmetry with virtual particles)
+					cell1->iterate_partner(handler, cell2);
 				}
 			}
 		}
@@ -705,42 +782,47 @@ void CellContainer::iterate_pairs(PairHandler& handler) {
  * This way the performance can be improved using Newton's third law.
  */
 void CellContainer::iterate_pairs_half(PairHandler& handler) {
-	//iterate over all non-halo subDoms
-	for (int i = 0; i < cellTotal; i++) {
-		if (!getCell(calc3Ind(i))->halo) { //test if this cell is not in the halo region.
-			//iterate inside of cell
-			getCell(calc3Ind(i))->iterate_pairs_half(handler);
+#ifdef _OPENMP
+	int tid;
+#pragma omp parallel private(tid)
+	{
+		tid = omp_get_thread_num();
+		//Calculate boundary
+		int start = 0, end = subDomsLen[0];
+		for(int i = 1; i <= tid; i++) {
+			start += subDomsLen[i-1];
+			end += subDomsLen[i];
+		}
 
-			Vector<int, 3> n = calc3Ind(i);
-			Vector<int, 3> tempN;
-			//iterate over surrounding subDoms, including halo subDoms.
-			for (int x = -1; x <= 1; x++) {
-				for (int y = -1; y <= 1; y++) {
-					if (dim3) {
-						for (int z = -1; z <= 1; z++) {
-							tempN[0] = n[0] + x;
-							tempN[1] = n[1] + y;
-							tempN[2] = n[2] + z;
-							if (calcInd(tempN) < i //only iterate over subDoms before this one
-									|| getCell(tempN)->halo) { //except halo cells (preventing asymmetry with virtual particles)
-								getCell(n)->iterate_partner(handler,
-										getCell(tempN));
-							}
-						}
-					} else {
-						tempN[0] = n[0] + x;
-						tempN[1] = n[1] + y;
-						tempN[2] = n[2];
-						if (calcInd(tempN) < i //only iterate over subDoms before this one
-								|| getCell(tempN)->halo) { //except halo cells (preventing asymmetry with virtual particles)
-							getCell(n)->iterate_partner(handler,
-									getCell(tempN));
-						}
-					}
-				}
+		//iterate over inner cells
+		for (int j = 0; j < subDomsNum[tid]; j++) {
+			if(!subDoms[tid][j].halo //test if this cell is not in the halo region.
+					&& subDoms[tid][j].pos[splitDim] < end - 1) { //test if this is an inner cell.
+				iterate_cell_half(handler, &subDoms[tid][j]);
+			}
+		}
+
+		//synchronize threads
+#pragma omp barrier
+
+		//iterate over boundary cells
+		for (int j = 0; j < subDomsNum[tid]; j++) {
+			if(!subDoms[tid][j].halo //test if this cell is not in the halo region.
+					&& subDoms[tid][j].pos[splitDim] == end - 1) { //test if this is a boundary cell.
+				iterate_cell_half(handler, &subDoms[tid][j]);
 			}
 		}
 	}
+#else
+	//iterate over all non-halo cells
+	for (int i = 0; i < subDomsCnt; i++) {
+		for (int j = 0; j < subDomsNum[i]; j++) {
+			if (!subDoms[i][j].halo) { //test if this cell is not in the halo region.
+				iterate_cell_half(handler, &subDoms[i][j]);
+			}
+		}
+	}
+#endif
 }
 
 /**

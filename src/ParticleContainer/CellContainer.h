@@ -23,6 +23,7 @@ using namespace utils;
 
 //Forward declarations
 class BoundaryCondition;
+class CellUpdater;
 namespace unitTest {
 	class UTest_CellContainer;
 	class UTest_BoundaryCondition;
@@ -50,6 +51,7 @@ namespace unitTest {
 class CellContainer: public ParticleContainer {
 	friend unitTest::UTest_CellContainer;
 	friend unitTest::UTest_BoundaryCondition;
+	friend CellUpdater;
 
 private:
 	/**
@@ -63,6 +65,7 @@ private:
 	SimpleContainer** subDoms;
 	int subDomsCnt;		//!< Number of subdomains used for parallelization.
 	int* subDomsLen;	//!< Length of the subdomains along the split direction.
+	int* subDomsNum;	//!< Number of cells in each subdomain.
 	int splitDim;		//!< Dimension along which the container is split.
 	Vector<double, 3> domainSize; 	//!< Domain size in each dimension.
 	SimpleContainer** haloInds;//!< Pointers toall halo cells for fast and simple iteration.
@@ -71,10 +74,13 @@ private:
 	int boundSize;					//!< Number of boundary cells.
 	bool dim3;					//!< Stores if the domain is three dimensional.
 
-	SimpleContainer* getCell(int n);
+	Vector<int, 3> calc3Ind(int n);
+	int calcInd(Vector<int, 3> n);
 	SimpleContainer* getCell(Vector<int, 3> n);
+	SimpleContainer* getCell(Vector<double, 3> x);
 
-	void setHaloBoundary();
+	inline void setHaloBoundary();
+	inline void iterate_cell_half(PairHandler& handler, SimpleContainer* cell1);
 
 public:
 	/**
@@ -99,9 +105,6 @@ public:
 	CellContainer(const Vector<double, 3> domainSize, const double cutoff,
 			std::vector<Particle>* initialParticleList = NULL);
 
-	Vector<int, 3> calc3Ind(int n);
-	int calcInd(Vector<int, 3> n);
-	SimpleContainer* getCell(Vector<double, 3> x);
 
 	bool empty();
 	int size();
