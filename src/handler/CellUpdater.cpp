@@ -16,8 +16,8 @@
  * container accordingly.
  */
 void CellUpdater::compute(Particle& p) {
-	if(cellCont->calcCell(p.getX()) != oldContainerIndex){
+	if(cellCont->getCell(p.getX()) != oldContainer){
 		cellCont->add(p);
-		toRemove.push_back(pair<Particle, int>(p, oldContainerIndex));
+		toRemove.push_back(pair<Particle, SimpleContainer*>(p, oldContainer));
 	}
 }

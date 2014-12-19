@@ -19,7 +19,7 @@ private:
 	CellContainer* cellCont; //!< CellContainer for all particles.
 
 public:
-	int oldContainerIndex; //!< Index of the old container storing the particle.
+	SimpleContainer* oldContainer; //!< Pointer to the old container storing the particle.
 
 	/**
 	 * \brief List of all outdated particles to remove.
@@ -27,15 +27,14 @@ public:
 	 * The first value contains the particle and the second
 	 * the container from which to remove it from.
 	 */
-	list<pair<Particle, int> > toRemove;
+	list<pair<Particle, SimpleContainer*> > toRemove;
 
 	CellUpdater(CellContainer* cellCont) :
 			cellCont(cellCont) {
-		oldContainerIndex = 0;
 	}
 
-	CellUpdater(int oldContainerIndex, CellContainer* cellCont) :
-			oldContainerIndex(oldContainerIndex), cellCont(cellCont) {
+	CellUpdater(SimpleContainer* oldContainer, CellContainer* cellCont) :
+		oldContainer(oldContainer), cellCont(cellCont) {
 	}
 
 	void compute(Particle& p);

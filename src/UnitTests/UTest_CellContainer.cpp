@@ -79,7 +79,7 @@ void UTest_CellContainer::tearDown() {
  * \brief Method for testing if the cell index is calculated self-consistently.
  *
  * It does so by first calculating the three-dimensional index and then converting
- * it back to the linearized index using the calcInd and the calcCell function.
+ * it back to the linearized index using the calcInd and the getCell function.
  */
 void UTest_CellContainer::testIndexCalc() {
 	utils::Vector<double, 3> x;
@@ -90,7 +90,7 @@ void UTest_CellContainer::testIndexCalc() {
 		x[1] = cellCont.calc3Ind(i)[1];
 		x[2] = cellCont.calc3Ind(i)[2];
 		x = (x - 0.5) * cellCont.cutoff;
-		CPPUNIT_ASSERT(i == cellCont.calcCell(x));
+		CPPUNIT_ASSERT(cellCont.getCell(cellCont.calc3Ind(i)) == cellCont.getCell(x));
 	}
 }
 
@@ -150,7 +150,7 @@ void UTest_CellContainer::testRemoveSize() {
 	CPPUNIT_ASSERT(numParticles + 1 == cellCont.size());
 
 	//Remove particle
-	cellCont.remove(p, cellCont.calcCell(p.getX()));
+	cellCont.remove(p, cellCont.getCell(p.getX()));
 	CPPUNIT_ASSERT(numParticles == cellCont.size());
 }
 
@@ -214,8 +214,8 @@ void UTest_CellContainer::testIterateBoundaryCount() {
 		for (int j = 0; j < 3; j++) {
 			x[j] += domainSize[j] / numParticles;
 		}
-		if (cellCont.calcCell(x) == cellCont.calcInd(nMin)
-				|| cellCont.calcCell(x) == cellCont.calcInd(nMax)) {
+		if (cellCont.getCell(x) == cellCont.getCell(nMin)
+				|| cellCont.getCell(x) == cellCont.getCell(nMax)) {
 			boundCnt++;
 		}
 	}

@@ -52,13 +52,27 @@ class CellContainer: public ParticleContainer {
 	friend unitTest::UTest_BoundaryCondition;
 
 private:
-	SimpleContainer* cells; //!< Array with one SimpleContainer per cell, including the halo region.
+	/**
+	 * \brief Array of subdomains consisting of containers for each cell.
+	 *
+	 * Array with one array of containers per subdomain, used for parallelization.
+	 * The total domain is split into subdomains along the largest coordinate.
+	 * Each subdomain consists of an array of SimpleContainers, each representing
+	 * one cell, including the halo region.
+	 */
+	SimpleContainer** subDoms;
+	int subDomsCnt;		//!< Number of subdomains used for parallelization.
+	int* subDomsLen;	//!< Length of the subdomains along the split direction.
+	int splitDim;		//!< Dimension along which the container is split.
 	Vector<double, 3> domainSize; 	//!< Domain size in each dimension.
-	int* haloInds;//!< Indices of all halo cells for fast and simple iteration.
-	int* boundInds;	//!< Indices of all boundary cells for fast and simple iteration.
+	SimpleContainer** haloInds;//!< Pointers toall halo cells for fast and simple iteration.
+	SimpleContainer** boundInds;	//!< Pointers to all boundary cells for fast and simple iteration.
 	int haloSize;					//!< Number of halo cells.
 	int boundSize;					//!< Number of boundary cells.
 	bool dim3;					//!< Stores if the domain is three dimensional.
+
+	SimpleContainer* getCell(int n);
+	SimpleContainer* getCell(Vector<int, 3> n);
 
 	void setHaloBoundary();
 
@@ -87,7 +101,7 @@ public:
 
 	Vector<int, 3> calc3Ind(int n);
 	int calcInd(Vector<int, 3> n);
-	int calcCell(Vector<double, 3> x);
+	SimpleContainer* getCell(Vector<double, 3> x);
 
 	bool empty();
 	int size();
@@ -96,7 +110,7 @@ public:
 	void add(vector<Particle>& list);
 
 	void remove(Particle& p);
-	void remove(Particle& p, int contInd);
+	void remove(Particle& p, SimpleContainer* cont);
 	void remove_halo();
 	void remove_halo_virtual();
 
