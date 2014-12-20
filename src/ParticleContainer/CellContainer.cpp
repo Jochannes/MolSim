@@ -72,7 +72,7 @@ inline void CellContainer::setHaloBoundary() {
 
 					//calculate indices
 					n[0] = x;
-					n[1] = side * (cellCount[2] - 1);
+					n[1] = side * (cellCount[1] - 1);
 					n[2] = z;
 
 					//set cell as halo cell and store index in haloInds
@@ -172,7 +172,7 @@ inline void CellContainer::setHaloBoundary() {
 
 					//calculate indices
 					n[0] = x;
-					n[1] = 1 + side * (cellCount[2] - 3);
+					n[1] = 1 + side * (cellCount[1] - 3);
 					n[2] = z;
 
 					//store cell index in boundInds
