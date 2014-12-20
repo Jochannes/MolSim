@@ -268,6 +268,12 @@ CellContainer::CellContainer(const Vector<double, 3> domainSize,
 		} else{
 			subDomsLen[i] = cellCount[splitDim] / subDomsCnt;
 		}
+#ifdef _OPENMP
+		if(subDomsLen[i] < 2){
+			LOG4CXX_FATAL(CellLogger, "The subdomains are too small; the parallelization would not be stable. Reduce the number of threads!");
+			exit(1);
+		}
+#endif
 	}
 
 	//initialize cell list
@@ -362,24 +368,14 @@ Vector<int, 3> CellContainer::calc3Ind(int n) {
  * \f$ N_i \f$ being the cellCount in the respective dimension.
  */
 int CellContainer::calcInd(Vector<int, 3> n) {
-	if (dim3) {
-		if ((n[0] < 0 || n[0] >= cellCount[0])
-				|| (n[1] < 0 || n[1] >= cellCount[1])
-				|| (n[2] < 0 || n[2] >= cellCount[2])) {
-			LOG4CXX_FATAL(CellLogger,
-					"Error calculating linearized cell index: Index out of domain (n = " << n.toString() << " out of N = " << cellCount.toString() << ")");
-			exit(1);
-		}
-		return n[0] + cellCount[0] * n[1] + cellCount[0] * cellCount[1] * n[2];
-	} else {
-		if ((n[0] < 0 || n[0] >= cellCount[0])
-				|| (n[1] < 0 || n[1] >= cellCount[1])) {
-			LOG4CXX_FATAL(CellLogger,
-					"Error calculating linearized cell index: Index out of domain (n = " << n.toString() << " out of N = " << cellCount.toString() << ")");
-			exit(1);
-		}
-		return n[0] + cellCount[0] * n[1];
+	if ((n[0] < 0 || n[0] >= cellCount[0])
+			|| (n[1] < 0 || n[1] >= cellCount[1])
+			|| (n[2] < 0 || n[2] >= cellCount[2])) {
+		LOG4CXX_FATAL(CellLogger,
+				"Error calculating linearized cell index: Index out of domain (n = " << n.toString() << " out of N = " << cellCount.toString() << ")");
+		exit(1);
 	}
+	return n[0] + cellCount[0] * n[1] + dim3 * cellCount[0] * cellCount[1] * n[2];
 }
 
 /**
@@ -401,11 +397,18 @@ SimpleContainer* CellContainer::getCell(Vector<int, 3> n) {
 
 	//Calculate linearized index in subdomain
 	n[splitDim] -= start - subDomsLen[subDom];
-	int subCnt[2] = { cellCount[0], cellCount[1] };
-	if (splitDim != 3) {
-		subCnt[splitDim] = subDomsLen[subDom];
+	utils::Vector<int, 3> subCnt;
+	subCnt[0] = cellCount[0];
+	subCnt[1] = cellCount[1];
+	subCnt[2] = cellCount[2];
+	subCnt[splitDim] = subDomsLen[subDom];
+	if ((n[0] < 0 || n[0] >= subCnt[0])
+			|| (n[1] < 0 || n[1] >= subCnt[1])
+			|| (n[2] < 0 || n[2] >= subCnt[2])) {
+		LOG4CXX_FATAL(CellLogger,
+				"Error calculating cell pointer: Index out of domain (n = " << n.toString() << " out of subdomain " << subDom << " with N = " << subCnt << ")");
+		exit(1);
 	}
-	int linInd = n[0] + subCnt[0] * n[1] + dim3 * subCnt[0] * subCnt[1] * n[2];
 	return subDoms[subDom] + n[0] + subCnt[0] * n[1]
 			+ dim3 * subCnt[0] * subCnt[1] * n[2];
 }
@@ -429,11 +432,10 @@ SimpleContainer* CellContainer::getCell(Vector<int, 3> n) {
 SimpleContainer* CellContainer::getCell(Vector<double, 3> x) {
 
 	//Calculate 3D index
-	Vector<double, 3> inds = x * (1 / cutoff);
 	Vector<int, 3> n;
-	n[0] = floor(inds[0]) + 1;
-	n[1] = floor(inds[1]) + 1;
-	n[2] = floor(inds[2]) + 1 * dim3;
+	n[0] = floor(x[0] / cutoff) + 1;
+	n[1] = floor(x[1] / cutoff) + 1;
+	n[2] = floor(x[2] / cutoff) + 1 * dim3;
 
 	return getCell(n);
 }
@@ -788,9 +790,8 @@ void CellContainer::iterate_pairs_half(PairHandler& handler) {
 	{
 		tid = omp_get_thread_num();
 		//Calculate boundary
-		int start = 0, end = subDomsLen[0];
+		int end = subDomsLen[0];
 		for(int i = 1; i <= tid; i++) {
-			start += subDomsLen[i-1];
 			end += subDomsLen[i];
 		}
 
