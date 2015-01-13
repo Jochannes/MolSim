@@ -19,6 +19,7 @@ src/handler/ForceCalculator_LennardJones.cpp\
 src/handler/plotHandler_VTK.cpp\
 src/handler/ReflectionHandler.cpp\
 src/handler/plotHandler_ResultOutput.cpp\
+src/handler/PeriodicCornerHandler.cpp\
 src/Thermostat.cpp\
 src/ParticleFileReader.cpp\
 src/UnitTests/Handler/CountPairs.cpp\

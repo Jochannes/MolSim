@@ -370,7 +370,7 @@ Vector<int, 3> CellContainer::calc3Ind(int n) {
 int CellContainer::calcInd(Vector<int, 3> n) {
 	if ((n[0] < 0 || n[0] >= cellCount[0])
 			|| (n[1] < 0 || n[1] >= cellCount[1])
-			|| (n[2] < 0 || n[2] >= cellCount[2])) {
+			|| (dim3 && (n[2] < 0 || n[2] >= cellCount[2]))) {
 		LOG4CXX_FATAL(CellLogger,
 				"Error calculating linearized cell index: Index out of domain (n = " << n.toString() << " out of N = " << cellCount.toString() << ")");
 		exit(1);
@@ -404,7 +404,7 @@ SimpleContainer* CellContainer::getCell(Vector<int, 3> n) {
 	subCnt[splitDim] = subDomsLen[subDom];
 	if ((n[0] < 0 || n[0] >= subCnt[0])
 			|| (n[1] < 0 || n[1] >= subCnt[1])
-			|| (n[2] < 0 || n[2] >= subCnt[2])) {
+			|| (dim3 && (n[2] < 0 || n[2] >= subCnt[2]))) {
 		LOG4CXX_FATAL(CellLogger,
 				"Error calculating cell pointer: Index out of domain (n = " << n.toString() << " out of subdomain " << subDom << " with N = " << subCnt << ")");
 		exit(1);
@@ -661,7 +661,9 @@ void CellContainer::iterate_boundary(ParticleHandler& handler) {
 void CellContainer::iterate_all(ParticleHandler& handler) {
 
 //iterate over all cells
-#ifdef _OPENMP
+
+//Parallelization causes problems with particles disappearing, not critical for performance -> turned off
+/*#ifdef _OPENMP
 	int tid;
 #pragma omp parallel private(tid)
 	{
@@ -672,7 +674,7 @@ void CellContainer::iterate_all(ParticleHandler& handler) {
 			}
 		}
 	}
-#else
+#else*/
 	for (int i = 0; i < subDomsCnt; i++) {
 		for (int j = 0; j < subDomsNum[i]; j++) {
 			if (!subDoms[i][j].halo) { //test if this cell is not in the halo region
@@ -680,7 +682,7 @@ void CellContainer::iterate_all(ParticleHandler& handler) {
 			}
 		}
 	}
-#endif
+//#endif
 }
 
 /**
@@ -790,7 +792,7 @@ void CellContainer::iterate_pairs_half(PairHandler& handler) {
 	{
 		tid = omp_get_thread_num();
 		//Calculate boundary
-		int end = subDomsLen[0];
+		int end = subDomsLen[0] - 1;
 		for(int i = 1; i <= tid; i++) {
 			end += subDomsLen[i];
 		}
@@ -798,7 +800,7 @@ void CellContainer::iterate_pairs_half(PairHandler& handler) {
 		//iterate over inner cells
 		for (int j = 0; j < subDomsNum[tid]; j++) {
 			if(!subDoms[tid][j].halo //test if this cell is not in the halo region.
-					&& subDoms[tid][j].pos[splitDim] < end - 1) { //test if this is an inner cell.
+					&& subDoms[tid][j].pos[splitDim] < end) { //test if this is an inner cell.
 				iterate_cell_half(handler, &subDoms[tid][j]);
 			}
 		}
@@ -809,7 +811,7 @@ void CellContainer::iterate_pairs_half(PairHandler& handler) {
 		//iterate over boundary cells
 		for (int j = 0; j < subDomsNum[tid]; j++) {
 			if(!subDoms[tid][j].halo //test if this cell is not in the halo region.
-					&& subDoms[tid][j].pos[splitDim] == end - 1) { //test if this is a boundary cell.
+					&& subDoms[tid][j].pos[splitDim] == end) { //test if this is a boundary cell.
 				iterate_cell_half(handler, &subDoms[tid][j]);
 			}
 		}

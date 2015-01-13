@@ -9,7 +9,6 @@
 #define PERIODIC_H_
 
 #include "BoundaryCondition.h"
-#include "handler/PeriodicHandler.h"
 
 /**
  * \brief Periodic BoundaryCondition, moving particles from one end of the domain to the other.

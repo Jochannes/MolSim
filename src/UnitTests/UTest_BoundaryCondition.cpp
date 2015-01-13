@@ -26,7 +26,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(UTest_BoundaryCondition);
  */
 UTest_BoundaryCondition::UTest_BoundaryCondition() :
 		numParticles(99), numHalo(10), domainSize(
-				utils::Vector<double, 3>(40)), cutoff(3), cellCont(
+				utils::Vector<double, 3>(41)), cutoff(3), cellCont(
 				CellContainer(domainSize, cutoff)) {
 }
 
@@ -122,17 +122,6 @@ void UTest_BoundaryCondition::testReflectionCnt() {
  */
 void UTest_BoundaryCondition::testPeriodicCnt() {
 
-	//Count expected number of virtual particles
-	for (int i = 0; i < 6; i++) {
-		cellCont.boundConds[i] = new BoundCondCount(i, true, true);
-	}
-	cellCont.impose_boundConds();
-	int expVirt = 0;
-	for (int i = 0; i < 6; i++) {
-		expVirt += ((BoundCondCount*)cellCont.boundConds[i])->cntPart;
-		delete(cellCont.boundConds[i]);
-	}
-
 	//Impose boundary conditions
 	for (int i = 0; i < 6; i++) {
 		cellCont.boundConds[i] = new Periodic(&cellCont, i);
@@ -148,6 +137,17 @@ void UTest_BoundaryCondition::testPeriodicCnt() {
 
 
 	//Check if all boundary particles have virtual particles inside of the domain
+
+	//Count expected number of virtual particles
+	for (int i = 0; i < 6; i++) {
+		cellCont.boundConds[i] = new BoundCondCount(&cellCont, i, true, false, true);
+	}
+	cellCont.impose_boundConds();
+	int expVirt = 0;
+	for (int i = 0; i < 6; i++) {
+		expVirt += ((BoundCondCount*)cellCont.boundConds[i])->cntPart;
+	}
+
 	CountParticles cntPart = CountParticles();
 	cellCont.iterate_halo(cntPart);
 	CPPUNIT_ASSERT(cntPart.cnt == expVirt);

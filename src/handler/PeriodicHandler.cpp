@@ -9,7 +9,9 @@
 #include "utils/Vector.h"
 #include "Particle.h"
 
-PeriodicHandler::PeriodicHandler(CellContainer* arg_cells, int arg_side, bool arg_move) : cellCont(arg_cells), side(arg_side), move(arg_move) {
+PeriodicHandler::PeriodicHandler(CellContainer* arg_cells, int arg_side,
+		bool arg_move) :
+		cellCont(arg_cells), side(arg_side), move(arg_move) {
 }
 
 PeriodicHandler::~PeriodicHandler() {
@@ -35,8 +37,9 @@ void PeriodicHandler::compute(Particle& p) {
 			cellCont->add(p);
 		}
 	} else { //copies the particle, sets the new particle as a virtual one.
-		double virtV[3] = {0, 0, 0};
-		Particle virtP = Particle(p.getX(), virtV, p.getM(), p.getType(), p.getEpsilon(), p.getSigma(), true);
+		double virtV[3] = { 0, 0, 0 };
+		Particle virtP = Particle(p.getX(), virtV, p.getM(), p.getType(),
+				p.getEpsilon(), p.getSigma(), true);
 		if (side % 2 == 0) {
 			virtP.getX()[side / 2] += cellCont->effDomain[side / 2];
 		} else {
