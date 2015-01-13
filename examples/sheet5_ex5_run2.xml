@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="../src/XMLInput/simulation.xsd">
+
+
+  <parameter>
+    <start-time>0</start-time>
+    <end-time>250</end-time>
+    <delta-t>0.001</delta-t>
+    
+    <simulation-mode>
+      <type>linked-cell</type>
+      <cutoff_radius>2.3</cutoff_radius>
+      <domain_size_x>9.2</domain_size_x>
+      <domain_size_y>9.2</domain_size_y>
+      <domain_size_z>9.2</domain_size_z>
+      <boundary x_0="periodic" x_max="periodic" y_0="periodic" y_max="periodic" z_0="periodic" z_max="periodic" />
+    </simulation-mode>
+    
+    <thermostat dim="3" steps="1000" init_temp="3.0" target_temp="0.5" delta_temp="0.00078" steps_changetemp="50" apply_brown="false" />
+    
+    <thermodyn-stats freq="1000" avgover="5" dr="0.05" maxrad="2.3" varfile="Output/sheet5_ex5_run2/VarStats.csv" rdffile="Output/sheet5_ex5_run2/RDFStats.csv" />
+  </parameter>
+  
+  <force-calculator>
+    <lj-smoothed cutoff_factor="2.3" rl="1.9" />
+  </force-calculator>
+  
+  <input>
+    <particle_file>examples/sheet5_ex5_run1_result.txt</particle_file>
+  </input>
+  
+  
+  <output>
+    <iteration base_filename="Output/sheet5_ex5_run2/MD_vtk" output_freq="100" />
+  </output>
+  
+  
+</simulation>
+

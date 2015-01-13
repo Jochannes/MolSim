@@ -299,6 +299,24 @@ lennard_jones (const lennard_jones_sequence& s)
   this->lennard_jones_ = s;
 }
 
+const simulation_force_calculator_t::lj_smoothed_sequence& simulation_force_calculator_t::
+lj_smoothed () const
+{
+  return this->lj_smoothed_;
+}
+
+simulation_force_calculator_t::lj_smoothed_sequence& simulation_force_calculator_t::
+lj_smoothed ()
+{
+  return this->lj_smoothed_;
+}
+
+void simulation_force_calculator_t::
+lj_smoothed (const lj_smoothed_sequence& s)
+{
+  this->lj_smoothed_ = s;
+}
+
 const simulation_force_calculator_t::gravity_sequence& simulation_force_calculator_t::
 gravity () const
 {
@@ -343,6 +361,46 @@ void lj_cutoff_t::
 cutoff_factor (const cutoff_factor_optional& x)
 {
   this->cutoff_factor_ = x;
+}
+
+
+// lj_smoothed_t
+// 
+
+const lj_smoothed_t::cutoff_factor_type& lj_smoothed_t::
+cutoff_factor () const
+{
+  return this->cutoff_factor_.get ();
+}
+
+lj_smoothed_t::cutoff_factor_type& lj_smoothed_t::
+cutoff_factor ()
+{
+  return this->cutoff_factor_.get ();
+}
+
+void lj_smoothed_t::
+cutoff_factor (const cutoff_factor_type& x)
+{
+  this->cutoff_factor_.set (x);
+}
+
+const lj_smoothed_t::rl_type& lj_smoothed_t::
+rl () const
+{
+  return this->rl_.get ();
+}
+
+lj_smoothed_t::rl_type& lj_smoothed_t::
+rl ()
+{
+  return this->rl_.get ();
+}
+
+void lj_smoothed_t::
+rl (const rl_type& x)
+{
+  this->rl_.set (x);
 }
 
 
@@ -676,6 +734,130 @@ apply_brown (const apply_brown_optional& x)
 }
 
 
+// thermodyn_stats_t
+// 
+
+const thermodyn_stats_t::freq_type& thermodyn_stats_t::
+freq () const
+{
+  return this->freq_.get ();
+}
+
+thermodyn_stats_t::freq_type& thermodyn_stats_t::
+freq ()
+{
+  return this->freq_.get ();
+}
+
+void thermodyn_stats_t::
+freq (const freq_type& x)
+{
+  this->freq_.set (x);
+}
+
+const thermodyn_stats_t::avgover_type& thermodyn_stats_t::
+avgover () const
+{
+  return this->avgover_.get ();
+}
+
+thermodyn_stats_t::avgover_type& thermodyn_stats_t::
+avgover ()
+{
+  return this->avgover_.get ();
+}
+
+void thermodyn_stats_t::
+avgover (const avgover_type& x)
+{
+  this->avgover_.set (x);
+}
+
+const thermodyn_stats_t::dr_type& thermodyn_stats_t::
+dr () const
+{
+  return this->dr_.get ();
+}
+
+thermodyn_stats_t::dr_type& thermodyn_stats_t::
+dr ()
+{
+  return this->dr_.get ();
+}
+
+void thermodyn_stats_t::
+dr (const dr_type& x)
+{
+  this->dr_.set (x);
+}
+
+const thermodyn_stats_t::maxrad_type& thermodyn_stats_t::
+maxrad () const
+{
+  return this->maxrad_.get ();
+}
+
+thermodyn_stats_t::maxrad_type& thermodyn_stats_t::
+maxrad ()
+{
+  return this->maxrad_.get ();
+}
+
+void thermodyn_stats_t::
+maxrad (const maxrad_type& x)
+{
+  this->maxrad_.set (x);
+}
+
+const thermodyn_stats_t::varfile_type& thermodyn_stats_t::
+varfile () const
+{
+  return this->varfile_.get ();
+}
+
+thermodyn_stats_t::varfile_type& thermodyn_stats_t::
+varfile ()
+{
+  return this->varfile_.get ();
+}
+
+void thermodyn_stats_t::
+varfile (const varfile_type& x)
+{
+  this->varfile_.set (x);
+}
+
+void thermodyn_stats_t::
+varfile (::std::auto_ptr< varfile_type > x)
+{
+  this->varfile_.set (x);
+}
+
+const thermodyn_stats_t::rdffile_type& thermodyn_stats_t::
+rdffile () const
+{
+  return this->rdffile_.get ();
+}
+
+thermodyn_stats_t::rdffile_type& thermodyn_stats_t::
+rdffile ()
+{
+  return this->rdffile_.get ();
+}
+
+void thermodyn_stats_t::
+rdffile (const rdffile_type& x)
+{
+  this->rdffile_.set (x);
+}
+
+void thermodyn_stats_t::
+rdffile (::std::auto_ptr< rdffile_type > x)
+{
+  this->rdffile_.set (x);
+}
+
+
 // simulation_parameters_t
 // 
 
@@ -785,6 +967,36 @@ void simulation_parameters_t::
 thermostat (::std::auto_ptr< thermostat_type > x)
 {
   this->thermostat_.set (x);
+}
+
+const simulation_parameters_t::thermodyn_stats_optional& simulation_parameters_t::
+thermodyn_stats () const
+{
+  return this->thermodyn_stats_;
+}
+
+simulation_parameters_t::thermodyn_stats_optional& simulation_parameters_t::
+thermodyn_stats ()
+{
+  return this->thermodyn_stats_;
+}
+
+void simulation_parameters_t::
+thermodyn_stats (const thermodyn_stats_type& x)
+{
+  this->thermodyn_stats_.set (x);
+}
+
+void simulation_parameters_t::
+thermodyn_stats (const thermodyn_stats_optional& x)
+{
+  this->thermodyn_stats_ = x;
+}
+
+void simulation_parameters_t::
+thermodyn_stats (::std::auto_ptr< thermodyn_stats_type > x)
+{
+  this->thermodyn_stats_.set (x);
 }
 
 
@@ -1884,6 +2096,7 @@ simulation_force_calculator_t::
 simulation_force_calculator_t ()
 : ::xml_schema::type (),
   lennard_jones_ (::xml_schema::flags (), this),
+  lj_smoothed_ (::xml_schema::flags (), this),
   gravity_ (::xml_schema::flags (), this)
 {
 }
@@ -1894,6 +2107,7 @@ simulation_force_calculator_t (const simulation_force_calculator_t& x,
                                ::xml_schema::container* c)
 : ::xml_schema::type (x, f, c),
   lennard_jones_ (x.lennard_jones_, f, this),
+  lj_smoothed_ (x.lj_smoothed_, f, this),
   gravity_ (x.gravity_, f, this)
 {
 }
@@ -1904,6 +2118,7 @@ simulation_force_calculator_t (const ::xercesc::DOMElement& e,
                                ::xml_schema::container* c)
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
   lennard_jones_ (f, this),
+  lj_smoothed_ (f, this),
   gravity_ (f, this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
@@ -1931,6 +2146,17 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
         lennard_jones_traits::create (i, f, this));
 
       this->lennard_jones_.push_back (r);
+      continue;
+    }
+
+    // lj-smoothed
+    //
+    if (n.name () == "lj-smoothed" && n.namespace_ ().empty ())
+    {
+      ::std::auto_ptr< lj_smoothed_type > r (
+        lj_smoothed_traits::create (i, f, this));
+
+      this->lj_smoothed_.push_back (r);
       continue;
     }
 
@@ -2021,6 +2247,93 @@ _clone (::xml_schema::flags f,
 
 lj_cutoff_t::
 ~lj_cutoff_t ()
+{
+}
+
+// lj_smoothed_t
+//
+
+lj_smoothed_t::
+lj_smoothed_t (const cutoff_factor_type& cutoff_factor,
+               const rl_type& rl)
+: ::xml_schema::type (),
+  cutoff_factor_ (cutoff_factor, ::xml_schema::flags (), this),
+  rl_ (rl, ::xml_schema::flags (), this)
+{
+}
+
+lj_smoothed_t::
+lj_smoothed_t (const lj_smoothed_t& x,
+               ::xml_schema::flags f,
+               ::xml_schema::container* c)
+: ::xml_schema::type (x, f, c),
+  cutoff_factor_ (x.cutoff_factor_, f, this),
+  rl_ (x.rl_, f, this)
+{
+}
+
+lj_smoothed_t::
+lj_smoothed_t (const ::xercesc::DOMElement& e,
+               ::xml_schema::flags f,
+               ::xml_schema::container* c)
+: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  cutoff_factor_ (f, this),
+  rl_ (f, this)
+{
+  if ((f & ::xml_schema::flags::base) == 0)
+  {
+    ::xsd::cxx::xml::dom::parser< char > p (e, false, true);
+    this->parse (p, f);
+  }
+}
+
+void lj_smoothed_t::
+parse (::xsd::cxx::xml::dom::parser< char >& p,
+       ::xml_schema::flags f)
+{
+  while (p.more_attributes ())
+  {
+    const ::xercesc::DOMAttr& i (p.next_attribute ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    if (n.name () == "cutoff_factor" && n.namespace_ ().empty ())
+    {
+      this->cutoff_factor_.set (cutoff_factor_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "rl" && n.namespace_ ().empty ())
+    {
+      this->rl_.set (rl_traits::create (i, f, this));
+      continue;
+    }
+  }
+
+  if (!cutoff_factor_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "cutoff_factor",
+      "");
+  }
+
+  if (!rl_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "rl",
+      "");
+  }
+}
+
+lj_smoothed_t* lj_smoothed_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class lj_smoothed_t (*this, f, c);
+}
+
+lj_smoothed_t::
+~lj_smoothed_t ()
 {
 }
 
@@ -2387,6 +2700,167 @@ thermostat_t::
 {
 }
 
+// thermodyn_stats_t
+//
+
+thermodyn_stats_t::
+thermodyn_stats_t (const freq_type& freq,
+                   const avgover_type& avgover,
+                   const dr_type& dr,
+                   const maxrad_type& maxrad,
+                   const varfile_type& varfile,
+                   const rdffile_type& rdffile)
+: ::xml_schema::type (),
+  freq_ (freq, ::xml_schema::flags (), this),
+  avgover_ (avgover, ::xml_schema::flags (), this),
+  dr_ (dr, ::xml_schema::flags (), this),
+  maxrad_ (maxrad, ::xml_schema::flags (), this),
+  varfile_ (varfile, ::xml_schema::flags (), this),
+  rdffile_ (rdffile, ::xml_schema::flags (), this)
+{
+}
+
+thermodyn_stats_t::
+thermodyn_stats_t (const thermodyn_stats_t& x,
+                   ::xml_schema::flags f,
+                   ::xml_schema::container* c)
+: ::xml_schema::type (x, f, c),
+  freq_ (x.freq_, f, this),
+  avgover_ (x.avgover_, f, this),
+  dr_ (x.dr_, f, this),
+  maxrad_ (x.maxrad_, f, this),
+  varfile_ (x.varfile_, f, this),
+  rdffile_ (x.rdffile_, f, this)
+{
+}
+
+thermodyn_stats_t::
+thermodyn_stats_t (const ::xercesc::DOMElement& e,
+                   ::xml_schema::flags f,
+                   ::xml_schema::container* c)
+: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  freq_ (f, this),
+  avgover_ (f, this),
+  dr_ (f, this),
+  maxrad_ (f, this),
+  varfile_ (f, this),
+  rdffile_ (f, this)
+{
+  if ((f & ::xml_schema::flags::base) == 0)
+  {
+    ::xsd::cxx::xml::dom::parser< char > p (e, false, true);
+    this->parse (p, f);
+  }
+}
+
+void thermodyn_stats_t::
+parse (::xsd::cxx::xml::dom::parser< char >& p,
+       ::xml_schema::flags f)
+{
+  while (p.more_attributes ())
+  {
+    const ::xercesc::DOMAttr& i (p.next_attribute ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    if (n.name () == "freq" && n.namespace_ ().empty ())
+    {
+      this->freq_.set (freq_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "avgover" && n.namespace_ ().empty ())
+    {
+      this->avgover_.set (avgover_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "dr" && n.namespace_ ().empty ())
+    {
+      this->dr_.set (dr_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "maxrad" && n.namespace_ ().empty ())
+    {
+      this->maxrad_.set (maxrad_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "varfile" && n.namespace_ ().empty ())
+    {
+      ::std::auto_ptr< varfile_type > r (
+        varfile_traits::create (i, f, this));
+
+      this->varfile_.set (r);
+      continue;
+    }
+
+    if (n.name () == "rdffile" && n.namespace_ ().empty ())
+    {
+      ::std::auto_ptr< rdffile_type > r (
+        rdffile_traits::create (i, f, this));
+
+      this->rdffile_.set (r);
+      continue;
+    }
+  }
+
+  if (!freq_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "freq",
+      "");
+  }
+
+  if (!avgover_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "avgover",
+      "");
+  }
+
+  if (!dr_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "dr",
+      "");
+  }
+
+  if (!maxrad_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "maxrad",
+      "");
+  }
+
+  if (!varfile_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "varfile",
+      "");
+  }
+
+  if (!rdffile_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "rdffile",
+      "");
+  }
+}
+
+thermodyn_stats_t* thermodyn_stats_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class thermodyn_stats_t (*this, f, c);
+}
+
+thermodyn_stats_t::
+~thermodyn_stats_t ()
+{
+}
+
 // simulation_parameters_t
 //
 
@@ -2400,7 +2874,8 @@ simulation_parameters_t (const start_time_type& start_time,
   end_time_ (end_time, ::xml_schema::flags (), this),
   delta_t_ (delta_t, ::xml_schema::flags (), this),
   simulation_mode_ (simulation_mode, ::xml_schema::flags (), this),
-  thermostat_ (::xml_schema::flags (), this)
+  thermostat_ (::xml_schema::flags (), this),
+  thermodyn_stats_ (::xml_schema::flags (), this)
 {
 }
 
@@ -2414,7 +2889,8 @@ simulation_parameters_t (const start_time_type& start_time,
   end_time_ (end_time, ::xml_schema::flags (), this),
   delta_t_ (delta_t, ::xml_schema::flags (), this),
   simulation_mode_ (simulation_mode, ::xml_schema::flags (), this),
-  thermostat_ (::xml_schema::flags (), this)
+  thermostat_ (::xml_schema::flags (), this),
+  thermodyn_stats_ (::xml_schema::flags (), this)
 {
 }
 
@@ -2427,7 +2903,8 @@ simulation_parameters_t (const simulation_parameters_t& x,
   end_time_ (x.end_time_, f, this),
   delta_t_ (x.delta_t_, f, this),
   simulation_mode_ (x.simulation_mode_, f, this),
-  thermostat_ (x.thermostat_, f, this)
+  thermostat_ (x.thermostat_, f, this),
+  thermodyn_stats_ (x.thermodyn_stats_, f, this)
 {
 }
 
@@ -2440,7 +2917,8 @@ simulation_parameters_t (const ::xercesc::DOMElement& e,
   end_time_ (f, this),
   delta_t_ (f, this),
   simulation_mode_ (f, this),
-  thermostat_ (f, this)
+  thermostat_ (f, this),
+  thermodyn_stats_ (f, this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
   {
@@ -2516,6 +2994,20 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       if (!this->thermostat_)
       {
         this->thermostat_.set (r);
+        continue;
+      }
+    }
+
+    // thermodyn-stats
+    //
+    if (n.name () == "thermodyn-stats" && n.namespace_ ().empty ())
+    {
+      ::std::auto_ptr< thermodyn_stats_type > r (
+        thermodyn_stats_traits::create (i, f, this));
+
+      if (!this->thermodyn_stats_)
+      {
+        this->thermodyn_stats_.set (r);
         continue;
       }
     }

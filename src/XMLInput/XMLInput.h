@@ -13,7 +13,9 @@
 #include "SphereGenerator.h"
 #include "handler/ForceCalculator_Gravity.h"
 #include "handler/ForceCalculator_LennardJones.h"
+#include "handler/ForceCalculator_LJ_smoothed.h"
 #include "Thermostat.h"
+#include "ThermoDynStats.h"
 #include "XMLInput/simulation.h"
 
 #include <string>
@@ -33,7 +35,9 @@ private:
 	double end_time;
 	double delta_t;
 
+	//ForceCalculators
 	std::vector<ForceCalculator_LennardJones> lennard_jones;
+	std::vector<ForceCalculator_LJ_smoothed> lj_smoothed;
 	std::vector<ForceCalculator_Gravity> gravity;
 	int forceCalcCnt;
 	int typesCnt;
@@ -43,6 +47,7 @@ private:
 	double domain_size[3];
 	boundary_type_t::value boundary[6];
 
+	//Thermostat
 	int dim;
 	double init_temp;
 	int steps;
@@ -50,6 +55,11 @@ private:
 	double delta_temp;
 	int steps_changetemp;
 	bool applyBrown;
+
+	//ThermodynStats
+	int thdyn_freq, thdyn_avgover;
+	double thdyn_dr, thdyn_maxrad;
+	std::string thdyn_varfile, thdyn_rdffile;
 
 	std::vector<ParticleFileReader> particle_file;
 	std::vector<CuboidGenerator> cuboid;

@@ -31,8 +31,8 @@
 // in the accompanying FLOSSE file.
 //
 
-#ifndef SRC_XMLINPUT_SIMULATION_H
-#define SRC_XMLINPUT_SIMULATION_H
+#ifndef CXX_HOME_JOHANNES_WORKSPACE_MOL_SIM_SRC_XMLINPUT_SIMULATION_H
+#define CXX_HOME_JOHANNES_WORKSPACE_MOL_SIM_SRC_XMLINPUT_SIMULATION_H
 
 // Begin prologue.
 //
@@ -226,9 +226,11 @@ class boundary_type_t;
 class boundary_t;
 class simulation_force_calculator_t;
 class lj_cutoff_t;
+class lj_smoothed_t;
 class gravity_t;
 class simulation_mode_t;
 class thermostat_t;
+class thermodyn_stats_t;
 class simulation_parameters_t;
 class cuboid_t;
 class sphere_t;
@@ -529,6 +531,23 @@ class simulation_force_calculator_t: public ::xml_schema::type
   void
   lennard_jones (const lennard_jones_sequence& s);
 
+  // lj-smoothed
+  // 
+  typedef ::lj_smoothed_t lj_smoothed_type;
+  typedef ::xsd::cxx::tree::sequence< lj_smoothed_type > lj_smoothed_sequence;
+  typedef lj_smoothed_sequence::iterator lj_smoothed_iterator;
+  typedef lj_smoothed_sequence::const_iterator lj_smoothed_const_iterator;
+  typedef ::xsd::cxx::tree::traits< lj_smoothed_type, char > lj_smoothed_traits;
+
+  const lj_smoothed_sequence&
+  lj_smoothed () const;
+
+  lj_smoothed_sequence&
+  lj_smoothed ();
+
+  void
+  lj_smoothed (const lj_smoothed_sequence& s);
+
   // gravity
   // 
   typedef ::gravity_t gravity_type;
@@ -574,6 +593,7 @@ class simulation_force_calculator_t: public ::xml_schema::type
 
   protected:
   lennard_jones_sequence lennard_jones_;
+  lj_smoothed_sequence lj_smoothed_;
   gravity_sequence gravity_;
 };
 
@@ -626,6 +646,69 @@ class lj_cutoff_t: public ::xml_schema::type
 
   protected:
   cutoff_factor_optional cutoff_factor_;
+};
+
+class lj_smoothed_t: public ::xml_schema::type
+{
+  public:
+  // cutoff_factor
+  // 
+  typedef ::xml_schema::double_ cutoff_factor_type;
+  typedef ::xsd::cxx::tree::traits< cutoff_factor_type, char, ::xsd::cxx::tree::schema_type::double_ > cutoff_factor_traits;
+
+  const cutoff_factor_type&
+  cutoff_factor () const;
+
+  cutoff_factor_type&
+  cutoff_factor ();
+
+  void
+  cutoff_factor (const cutoff_factor_type& x);
+
+  // rl
+  // 
+  typedef ::xml_schema::double_ rl_type;
+  typedef ::xsd::cxx::tree::traits< rl_type, char, ::xsd::cxx::tree::schema_type::double_ > rl_traits;
+
+  const rl_type&
+  rl () const;
+
+  rl_type&
+  rl ();
+
+  void
+  rl (const rl_type& x);
+
+  // Constructors.
+  //
+  lj_smoothed_t (const cutoff_factor_type&,
+                 const rl_type&);
+
+  lj_smoothed_t (const ::xercesc::DOMElement& e,
+                 ::xml_schema::flags f = 0,
+                 ::xml_schema::container* c = 0);
+
+  lj_smoothed_t (const lj_smoothed_t& x,
+                 ::xml_schema::flags f = 0,
+                 ::xml_schema::container* c = 0);
+
+  virtual lj_smoothed_t*
+  _clone (::xml_schema::flags f = 0,
+          ::xml_schema::container* c = 0) const;
+
+  virtual 
+  ~lj_smoothed_t ();
+
+  // Implementation.
+  //
+  protected:
+  void
+  parse (::xsd::cxx::xml::dom::parser< char >&,
+         ::xml_schema::flags);
+
+  protected:
+  ::xsd::cxx::tree::one< cutoff_factor_type > cutoff_factor_;
+  ::xsd::cxx::tree::one< rl_type > rl_;
 };
 
 class gravity_t: public ::xml_schema::type
@@ -978,6 +1061,139 @@ class thermostat_t: public ::xml_schema::type
   apply_brown_optional apply_brown_;
 };
 
+class thermodyn_stats_t: public ::xml_schema::type
+{
+  public:
+  // freq
+  // 
+  typedef ::xml_schema::unsigned_int freq_type;
+  typedef ::xsd::cxx::tree::traits< freq_type, char > freq_traits;
+
+  const freq_type&
+  freq () const;
+
+  freq_type&
+  freq ();
+
+  void
+  freq (const freq_type& x);
+
+  // avgover
+  // 
+  typedef ::xml_schema::unsigned_int avgover_type;
+  typedef ::xsd::cxx::tree::traits< avgover_type, char > avgover_traits;
+
+  const avgover_type&
+  avgover () const;
+
+  avgover_type&
+  avgover ();
+
+  void
+  avgover (const avgover_type& x);
+
+  // dr
+  // 
+  typedef ::xml_schema::double_ dr_type;
+  typedef ::xsd::cxx::tree::traits< dr_type, char, ::xsd::cxx::tree::schema_type::double_ > dr_traits;
+
+  const dr_type&
+  dr () const;
+
+  dr_type&
+  dr ();
+
+  void
+  dr (const dr_type& x);
+
+  // maxrad
+  // 
+  typedef ::xml_schema::double_ maxrad_type;
+  typedef ::xsd::cxx::tree::traits< maxrad_type, char, ::xsd::cxx::tree::schema_type::double_ > maxrad_traits;
+
+  const maxrad_type&
+  maxrad () const;
+
+  maxrad_type&
+  maxrad ();
+
+  void
+  maxrad (const maxrad_type& x);
+
+  // varfile
+  // 
+  typedef ::xml_schema::string varfile_type;
+  typedef ::xsd::cxx::tree::traits< varfile_type, char > varfile_traits;
+
+  const varfile_type&
+  varfile () const;
+
+  varfile_type&
+  varfile ();
+
+  void
+  varfile (const varfile_type& x);
+
+  void
+  varfile (::std::auto_ptr< varfile_type > p);
+
+  // rdffile
+  // 
+  typedef ::xml_schema::string rdffile_type;
+  typedef ::xsd::cxx::tree::traits< rdffile_type, char > rdffile_traits;
+
+  const rdffile_type&
+  rdffile () const;
+
+  rdffile_type&
+  rdffile ();
+
+  void
+  rdffile (const rdffile_type& x);
+
+  void
+  rdffile (::std::auto_ptr< rdffile_type > p);
+
+  // Constructors.
+  //
+  thermodyn_stats_t (const freq_type&,
+                     const avgover_type&,
+                     const dr_type&,
+                     const maxrad_type&,
+                     const varfile_type&,
+                     const rdffile_type&);
+
+  thermodyn_stats_t (const ::xercesc::DOMElement& e,
+                     ::xml_schema::flags f = 0,
+                     ::xml_schema::container* c = 0);
+
+  thermodyn_stats_t (const thermodyn_stats_t& x,
+                     ::xml_schema::flags f = 0,
+                     ::xml_schema::container* c = 0);
+
+  virtual thermodyn_stats_t*
+  _clone (::xml_schema::flags f = 0,
+          ::xml_schema::container* c = 0) const;
+
+  virtual 
+  ~thermodyn_stats_t ();
+
+  // Implementation.
+  //
+  protected:
+  void
+  parse (::xsd::cxx::xml::dom::parser< char >&,
+         ::xml_schema::flags);
+
+  protected:
+  ::xsd::cxx::tree::one< freq_type > freq_;
+  ::xsd::cxx::tree::one< avgover_type > avgover_;
+  ::xsd::cxx::tree::one< dr_type > dr_;
+  ::xsd::cxx::tree::one< maxrad_type > maxrad_;
+  ::xsd::cxx::tree::one< varfile_type > varfile_;
+  ::xsd::cxx::tree::one< rdffile_type > rdffile_;
+};
+
 class simulation_parameters_t: public ::xml_schema::type
 {
   public:
@@ -1061,6 +1277,27 @@ class simulation_parameters_t: public ::xml_schema::type
   void
   thermostat (::std::auto_ptr< thermostat_type > p);
 
+  // thermodyn-stats
+  // 
+  typedef ::thermodyn_stats_t thermodyn_stats_type;
+  typedef ::xsd::cxx::tree::optional< thermodyn_stats_type > thermodyn_stats_optional;
+  typedef ::xsd::cxx::tree::traits< thermodyn_stats_type, char > thermodyn_stats_traits;
+
+  const thermodyn_stats_optional&
+  thermodyn_stats () const;
+
+  thermodyn_stats_optional&
+  thermodyn_stats ();
+
+  void
+  thermodyn_stats (const thermodyn_stats_type& x);
+
+  void
+  thermodyn_stats (const thermodyn_stats_optional& x);
+
+  void
+  thermodyn_stats (::std::auto_ptr< thermodyn_stats_type > p);
+
   // Constructors.
   //
   simulation_parameters_t (const start_time_type&,
@@ -1101,6 +1338,7 @@ class simulation_parameters_t: public ::xml_schema::type
   ::xsd::cxx::tree::one< delta_t_type > delta_t_;
   ::xsd::cxx::tree::one< simulation_mode_type > simulation_mode_;
   thermostat_optional thermostat_;
+  thermodyn_stats_optional thermodyn_stats_;
 };
 
 class cuboid_t: public ::xml_schema::type
@@ -2077,4 +2315,4 @@ simulation (::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument >& d,
 //
 // End epilogue.
 
-#endif // SRC_XMLINPUT_SIMULATION_H
+#endif // CXX_HOME_JOHANNES_WORKSPACE_MOL_SIM_SRC_XMLINPUT_SIMULATION_H

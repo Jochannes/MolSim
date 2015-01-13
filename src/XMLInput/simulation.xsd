@@ -29,12 +29,18 @@
   <xs:complexType name="simulation_force-calculator_t">
     <xs:sequence>
       <xs:element maxOccurs="unbounded" minOccurs="0" name="lennard-jones" type="lj_cutoff_t"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="lj-smoothed" type="lj_smoothed_t"/>
       <xs:element maxOccurs="unbounded" minOccurs="0" name="gravity" type="gravity_t"/>
     </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="lj_cutoff_t">
   	<xs:attribute name="cutoff_factor" type="xs:double" use="optional"/>
+  </xs:complexType>
+  
+  <xs:complexType name="lj_smoothed_t">
+  	<xs:attribute name="cutoff_factor" type="xs:double" use="required"/>
+  	<xs:attribute name="rl" type="xs:double" use="required"/>
   </xs:complexType>
 
   <xs:complexType name="gravity_t">
@@ -62,6 +68,15 @@
     <xs:attribute name="steps_changetemp" type="xs:unsignedInt" use="optional"/>
     <xs:attribute name="apply_brown" type="xs:boolean" use="optional"/>
   </xs:complexType>
+  
+  <xs:complexType name="thermodyn_stats_t">
+    <xs:attribute name="freq" type="xs:unsignedInt" use="required"/>
+    <xs:attribute name="avgover" type="xs:unsignedInt" use="required"/>
+    <xs:attribute name="dr" type="xs:double" use="required"/>
+    <xs:attribute name="maxrad" type="xs:double" use="required"/>
+    <xs:attribute name="varfile" type="xs:string" use="required"/>
+    <xs:attribute name="rdffile" type="xs:string" use="required"/>
+  </xs:complexType>
 
   <xs:complexType name="simulation_parameters_t">
     <xs:sequence>
@@ -69,7 +84,8 @@
       <xs:element name="end-time" type="xs:double"/>
       <xs:element name="delta-t" type="xs:double"/>
       <xs:element name="simulation-mode" type="simulation-mode_t"/>
-      <xs:element name="thermostat" type="thermostat_t" minOccurs="0" />
+      <xs:element minOccurs="0" name="thermostat" type="thermostat_t"/>
+      <xs:element minOccurs="0" name="thermodyn-stats" type="thermodyn_stats_t"/>
     </xs:sequence>
   </xs:complexType>
   
@@ -116,18 +132,18 @@
   
   
   <xs:complexType name="iteration_output_t">
-    <xs:attribute name="base_filename" type="xs:string" use="required" />
-    <xs:attribute name="output_freq" type="xs:unsignedInt" use="required" />
+    <xs:attribute name="base_filename" type="xs:string" use="required"/>
+    <xs:attribute name="output_freq" type="xs:unsignedInt" use="required"/>
   </xs:complexType>
   
   <xs:complexType name="result_output_t">
-    <xs:attribute name="filename" type="xs:string" use="required" />
+    <xs:attribute name="filename" type="xs:string" use="required"/>
   </xs:complexType>
   
   <xs:complexType name="simulation_output_t">
     <xs:sequence>
-      <xs:element name="iteration" type="iteration_output_t" minOccurs="0" />
-      <xs:element name="result" type="result_output_t" minOccurs="0" />
+      <xs:element minOccurs="0" name="iteration" type="iteration_output_t"/>
+      <xs:element minOccurs="0" name="result" type="result_output_t"/>
     </xs:sequence>
   </xs:complexType>
   
@@ -145,4 +161,3 @@
 
 
 </xs:schema>
-

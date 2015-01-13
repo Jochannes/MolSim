@@ -222,12 +222,28 @@ void XMLInput::ReadFile()
 		}
 	}
 
+	// 1.6: thermodyn_stats
+	const simulation_parameters_t::thermodyn_stats_optional thdyn = param.thermodyn_stats();
+	if (thdyn.present()) {
+		this->thdyn_freq = thdyn.get().freq();
+		this->thdyn_avgover = thdyn.get().avgover();
+		this->thdyn_dr = thdyn.get().dr();
+		this->thdyn_maxrad = thdyn.get().maxrad();
+		this->thdyn_varfile = thdyn.get().varfile();
+		this->thdyn_rdffile = thdyn.get().rdffile();
+
+		LOG4CXX_DEBUG(xmllogger, "calculating thermodynamic statistics: freq=" << this->thdyn_freq <<
+				"; avgover=" << this->thdyn_avgover << "; dr=" << this->thdyn_dr <<
+				"; maxrad=" << this->thdyn_maxrad << "; varfile=" << this->thdyn_varfile << "; rdffile=" << this->thdyn_rdffile);
+	}
+
 
 	// 2: element "force-calculator"
 	const simulation_force_calculator_t& fc = s->force_calculator();
 	forceCalcCnt = 0;
 
 	// 2.1: element "lennard_jones"
+	forceCalcCnt += fc.lennard_jones().size();
 	for( simulation_force_calculator_t::lennard_jones_const_iterator it = fc.lennard_jones().begin();
 		 it != fc.lennard_jones().end();
 		 it++ )
@@ -243,10 +259,22 @@ void XMLInput::ReadFile()
 
 			LOG4CXX_DEBUG(xmllogger, "using Lennard-Jones force calculator without cutoff.");
 		}
-		forceCalcCnt++;
 	}
 
-	// 2.2: element "gravity"
+	// 2.2: element "lj_smoothed"
+	forceCalcCnt += fc.lj_smoothed().size();
+	for( simulation_force_calculator_t::lj_smoothed_const_iterator it = fc.lj_smoothed().begin();
+		 it != fc.lj_smoothed().end();
+		 it++ )
+	{
+		const double cutoff_factor = it->cutoff_factor();
+		const double rl = it->rl();
+		this->lj_smoothed.push_back(ForceCalculator_LJ_smoothed(cutoff_factor, rl));
+
+		LOG4CXX_DEBUG(xmllogger, "using smoothed Lennard-Jones force calculator with cutoff radius, cutoff_factor=" << cutoff_factor << ", rl=" << rl << ".");
+	}
+
+	// 2.3: element "gravity"
 	forceCalcCnt += fc.gravity().size();
 	this->gravity.reserve( fc.gravity().size() );
 	for( simulation_force_calculator_t::gravity_const_iterator it = fc.gravity().begin();
@@ -396,6 +424,13 @@ void XMLInput::configureApplication()
 		::fcalcs[i] = new ForceCalculator_LennardJones(it->cutoff_factor);
 		i++;
 	}
+	for( vector<ForceCalculator_LJ_smoothed>::iterator it = this->lj_smoothed.begin();
+		 it != this->lj_smoothed.end();
+		 it++ )
+	{
+		::fcalcs[i] = new ForceCalculator_LJ_smoothed(it->cutoff_factor, it->rl);
+		i++;
+	}
 	for( vector<ForceCalculator_Gravity>::iterator it = this->gravity.begin();
 		 it != this->gravity.end();
 		 it++ )
@@ -436,7 +471,6 @@ void XMLInput::configureApplication()
 		::particles->add(*it);
 	}
 
-
 	// Thermostat
 	if (this->dim > 0) {
 		if (this->delta_temp == 0.0) {		// use a constant temperature
@@ -451,6 +485,9 @@ void XMLInput::configureApplication()
 	else {
 		::thermostat = NULL;
 	}
+
+	// ThermoDynStats
+	::thdynStats = new ThermoDynStats(this->thdyn_freq, this->thdyn_avgover, this->thdyn_dr, this->thdyn_maxrad, this->thdyn_varfile, this->thdyn_rdffile);
 
 	// output
 	if( !this->base_filename.empty() ) {

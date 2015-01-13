@@ -9,7 +9,6 @@
 #define COORDINATECALCULATOR_H_
 
 #include "ParticleHandler.h"
-#include "Particle.h"
 
 /**
  * \brief Class for defining the interface used for position calculation.

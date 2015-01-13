@@ -34,6 +34,8 @@ extern int    output_freq;
 
 extern Thermostat* thermostat;
 
+extern ThermoDynStats* thdynStats;
+
 extern ParticleContainer* particles;
 extern ParticleOutput* particleOut;
 extern ResultOutput* resultOut;

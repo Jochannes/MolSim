@@ -7,6 +7,7 @@
 #include "handler/VelocityCalculator.h"
 #include "handler/ForceCalculator.h"
 #include "Thermostat.h"
+#include "ThermoDynStats.h"
 
 #include <cstring>
 #include <cstdlib>
@@ -68,6 +69,8 @@ int output_freq = 10;	//!< Output frequency of the simulation.
 
 Thermostat* thermostat;	//!< Thermostat controlling the temperatures of the particles.
 
+ThermoDynStats* thdynStats = NULL;	//!< Class controlling the calculation of thermodynamical statistics.
+
 ParticleContainer* particles;//!< Container for encapsulating the particle list.
 ParticleOutput* particleOut = NULL; //!< Object for defining the output method to be used.
 ResultOutput* resultOut = NULL;	//!< Object for defining the result output method.
@@ -114,6 +117,11 @@ int main(int argc, char* argsv[]) {
 		// control temperatures (if activated)
 		if (thermostat != NULL) {
 			thermostat->handle(iteration);
+		}
+
+		//Calculate the thermodynamical statistics (if activated)
+		if (thdynStats != NULL) {
+			thdynStats->analyze(particles, iteration);
 		}
 
 		iteration++;

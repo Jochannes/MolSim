@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="../src/XMLInput/simulation.xsd">
+
+
+  <parameter>
+    <start-time>0</start-time>
+    <end-time>150</end-time>
+    <delta-t>0.001</delta-t>
+    
+    <simulation-mode>
+      <type>linked-cell</type>
+      <cutoff_radius>2.3</cutoff_radius>
+      <domain_size_x>9.2</domain_size_x>
+      <domain_size_y>9.2</domain_size_y>
+      <domain_size_z>9.2</domain_size_z>
+      <boundary x_0="periodic" x_max="periodic" y_0="periodic" y_max="periodic" z_0="periodic" z_max="periodic" />
+    </simulation-mode>
+    
+    <thermostat dim="3" steps="1000" init_temp="0.01" target_temp="3.0" delta_temp="0.001" steps_changetemp="40" apply_brown="true" />
+  </parameter>
+  
+  <force-calculator>
+    <lj-smoothed cutoff_factor="2.3" rl="1.9" />
+  </force-calculator>
+  
+  <input>
+    <cuboid x1="0.575" x2="0.575" x3="0.575" n1="8" n2="8" n3="8" h="1.15" m="1.0" epsilon="1.0" sigma="1.0" type="1" v1="0.0" v2="0.0" v3="0.0" />
+  </input>
+  
+  
+  <output>
+    <iteration base_filename="Output/sheet5_ex5_run1/MD_vtk" output_freq="100" />
+    <result filename="examples/sheet5_ex5_run1_result.txt" />
+  </output>
+  
+  
+</simulation>
+
