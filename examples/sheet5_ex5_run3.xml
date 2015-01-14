@@ -17,9 +17,9 @@
       <boundary x_0="periodic" x_max="periodic" y_0="periodic" y_max="periodic" z_0="periodic" z_max="periodic" />
     </simulation-mode>
     
-    <thermostat dim="3" steps="1000" init_temp="3.0" target_temp="0.02" delta_temp="0.0025" steps_changetemp="25" apply_brown="false" />
+    <thermostat dim="3" steps="25" init_temp="3.0" target_temp="0.02" delta_temp="0.0025" steps_changetemp="25" apply_brown="false" />
     
-    <thermodyn-stats freq="500" avgover="5" dr="0.05" maxrad="2.3" varfile="Output/sheet5_ex5_run2/VarStats.csv" rdffile="Output/sheet5_ex5_run2/RDFStats.csv" />
+    <thermodyn-stats freq="500" avgover="5" dr="0.05" maxrad="2.3" varfile="Output/sheet5_ex5_run3/VarStats.csv" rdffile="Output/sheet5_ex5_run3/RDFStats.csv" />
   </parameter>
   
   <force-calculator>
@@ -32,7 +32,7 @@
   
   
   <output>
-    <iteration base_filename="Output/sheet5_ex5_run2/MD_vtk" output_freq="100" />
+    <iteration base_filename="Output/sheet5_ex5_run3/MD_vtk" output_freq="100" />
   </output>
   
   

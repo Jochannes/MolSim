@@ -17,7 +17,7 @@
       <boundary x_0="periodic" x_max="periodic" y_0="periodic" y_max="periodic" z_0="periodic" z_max="periodic" />
     </simulation-mode>
     
-    <thermostat dim="3" steps="1000" init_temp="0.01" target_temp="3.0" delta_temp="0.001" steps_changetemp="40" apply_brown="true" />
+    <thermostat dim="3" steps="40" init_temp="0.01" target_temp="3.0" delta_temp="0.001" steps_changetemp="40" apply_brown="true" />
   </parameter>
   
   <force-calculator>

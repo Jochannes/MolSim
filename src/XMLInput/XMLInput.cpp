@@ -234,7 +234,7 @@ void XMLInput::ReadFile()
 
 		LOG4CXX_DEBUG(xmllogger, "calculating thermodynamic statistics: freq=" << this->thdyn_freq <<
 				"; avgover=" << this->thdyn_avgover << "; dr=" << this->thdyn_dr <<
-				"; maxrad=" << this->thdyn_maxrad << "; varfile=" << this->thdyn_varfile << "; rdffile=" << this->thdyn_rdffile);
+				"; maxrad=" << this->thdyn_maxrad << "; varfile='" << this->thdyn_varfile << "'; rdffile='" << this->thdyn_rdffile << "'");
 	}
 
 

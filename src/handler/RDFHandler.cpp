@@ -10,8 +10,12 @@
 
 using namespace utils;
 
-RDFHandler::RDFHandler(double arg_dr, int arg_intervalCnt) : dr(arg_dr), intervalCnt(arg_intervalCnt) {
+RDFHandler::RDFHandler(double arg_dr, int arg_intervalCnt) :
+		dr(arg_dr), intervalCnt(arg_intervalCnt) {
 	intervals = new int[intervalCnt];
+	for(int i = 0; i < intervalCnt; i++){
+		intervals[i] = 0;
+	}
 }
 
 RDFHandler::~RDFHandler() {
@@ -24,6 +28,8 @@ RDFHandler::~RDFHandler() {
  */
 void RDFHandler::compute(Particle& p1, Particle& p2) {
 	double distance = (p1.getX() - p2.getX()).L2Norm();
-	intervals[(int)(distance / dr)]++;
+	if ((int) (distance / dr) < intervalCnt) {
+		intervals[(int) (distance / dr)]++;
+	}
 }
 

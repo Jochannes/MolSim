@@ -10,8 +10,12 @@
 #include "handler/RDFHandler.h"
 
 #include <fstream>
+#include <stdio.h>
+#include <log4cxx/logger.h>
+#include <cstdlib>
 
 using namespace std;
+using namespace log4cxx;
 
 ThermoDynStats::ThermoDynStats(double arg_freq, double arg_avgOver,
 		double arg_dr, double arg_maxrad, string& arg_varFile, string& arg_rdfFile) :
@@ -24,6 +28,9 @@ ThermoDynStats::ThermoDynStats(double arg_freq, double arg_avgOver,
 	for (int i = 0; i < avgOver; i++) {
 		rdf[i] = new double[intervalCnt];
 	}
+
+	std::remove(varFile.c_str());
+	std::remove(rdfFile.c_str());
 }
 
 /**
@@ -43,9 +50,14 @@ void ThermoDynStats::analyze(ParticleContainer* cont, int iteration) {
 	}
 
 	//Calculate average and save the statistics
+	int it = iteration % freq;
+	int end = avgOver - 1;
 	if (iteration % freq == avgOver - 1) {
 		double avg_var = 0;
 		double* avg_rdf = new double[intervalCnt];
+		for(int i = 0; i < intervalCnt; i++){
+			avg_rdf[i] = 0;
+		}
 
 		//sum over iterations
 		for (int i = 0; i < avgOver; i++) {
@@ -95,14 +107,24 @@ inline void ThermoDynStats::calcRDF(ParticleContainer* cont, int it) {
  */
 inline void ThermoDynStats::saveStats(int it, double avg_var, double* avg_rdf) {
 
+	static LoggerPtr thdynLogger(Logger::getLogger("MolSim.ResultOutput"));
+
 	//save movement variance
 	ofstream ofs;
-	ofs.open(varFile.c_str());
+	ofs.open(varFile.c_str(), fstream::out | fstream::app);
+	if (!ofs.is_open()) {
+		LOG4CXX_FATAL(thdynLogger, "Error: could not open file " << varFile);
+		exit(1);
+	}
 	ofs << it << ";" << avg_var << endl;
 	ofs.close();
 
 	//save radial pair distribution function
-	ofs.open(rdfFile.c_str());
+	ofs.open(rdfFile.c_str(), fstream::out | fstream::app);
+	if (!ofs.is_open()) {
+		LOG4CXX_FATAL(thdynLogger, "Error: could not open file " << rdfFile);
+		exit(1);
+	}
 	ofs << it;
 	for (int i = 0; i < intervalCnt; i++) {
 		ofs << ";" << avg_rdf[i];

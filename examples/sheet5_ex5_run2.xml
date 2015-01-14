@@ -17,7 +17,7 @@
       <boundary x_0="periodic" x_max="periodic" y_0="periodic" y_max="periodic" z_0="periodic" z_max="periodic" />
     </simulation-mode>
     
-    <thermostat dim="3" steps="1000" init_temp="3.0" target_temp="0.5" delta_temp="0.00078" steps_changetemp="50" apply_brown="false" />
+    <thermostat dim="3" steps="50" init_temp="3.0" target_temp="0.5" delta_temp="0.00078" steps_changetemp="50" apply_brown="false" />
     
     <thermodyn-stats freq="1000" avgover="5" dr="0.05" maxrad="2.3" varfile="Output/sheet5_ex5_run2/VarStats.csv" rdffile="Output/sheet5_ex5_run2/RDFStats.csv" />
   </parameter>

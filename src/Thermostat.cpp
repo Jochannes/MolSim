@@ -20,6 +20,68 @@ using namespace log4cxx;
 LoggerPtr thermlogger(Logger::getLogger("MolSim.Thermostat"));
 
 
+Thermostat::Thermostat(ParticleContainer& param_particles, int param_num_dimensions,
+		double param_init_temp, int param_steps_thermostat,
+		bool param_applyBrown) :
+		particles(param_particles), num_dimensions(param_num_dimensions), steps_thermostat(
+				param_steps_thermostat), target_temp(0.0), next_temp(
+				param_init_temp), delta_temp(0.0), steps_tempchange(0), constant(
+				true) {
+	if (param_applyBrown) {
+		applyBrown();
+	}
+	adjustParticleTemperatures();
+}
+
+Thermostat::Thermostat(ParticleContainer& param_particles, int param_num_dimensions,
+		double param_init_temp, int param_steps_thermostat,
+		double param_target_temp, double param_delta_temp,
+		int param_steps_tempchange, bool param_applyBrown) :
+		particles(param_particles), num_dimensions(param_num_dimensions), steps_thermostat(
+				param_steps_thermostat), target_temp(param_target_temp), next_temp(
+				param_init_temp), steps_tempchange(
+				param_steps_tempchange), constant(false) {
+
+	//Change sign of delta_temp to fit the required direction of temperature change
+	if ((param_init_temp < target_temp && param_delta_temp > 0)
+			|| (param_init_temp > target_temp && delta_temp < 0)) {
+		delta_temp = param_delta_temp;
+	} else {
+		delta_temp = -param_delta_temp;
+	}
+
+	if (param_applyBrown) {
+		applyBrown();
+	}
+	adjustParticleTemperatures();
+}
+
+Thermostat::~Thermostat() {
+}
+
+void Thermostat::handle(int iteration) {
+	if (!constant && (iteration % steps_tempchange == 0)) {
+		changeTemperature();
+	}
+	if (iteration % steps_thermostat == 0) {
+		adjustParticleTemperatures();
+	}
+}
+
+void Thermostat::changeTemperature() {
+	if (delta_temp > 0) {
+		if (target_temp - next_temp <= delta_temp)
+			next_temp = target_temp;
+		else
+			next_temp += delta_temp;
+	} else {
+		if (target_temp - next_temp >= delta_temp)
+			next_temp = target_temp;
+		else
+			next_temp += delta_temp;
+	}
+}
+
 double Thermostat::calculateKineticEnergy()
 {
 	KineticEnergyHandler h;
@@ -53,12 +115,9 @@ void Thermostat::adjustParticleTemperatures()
 		// scale the temperatures of all particles
 		TemperatureAdjustHandler h(beta);
 		particles.iterate_all(h);
-
-		LOG4CXX_DEBUG(thermlogger, "temp-adjust: E_kin_D=" << E_kin_D << "; E_kin=" << E_kin << "; beta=" << beta);
+		LOG4CXX_DEBUG(thermlogger, "temp-adjust: T=" << next_temp << "; E_kin_D=" << E_kin_D << "; E_kin=" << E_kin << "; beta=" << beta);
 	}
 	else {
 		LOG4CXX_DEBUG(thermlogger, "temp-adjust: too small kinetic energy!");
 	}
 }
-
-
