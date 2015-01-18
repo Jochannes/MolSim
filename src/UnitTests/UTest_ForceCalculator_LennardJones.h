@@ -24,15 +24,16 @@ namespace unitTest {
  * This class tests if the potential well is set right and attractive and repulsive regions are right.
  */
 class UTest_ForceCalculator_LennardJones: public CppUnit::TestFixture {
-CPPUNIT_TEST_SUITE( UTest_ForceCalculator_LennardJones );
+	CPPUNIT_TEST_SUITE( UTest_ForceCalculator_LennardJones );
 	CPPUNIT_TEST(testPotentialWell);
 	CPPUNIT_TEST(testAttraction);
 	CPPUNIT_TEST(testRepulsion);
-	CPPUNIT_TEST(testNewton);CPPUNIT_TEST_SUITE_END()
-	;
+	CPPUNIT_TEST(testNewton);
+	CPPUNIT_TEST_SUITE_END();
 
 private:
 	double r_well;							//!< Distance of the potential well
+	double cutoff;							//!< Cutoff distance for fLJ_cutoff
 	Particle p1;				//!< First Particle used for force calculations
 	Particle p2;				//!< Second Particle used for force calculations
 	ForceCalculator_LennardJones fLennard;//!< ForceCalculator used for force calculation tests
@@ -40,7 +41,9 @@ private:
 
 public:
 	UTest_ForceCalculator_LennardJones() :
-			r_well(Particle::def_sigma * pow(2.0, 1.0 / 6)) {
+			r_well(Particle::def_sigma * pow(2.0, 1.0 / 6)),
+			fLJ_cutoff(ForceCalculator_LennardJones(3.0)),
+			cutoff(Particle::def_sigma * 3.0){
 	}
 
 	void setUp();

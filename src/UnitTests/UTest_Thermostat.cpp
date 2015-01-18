@@ -74,7 +74,7 @@ void UTest_Thermostat::testTemperatureControl() {
 	int steps_thermostat = 5;
 	int steps_changetemp = 20;
 	int iteration = 0;
-	int max_it = 100;
+	int max_it = 99;
 	double temp = init_temp;
 	::delta_t = 0.005;
 

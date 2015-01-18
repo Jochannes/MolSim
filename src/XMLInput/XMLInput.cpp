@@ -224,6 +224,7 @@ void XMLInput::ReadFile()
 
 	// 1.6: thermodyn_stats
 	const simulation_parameters_t::thermodyn_stats_optional thdyn = param.thermodyn_stats();
+	this->thdyn_use = thdyn.present();
 	if (thdyn.present()) {
 		this->thdyn_freq = thdyn.get().freq();
 		this->thdyn_avgover = thdyn.get().avgover();
@@ -487,7 +488,11 @@ void XMLInput::configureApplication()
 	}
 
 	// ThermoDynStats
-	::thdynStats = new ThermoDynStats(this->thdyn_freq, this->thdyn_avgover, this->thdyn_dr, this->thdyn_maxrad, this->thdyn_varfile, this->thdyn_rdffile);
+	if(this->thdyn_use) {
+		::thdynStats = new ThermoDynStats(this->thdyn_freq, this->thdyn_avgover, this->thdyn_dr, this->thdyn_maxrad, this->thdyn_varfile, this->thdyn_rdffile);
+	} else {
+		::thdynStats = NULL;
+	}
 
 	// output
 	if( !this->base_filename.empty() ) {

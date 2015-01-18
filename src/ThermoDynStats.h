@@ -13,6 +13,10 @@
 
 using namespace std;
 
+namespace unitTest {
+	class UTest_ThermoDynStats;
+}
+
 /**
  * \brief Class for calculating thermodynamical statistics.
  *
@@ -21,6 +25,8 @@ using namespace std;
  * and saves them in separate files.
  */
 class ThermoDynStats {
+	friend unitTest::UTest_ThermoDynStats;
+
 private:
 	int freq;			//!< Specifies how often thermodynamical statistics will be calculated.
 	int avgOver;		//!< Specifies over how many iterations the statistics will be averaged.
@@ -39,7 +45,7 @@ private:
 	inline void saveStats(int it, double avg_var, double* avg_rdf);
 public:
 
-	ThermoDynStats(double arg_freq, double arg_avgOver, double arg_dr, double arg_maxrad, string& arg_varFile, string& arg_rdfFile);
+	ThermoDynStats(int arg_freq, int arg_avgOver, double arg_dr, double arg_maxrad, string& arg_varFile, string& arg_rdfFile);
 
 	void analyze(ParticleContainer* cont, int iteration);
 };

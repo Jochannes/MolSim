@@ -34,8 +34,10 @@ src/UnitTests/UTest_CuboidGenerator.cpp\
 src/UnitTests/UTest_CellContainer.cpp\
 src/UnitTests/UTest_Thermostat.cpp\
 src/UnitTests/UTest_BoundaryCondition.cpp\
+src/UnitTests/UTest_ForceCalculator_LJ_smoothed.cpp\
 src/UnitTests/UTest_SphereGenerator.cpp\
 src/UnitTests/UTest_ForceCalculator_Gravity.cpp\
+src/UnitTests/UTest_ThermoDynStats.cpp\
 src/UnitTests/UTest_SimpleContainer.cpp\
 src/UnitTests/BoundCondCount.cpp\
 src/UnitTests/UTest_ParticleFile.cpp\

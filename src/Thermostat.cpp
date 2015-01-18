@@ -44,7 +44,7 @@ Thermostat::Thermostat(ParticleContainer& param_particles, int param_num_dimensi
 
 	//Change sign of delta_temp to fit the required direction of temperature change
 	if ((param_init_temp < target_temp && param_delta_temp > 0)
-			|| (param_init_temp > target_temp && delta_temp < 0)) {
+			|| (param_init_temp > target_temp && param_delta_temp < 0)) {
 		delta_temp = param_delta_temp;
 	} else {
 		delta_temp = -param_delta_temp;

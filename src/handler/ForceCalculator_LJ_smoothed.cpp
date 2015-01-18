@@ -73,7 +73,7 @@ void ForceCalculator_LJ_smoothed::compute(Particle& p1, Particle& p2) {
 			double cutoff = sigma * cutoff_factor;
 			double smFactor = (3*cutoff - rl - 2*distance) / pow(cutoff - rl, 3);
 			smFactor *= pow(distance - rl, 2);
-			factor -= smFactor;
+			factor *= 1 - smFactor;
 		}
 
 		diff_force = factor * diff_force;

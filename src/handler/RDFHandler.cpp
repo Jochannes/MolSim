@@ -28,7 +28,7 @@ RDFHandler::~RDFHandler() {
  */
 void RDFHandler::compute(Particle& p1, Particle& p2) {
 	double distance = (p1.getX() - p2.getX()).L2Norm();
-	if ((int) (distance / dr) < intervalCnt) {
+	if (distance < intervalCnt * dr) {
 		intervals[(int) (distance / dr)]++;
 	}
 }

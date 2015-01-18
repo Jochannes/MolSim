@@ -57,6 +57,7 @@ private:
 	bool applyBrown;
 
 	//ThermodynStats
+	bool thdyn_use;
 	int thdyn_freq, thdyn_avgover;
 	double thdyn_dr, thdyn_maxrad;
 	std::string thdyn_varfile, thdyn_rdffile;

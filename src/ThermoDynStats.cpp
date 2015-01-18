@@ -17,7 +17,7 @@
 using namespace std;
 using namespace log4cxx;
 
-ThermoDynStats::ThermoDynStats(double arg_freq, double arg_avgOver,
+ThermoDynStats::ThermoDynStats(int arg_freq, int arg_avgOver,
 		double arg_dr, double arg_maxrad, string& arg_varFile, string& arg_rdfFile) :
 		freq(arg_freq), avgOver(arg_avgOver), dr(arg_dr), maxrad(arg_maxrad), varFile(arg_varFile), rdfFile(arg_rdfFile) {
 
@@ -56,7 +56,7 @@ void ThermoDynStats::analyze(ParticleContainer* cont, int iteration) {
 		double avg_var = 0;
 		double* avg_rdf = new double[intervalCnt];
 		for(int i = 0; i < intervalCnt; i++){
-			avg_rdf[i] = 0;
+			avg_var[i] = 0;
 		}
 
 		//sum over iterations
