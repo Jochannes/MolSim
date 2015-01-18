@@ -56,7 +56,7 @@ void ThermoDynStats::analyze(ParticleContainer* cont, int iteration) {
 		double avg_var = 0;
 		double* avg_rdf = new double[intervalCnt];
 		for(int i = 0; i < intervalCnt; i++){
-			avg_var[i] = 0;
+			avg_rdf[i] = 0;
 		}
 
 		//sum over iterations
