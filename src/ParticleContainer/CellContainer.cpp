@@ -337,8 +337,8 @@ CellContainer::CellContainer(const Vector<double, 3> domainSize,
  *
  * The index is calculated using the following equation:
  * \f{eqnarray*}{
- * n_0 &=& \left( n\ \mbox{mod}\ N_0 N_1 \right)\ \mbox{mod}\ N_0\\
- * n_1 &=& \left \lfloor \frac{n\ \mbox{mod}\ N_0 N_1 }{N_0} \right \rfloor\\
+ * n_0 &=& \left( n\ \text{mod}\ N_0 N_1 \right)\ \text{mod}\ N_0\\
+ * n_1 &=& \left \lfloor \frac{n\ \text{mod}\ N_0 N_1 }{N_0} \right \rfloor\\
  * n_2 &=& \left \lfloor \frac{n}{N_0 N_1} \right \rfloor
  * \f}
  *

@@ -26,7 +26,7 @@ VarHandler::~VarHandler() {
  *
  * Altogether, this function realizes the equation:
  * \f[
- * \mbox{VarN}(t) = \sum_{i=1}^N \left| x_i (t) - x_i (t_0) \right|_2^2
+ * \text{VarN}(t) = \sum_{i=1}^N \left| x_i (t) - x_i (t_0) \right|_2^2
  * \f]
  *
  * The next position is calculated using the

@@ -37,10 +37,10 @@ ForceCalculator_LJ_smoothed::~ForceCalculator_LJ_smoothed() {
  * \f]
  * with
  * \f[
- * S_{ij} = \begin{cases} 1 &\mbox{if } \left| x_i - x_j \right\|_2 \le r_l \\
- * 		1 - \left( \left| x_i - x_j \right\|_2 - r_l \right) ^2 \cdot \frac{3 r_{\mbox{cutoff}} - r_l - 2 \left| x_i - x_j \right\|_2}{\left( r_{\mbox{cutoff}} - r_l \right)^3}
- * 			&\mbox{if } r_l < \left| x_i - x_j \right\|_2 < r_{\mbox{cutoff}}\\
- * 		0 &\mbox{if } \left| x_i - x_j \right\|_2 \ge r_{\mbox{cutoff}}. \end{cases}
+ * S_{ij} = \begin{cases} 1 &\text{if } \left\| x_i - x_j \right\|_2 \le r_l \\
+ * 		1 - \left( \left\| x_i - x_j \right\|_2 - r_l \right) ^2 \cdot \frac{3 r_{\text{cutoff}} - r_l - 2 \left\| x_i - x_j \right\|_2}{\left( r_{\text{cutoff}} - r_l \right)^3}
+ * 			&\text{if } r_l < \left\| x_i - x_j \right\|_2 < r_{\text{cutoff}}\\
+ * 		0 &\text{if } \left\| x_i - x_j \right\|_2 \ge r_{\text{cutoff}}. \end{cases}
  * \f]
  */
 void ForceCalculator_LJ_smoothed::compute(Particle& p1, Particle& p2) {

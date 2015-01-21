@@ -247,13 +247,13 @@ void UTest_CellContainer::testIterateCount() {
  * Since the particles are distributed evenly along the diagonal of the cell container,
  * each particle should have
  * \f[
- * n_{\mbox{neigbours}} = 3 n_{\mbox{cell}} = 3 \cdot \frac{n_{\mbox{tot}}}{N_{\mbox{cells}} - 2}
+ * n_{\text{neigbours}} = 3 n_{\text{cell}} = 3 \cdot \frac{n_{\text{tot}}}{N_{\text{cells}} - 2}
  * \f]
  * neighbours,
- * with \f$ N_{\mbox{cells}} \f$ being the total number of cells per dimension.
+ * with \f$ N_{\text{cells}} \f$ being the total number of cells per dimension.
  * This leads to a total of
  * \f[
- * n_{\mbox{neigbours}} = 3 n_{\mbox{cell}} n_{\mbox{tot}} - 2 n_{\mbox{cell}}^2
+ * n_{\text{neigbours}} = 3 n_{\text{cell}} n_{\text{tot}} - 2 n_{\text{cell}}^2
  * \f]
  * particle pairs, the second term being due to particles in the boundary cells having fewer neigbours.
  * Since the exact particle distribution is unknown, this estimation can lead to an error of up to one
@@ -274,12 +274,12 @@ void UTest_CellContainer::testIteratePairCount() {
  * Since the particles are distributed evenly along the diagonal of the cell container,
  * each particle should have
  * \f[
- * n_{\mbox{neigbours}} = 3 n_{\mbox{cell}} = 3 \cdot \frac{n_{\mbox{tot}}}{N_{\mbox{cells}} - 2}
+ * n_{\text{neigbours}} = 3 n_{\text{cell}} = 3 \cdot \frac{n_{\text{tot}}}{N_{\text{cells}} - 2}
  * \f]
- * neighbours, with \f$ N_{\mbox{cells}} \f$ being the total number of cells per dimension.
+ * neighbours, with \f$ N_{\text{cells}} \f$ being the total number of cells per dimension.
  * This leads to a total of
  * \f[
- * n_{\mbox{neigbours}} = 0.5 \cdot \left( 3 n_{\mbox{cell}} n_{\mbox{tot}} - 2 n_{\mbox{cell}}^2 \right)
+ * n_{\text{neigbours}} = 0.5 \cdot \left( 3 n_{\text{cell}} n_{\text{tot}} - 2 n_{\text{cell}}^2 \right)
  * \f]
  * particle pairs, the second term being due to particles in the boundary cells having fewer neigbours.
  * Since the exact particle distribution is unknown, this estimation can lead to an error of up to one

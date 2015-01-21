@@ -17,6 +17,15 @@
 using namespace std;
 using namespace log4cxx;
 
+/**
+ * \brief Constructor for initializing all values for statistics calculation
+ * @param arg_freq Frequency of statistics calculation.
+ * @param arg_avgOver Number of iterations over which the statistics will be averaged.
+ * @param arg_dr Radius discretization length for the radial pair distribution function.
+ * @param arg_maxrad Maximum radius for the radial pair distribution function (usually the cutoff radius).
+ * @param arg_varFile File for storing the movement variance.
+ * @param arg_rdfFile File for storing the radial pair distribution function.
+ */
 ThermoDynStats::ThermoDynStats(int arg_freq, int arg_avgOver,
 		double arg_dr, double arg_maxrad, string& arg_varFile, string& arg_rdfFile) :
 		freq(arg_freq), avgOver(arg_avgOver), dr(arg_dr), maxrad(arg_maxrad), varFile(arg_varFile), rdfFile(arg_rdfFile) {
@@ -35,6 +44,7 @@ ThermoDynStats::ThermoDynStats(int arg_freq, int arg_avgOver,
 
 /**
  * \brief Function for calculating and saving the thermodynamical statistics.
+ * @param cont ParticleContainer for which the statistics are calculated.
  * @param iteration Current iteration number.
  *
  * This method should be called for each iteration step. Depending
@@ -79,6 +89,7 @@ void ThermoDynStats::analyze(ParticleContainer* cont, int iteration) {
 
 /**
  * \brief Function for calculating the movement variance.
+ * @param cont ParticleContainer for which the statistics are calculated.
  * @param it Iteration number (between 0 and avgOver).
  */
 inline void ThermoDynStats::calcVar(ParticleContainer* cont, int it) {
@@ -89,6 +100,7 @@ inline void ThermoDynStats::calcVar(ParticleContainer* cont, int it) {
 
 /**
  * \brief Function for calculating the radial pair distribution function.
+ * @param cont ParticleContainer for which the statistics are calculated.
  * @param it Iteration number (between 0 and avgOver).
  */
 inline void ThermoDynStats::calcRDF(ParticleContainer* cont, int it) {
@@ -102,6 +114,7 @@ inline void ThermoDynStats::calcRDF(ParticleContainer* cont, int it) {
 
 /**
  * \brief Function for saving the statistics in text files.
+ * @param it Iteration number (between 0 and avgOver).
  * @param avg_var Calculated movement variance, averaged over multiple iterations.
  * @param avg_rdf Calculated radial pair distribution function, averaged over multiple iterations.
  */

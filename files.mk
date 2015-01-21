@@ -53,4 +53,5 @@ src/BoundaryCondition/Outflow.cpp\
 src/BoundaryCondition/Periodic.cpp\
 src/ParticleContainer/SimpleContainer.cpp\
 src/ParticleContainer/CellContainer.cpp\
+src/PapiProfile.cpp\
 src/ThermoDynStats.cpp\
