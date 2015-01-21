@@ -18,6 +18,8 @@
 #include <log4cxx/stream.h>
 #include <typeinfo>
 #include <sys/time.h>
+#include <omp.h>
+#include <papi.h>
 
 //UnitTests
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -82,6 +84,24 @@ int numForceCalcs;			//!< Number of force calculators.
 bool timing = false;	//!< Specifies if the iteration time will be measured.
 char* timingFile;	//!< Name of the file to store the timing results.
 int timingCount = 100;	//!< Number of iterations to measure.
+
+//PAPI profiling
+bool papi = false;	//!< Specifies if PAPI profiling will be activated.
+char* papiFile;		//!< Name of the file to store the PAPI profiling results.
+long long real_usec;	//!< Real time in microseconds.
+long long real_cyc;		//!< Real time in clock cycles.
+int* papiEvents;	//!< Events measured by each thread.
+int papiEventCnt;	//!< Number of events measured by each thread.
+/**
+ * \brief PAPI profiling values of each thread.
+ *
+ * Currently measured:
+ * 0. Total cycles
+ * 1. Instructions completed
+ * 2. Floating point operations
+ * 3. Cycles stalled on any resource
+ */
+long long** papiValues;
 
 LoggerPtr logger(Logger::getLogger("MolSim")); //!< Object for handling general logs.
 
@@ -155,6 +175,46 @@ int main(int argc, char* argsv[]) {
 		}
 	}
 
+	#ifdef _OPENMP
+	if(papi) {
+		//Collect counters
+		real_usec = PAPI_get_real_usec() - real_usec;
+		real_cyc = PAPI_get_real_cyc() - real_cyc;
+		papiValues = new long long*[omp_get_max_threads()];
+		for(int i = 0; i < omp_get_max_threads(); i++) {
+			papiValues[i] = new long long[papiEventCnt];
+			for(int j = 0; j < papiEventCnt; j++){
+				papiValues[i][j] = 0;
+			}
+		}
+		#pragma omp parallel
+		{
+			#pragma omp critical
+			if (PAPI_stop_counters(papiValues[omp_get_thread_num()], papiEventCnt) != PAPI_OK) {
+				LOG4CXX_ERROR(logger, "PAPI counter stop failed.");
+			}
+		}
+
+		//Save counters in file
+		ofstream papiStream;
+		papiStream.open(papiFile);
+		double real_sec = real_usec * 0.000001;
+		double usage;
+		papiStream << "Overall: " << real_sec << "s, " << real_cyc << " cycles" << endl << endl;
+		papiStream << "Per thread: " << endl;
+		papiStream << "thread number; total cycles; completed instructions; floating point operations; cycles stalled; usage" << endl;
+		for(int i = 0; i < omp_get_max_threads(); i++) {
+			papiStream << i;
+			for(int j = 0; j < papiEventCnt; j++) {
+				papiStream << ";" << papiValues[i][j];
+			}
+			usage = 100 - papiValues[i][3] / (papiValues[i][0] * 0.01);
+			papiStream << ";" << usage << "%" << endl;
+		}
+		papiStream.close();
+	}
+	#endif
+
 	if (timing && iteration < timingCount) {
 
 		gettimeofday(&timer_end, NULL);
@@ -227,6 +287,7 @@ void parseParameters(int argc, char* argsv[]) {
 								"  -sim XMLFILE				Starts a simulation with parameters read from XMLFILE.\n"
 								"  -test [NAME]				Runs a unit test. Optionally the name of the test suite can be specified by NAME.\n"
 								"  -timing TXTFILE [CNT] 	Activates time measurement for the first CNT iterations with output written to TXTFILE.\n"
+								"  -papi TXTFILE			Activates PAPI profiling with output written to TXTFILE. Works only when OpenMP is activated.\n"
 								"\n" << endl;
 			} else if (strcmp(option, "test") == 0) {
 				LOG4CXX_DEBUG(logger, "starting unit test.");
@@ -258,7 +319,7 @@ void parseParameters(int argc, char* argsv[]) {
 			} else if (strcmp(option, "timing") == 0) {
 				LOG4CXX_DEBUG(logger, "activating timing.");
 				if (value == NULL) {
-					LOG4CXX_FATAL(logger, "Error! No output file specified.");
+					LOG4CXX_FATAL(logger, "Error! No output file specified for timing.");
 					exit(1);
 				}
 				if (value2 != NULL) {
@@ -268,6 +329,37 @@ void parseParameters(int argc, char* argsv[]) {
 				timing = true;
 				timingFile = new char[strlen(value) + 1];
 				strcpy(timingFile, value);
+			} else if (strcmp(option, "papi") == 0) {
+				LOG4CXX_DEBUG(logger, "activating PAPI profiling.");
+				if (value == NULL) {
+					LOG4CXX_FATAL(logger, "Error! No output file specified for PAPI profiling.");
+					exit(1);
+				}
+
+				//Initialize PAPI
+				#ifdef _OPENMP
+				PAPI_library_init(PAPI_VER_CURRENT);
+				PAPI_thread_init(pthread_self);
+				real_usec = PAPI_get_real_usec();
+				real_cyc = PAPI_get_real_cyc();
+				papiEventCnt = 4;
+				papiEvents = new int[papiEventCnt];
+				papiEvents[0] = PAPI_TOT_CYC;
+				papiEvents[1] = PAPI_TOT_INS;
+				papiEvents[2] = PAPI_FP_OPS;
+				papiEvents[3] = PAPI_RES_STL;
+				#pragma omp parallel
+				{
+					#pragma omp critical
+					if (PAPI_start_counters(papiEvents, papiEventCnt) != PAPI_OK) {
+						LOG4CXX_ERROR(logger, "PAPI counter start failed.");
+					}
+				}
+				#endif
+
+				papi = true;
+				papiFile = new char[strlen(value) + 1];
+				strcpy(papiFile, value);
 			}
 		} else {
 			LOG4CXX_INFO(logger, "Ignored parameter: " << argsv[i]);
