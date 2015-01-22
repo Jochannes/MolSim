@@ -10,6 +10,10 @@
 
 void KineticEnergyHandler::compute(Particle& p)
 {
-	E_kin += 0.5 * p.getM() * p.getV().innerProduct(p.getV());
+	if( type == -1  ||  p.getType() == type ) {
+		utils::Vector<double, 3> v = p.getV() - v_mean;
+
+		E_kin += 0.5 * p.getM() * v.innerProduct(v);
+	}
 }
 

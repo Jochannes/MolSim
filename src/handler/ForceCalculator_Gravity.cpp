@@ -10,8 +10,8 @@
 
 #include <cmath>
 
-ForceCalculator_Gravity::ForceCalculator_Gravity(double arg_g, unsigned int arg_direction)
-	: g(arg_g), direction(arg_direction) {
+ForceCalculator_Gravity::ForceCalculator_Gravity(double arg_g, unsigned int arg_direction, int arg_type)
+	: g(arg_g), direction(arg_direction), type(arg_type) {
 	ForceCalculator::interaction = false;
 }
 
@@ -29,8 +29,15 @@ ForceCalculator_Gravity::~ForceCalculator_Gravity() {
  * \f[
  * G = m \cdot g_{\text{grav}}
  * \f]
+ *
+ * The force is only calculated if the particle's type matches
+ * the one specified in 'type' member variable. If 'type' is -1,
+ * the force is always applied.
  */
 void ForceCalculator_Gravity::compute(Particle& p) {
-	p.getF()[direction] += p.getM() * g;
+
+	if( type == -1  ||  p.getType() == type) {
+		p.getF()[direction] += p.getM() * g;
+	}
 }
 

@@ -18,11 +18,13 @@
 class TemperatureAdjustHandler: public ParticleHandler
 {
 private:
-	const double beta;	//!< Factor for scaling the velocities of the particles.
+	const double beta;		//!< Factor for scaling the velocities of the particles.
+	const int direction;	//!< Id of the component for which the scaling is left out. -1 for none.
+	const int type;			//!< Type of particle for which the temperature is adjusted.
 
 public:
-	TemperatureAdjustHandler(double param_beta) :
-		beta(param_beta)
+	TemperatureAdjustHandler(double param_beta, int arg_direction = -1, int arg_type = -1)
+		: beta(param_beta), direction(arg_direction), type(arg_type)
 	{ }
 
 	virtual ~TemperatureAdjustHandler() {

@@ -10,19 +10,28 @@
 
 #include "ParticleHandler.h"
 #include "Particle.h"
+#include "utils/Vector.h"
+
 
 /**
  * \brief Class for calculating the kinetic energy of all particles in a ParticleContainer.
- *
+ * Optionally the mean velocity of the object the particles belong to can be specified.
+ * This velocity will be subtracted from the velocity of each particle during calculation.
  */
 class KineticEnergyHandler: public ParticleHandler
 {
 private:
 	double E_kin;	//!< Saves the sum of the kinetic energies of all particles.
+	utils::Vector<double, 3> v_mean;	//!< mean velocity of the object the particle belongs to.
+	int type;		//!< Type of the particles to calculate the kinetic energy. -1 for all.
 
 public:
-	KineticEnergyHandler() :
-		E_kin(0.0)
+	KineticEnergyHandler(int param_type = -1) :
+		E_kin(0.0), v_mean(0.0), type(param_type)
+	{ }
+
+	KineticEnergyHandler(utils::Vector<double, 3> arg_v_mean, int param_type = -1)
+		: E_kin(0.0), v_mean(arg_v_mean), type(param_type)
 	{ }
 
 	virtual ~KineticEnergyHandler() {

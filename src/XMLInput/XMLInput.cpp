@@ -203,6 +203,14 @@ void XMLInput::ReadFile()
 			this->applyBrown = therm.get().apply_brown().get();
 		}
 
+		if( therm.get().direction().present() ) {
+			this->therm_direction = therm.get().direction().get();
+		}
+
+		if( therm.get().type().present() ) {
+			this->therm_type = therm.get().type().get();
+		}
+
 		if ( therm.get().target_temp().present() &&
 			 therm.get().delta_temp().present() &&
 			 therm.get().steps_changetemp().present() )
@@ -220,12 +228,14 @@ void XMLInput::ReadFile()
 					"; init_temp=" << this->init_temp << "; steps=" << this->steps <<
 					"; target_temp=" << this->target_temp << "; delta_temp=" << this->delta_temp <<
 					"; steps_changetemp=" << this->steps_changetemp <<
-					"; applyBrown=" << (applyBrown ? "true" : "false") );
+					"; applyBrown=" << (applyBrown ? "true" : "false") <<
+					"; type=" << this->therm_type << "; direction=" << this->therm_direction );
 		}
 		else {
 			LOG4CXX_DEBUG(xmllogger, "using constant thermostat: dim=" << this->dim <<
 					"; init_temp=" << this->init_temp << "; steps=" << this->steps <<
-					"; applyBrown=" << (applyBrown ? "true" : "false") );
+					"; applyBrown=" << (applyBrown ? "true" : "false") <<
+					"; type=" << this->therm_type << "; direction=" << this->therm_direction );
 		}
 	}
 
@@ -243,6 +253,29 @@ void XMLInput::ReadFile()
 		LOG4CXX_DEBUG(xmllogger, "calculating thermodynamic statistics: freq=" << this->thdyn_freq <<
 				"; avgover=" << this->thdyn_avgover << "; dr=" << this->thdyn_dr <<
 				"; maxrad=" << this->thdyn_maxrad << "; varfile='" << this->thdyn_varfile << "'; rdffile='" << this->thdyn_rdffile << "'");
+	}
+
+	// 1.7: fixed
+	const simulation_parameters_t::fixed_optional fixed = param.fixed();
+	if (fixed.present()) {
+		this->fixed_count = fixed.get().size();
+
+		if( this->fixed_count > 0 ) {
+			this->fixed_types = new int[this->fixed_count];
+
+			LOG4CXX_DEBUG(xmllogger, "using " << this->fixed_count << " fixed types.");
+
+			int i = 0;
+			for( fixed_t::const_iterator it = fixed.get().begin();
+				 it != fixed.get().end();
+			 	 it++ )
+			{
+				LOG4CXX_DEBUG(xmllogger, *it);
+
+				this->fixed_types[i] = *it;
+				i++;
+			}
+		}
 	}
 
 
@@ -291,6 +324,7 @@ void XMLInput::ReadFile()
 	{
 		double g_grav = it->g_grav();
 		unsigned int direction = 1;	// y axis
+		int type = -1;
 
 		if( it->direction().present() ) {
 			switch( it->direction().get() )
@@ -309,9 +343,13 @@ void XMLInput::ReadFile()
 			}
 		}
 
+		if( it->type().present() ) {
+			type = it->type().get();
+		}
+
 		this->gravity.push_back(ForceCalculator_Gravity(g_grav, direction));
 
-		LOG4CXX_DEBUG(xmllogger, "using gravity force calculator, g_grav=" << g_grav << ", direction=" << direction << ".");
+		LOG4CXX_DEBUG(xmllogger, "using gravity force calculator, g_grav=" << g_grav << ", direction=" << direction << ", type=" << type << ".");
 	}
 
 	// 2.4: element "harmonic"
@@ -634,12 +672,13 @@ void XMLInput::configureApplication()
 	// Thermostat
 	if (this->dim > 0) {
 		if (this->delta_temp == 0.0) {		// use a constant temperature
-			::thermostat = new Thermostat(*::particles, this->dim, this->init_temp, this->steps, this->applyBrown);
+			::thermostat = new Thermostat(*::particles, this->dim, this->init_temp, this->steps,
+											this->applyBrown, this->therm_type, this->therm_direction);
 		}
 		else {								// use a variable temperature
 			::thermostat = new Thermostat(*::particles, this->dim, this->init_temp, this->steps,
 											this->target_temp, this->delta_temp, this->steps_changetemp,
-											this->applyBrown);
+											this->applyBrown, this->therm_type, this->therm_direction);
 		}
 	}
 	else {
@@ -663,7 +702,7 @@ void XMLInput::configureApplication()
 	}
 
 	// create default position and velocity calculators
-	::xcalc = new PositionCalculator();
+	::xcalc = new PositionCalculator(this->fixed_count, this->fixed_types);
 	::vcalc = new VelocityCalculator();
 }
 

@@ -17,8 +17,13 @@
  * enables the calculation method to be changed easily.
  */
 class PositionCalculator: public ParticleHandler {
+	int *omit_types;	//!< array of types of particles for which the position update is omitted.
+	int omit_count;		//!< size of the array
+
 public:
 	PositionCalculator();
+	PositionCalculator(int arg_omit_count, int* arg_omit_types);
+
 	virtual ~PositionCalculator();
 
 	/**

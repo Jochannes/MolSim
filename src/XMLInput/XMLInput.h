@@ -60,12 +60,17 @@ private:
 	double delta_temp;
 	int steps_changetemp;
 	bool applyBrown;
+	int therm_direction, therm_type;
 
 	//ThermodynStats
 	bool thdyn_use;
 	int thdyn_freq, thdyn_avgover;
 	double thdyn_dr, thdyn_maxrad;
 	std::string thdyn_varfile, thdyn_rdffile;
+
+	// fixed
+	int fixed_count;
+	int* fixed_types;
 
 	std::vector<ParticleFileReader> particle_file;
 	std::vector<CuboidGenerator> cuboid;
@@ -96,6 +101,7 @@ public:
 			xmlfilename(param_xmlfilename), start_time(0), end_time(1000), delta_t(0.014), forceCalcCnt(0),
 			sm_type(simulation_mode_type_t::linked_cell), cutoff_radius(3),
 			dim(0), init_temp(0), steps(0), target_temp(0), delta_temp(0), steps_changetemp(0), applyBrown(true),
+			therm_direction(-1), therm_type(-1), fixed_count(0), fixed_types(NULL),
 			output_freq(10), base_filename(""), res_filename("")
 	{
 		domain_size[0] = 1;

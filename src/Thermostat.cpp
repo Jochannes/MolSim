@@ -7,6 +7,7 @@
 
 #include "Thermostat.h"
 #include "handler/MaxwellBoltzmannHandler.h"
+#include "handler/MeanVelocityHandler.h"
 #include <cmath>
 
 #include <log4cxx/logger.h>
@@ -22,11 +23,12 @@ LoggerPtr thermlogger(Logger::getLogger("MolSim.Thermostat"));
 
 Thermostat::Thermostat(ParticleContainer& param_particles, int param_num_dimensions,
 		double param_init_temp, int param_steps_thermostat,
-		bool param_applyBrown) :
+		bool param_applyBrown, int param_type, int param_direction)
+	:
 		particles(param_particles), num_dimensions(param_num_dimensions), steps_thermostat(
 				param_steps_thermostat), target_temp(0.0), next_temp(
-				param_init_temp), delta_temp(0.0), steps_tempchange(0), constant(
-				true) {
+				param_init_temp), delta_temp(0.0), steps_tempchange(0), constant(true),
+				type(param_type), direction(param_direction) {
 	if (param_applyBrown) {
 		applyBrown();
 	}
@@ -36,11 +38,14 @@ Thermostat::Thermostat(ParticleContainer& param_particles, int param_num_dimensi
 Thermostat::Thermostat(ParticleContainer& param_particles, int param_num_dimensions,
 		double param_init_temp, int param_steps_thermostat,
 		double param_target_temp, double param_delta_temp,
-		int param_steps_tempchange, bool param_applyBrown) :
+		int param_steps_tempchange, bool param_applyBrown,
+		int param_type, int param_direction)
+	:
 		particles(param_particles), num_dimensions(param_num_dimensions), steps_thermostat(
 				param_steps_thermostat), target_temp(param_target_temp), next_temp(
 				param_init_temp), steps_tempchange(
-				param_steps_tempchange), constant(false) {
+				param_steps_tempchange), constant(false),
+				type(param_type), direction(param_direction) {
 
 	//Change sign of delta_temp to fit the required direction of temperature change
 	if ((param_init_temp < target_temp && param_delta_temp > 0)
@@ -84,9 +89,21 @@ void Thermostat::changeTemperature() {
 
 double Thermostat::calculateKineticEnergy()
 {
-	KineticEnergyHandler h;
-	particles.iterate_all(h);
-	return h.getKineticEnergy();
+	if( direction == -1) {
+		KineticEnergyHandler h(type);
+		particles.iterate_all(h);
+		return h.getKineticEnergy();
+	}
+	else {
+		utils::Vector<double, 3> v_mean;
+		MeanVelocityHandler h1(direction, type);
+		particles.iterate_all(h1);
+		v_mean[direction] = h1.getMeanV();
+
+		KineticEnergyHandler h2(v_mean, type);
+		particles.iterate_all(h2);
+		return h2.getKineticEnergy();
+	}
 }
 
 
@@ -113,7 +130,7 @@ void Thermostat::adjustParticleTemperatures()
 		double beta = sqrt( E_kin_D / E_kin );
 
 		// scale the temperatures of all particles
-		TemperatureAdjustHandler h(beta);
+		TemperatureAdjustHandler h(beta, direction, type);
 		particles.iterate_all(h);
 		LOG4CXX_DEBUG(thermlogger, "temp-adjust: T=" << next_temp << "; E_kin_D=" << E_kin_D << "; E_kin=" << E_kin << "; beta=" << beta);
 	}

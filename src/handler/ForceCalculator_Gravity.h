@@ -21,8 +21,9 @@ class ForceCalculator_Gravity : public ForceCalculator
 public:
 	double g;		//!< Acceleration coefficient.
 	unsigned int direction;	//!< Direction. 0: x-axis; 1: y-axis (default); 2: z-axis
+	int type;		//!< Type of particles to which the gravity shall be exclusively applied. All particles: -1 (default)
 
-	ForceCalculator_Gravity(double arg_g, unsigned int arg_direction = 1);
+	ForceCalculator_Gravity(double arg_g, unsigned int arg_direction = 1, int arg_type = -1);
 	virtual ~ForceCalculator_Gravity();
 
 	/**

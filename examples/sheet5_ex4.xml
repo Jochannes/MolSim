@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="../src/XMLInput/simulation.xsd">
+
+
+  <parameter>
+    <start-time>0</start-time>
+    <end-time>500</end-time>
+    <delta-t>0.0005</delta-t>
+    
+    <simulation-mode>
+      <type>linked-cell</type>
+      <cutoff_radius>2.75</cutoff_radius>
+      <domain_size_x>35</domain_size_x>
+      <domain_size_y>25</domain_size_y>
+      <domain_size_z>10</domain_size_z>
+      <boundary x_0="periodic" x_max="periodic" y_0="periodic" y_max="periodic" z_0="periodic" z_max="periodic" />
+    </simulation-mode>
+    
+    <thermostat dim="3" steps="10" init_temp="40" type="2" direction="1" />
+    
+    <fixed>0 1</fixed>
+    
+    <velocity-density-profile x_start="0.0" x_end="30.0" x_count="50" file="veldenprof.csv" freq="10000" />
+  </parameter>
+  
+  <force-calculator>
+    <lennard-jones cutoff_factor="2.5" />
+    <gravity g_grav="-0.8" type="2"/>
+  </force-calculator>
+  
+  <input>
+    <cuboid x1="1.0" x2="0.6" x3="0.6" n1="2" n2="23" n3="9" h="1.12" m="1.0" epsilon="2.0" sigma="1.1" type="0" v1="0.0" v2="0.0" v3="0.0" />
+    <cuboid x1="27.4" x2="0.6" x3="0.6" n1="2" n2="23" n3="9" h="1.12" m="1.0" epsilon="2.0" sigma="1.1" type="1" v1="0.0" v2="0.0" v3="0.0" />
+    <cuboid x1="3.4" x2="0.6" x3="0.6" n1="20" n2="21" n3="8" h="1.2" m="1.0" epsilon="1.0" sigma="1.0" type="2" v1="0.0" v2="0.0" v3="0.0" />
+  </input>
+  
+  
+  <output>
+    <iteration base_filename="Output/sheet5_ex4/MD_vtk" output_freq="100" />
+  </output>
+  
+  
+</simulation>
+

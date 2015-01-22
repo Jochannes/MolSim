@@ -39,6 +39,9 @@ private:
 	const int steps_tempchange;	//!< number of timesteps after which the temperature is changed
 	double delta_temp;//!< step size in which the temperature is changed
 
+	const int type;
+	const int direction;
+
 	static const double mass = 1.0;		//!< mass of the particles
 
 	/**
@@ -76,10 +79,12 @@ public:
 	 * @param param_init_temp The initial temperature of the particles.
 	 * @param param_steps_thermostat The number of time steps after which the temperature is applied.
 	 * @param param_applyBrown Determines whether the brownian motion should be applied to the particles. Default: yes.
+	 * @param param_type Determines to which type of particles the temperature control is applied. Default: all.
+	 * @param param_direction Determines in which direction the velocity of particles should not contribute to temperature. Default: none.
 	 */
 	Thermostat(ParticleContainer& param_particles, int param_num_dimensions,
 			double param_init_temp, int param_steps_thermostat,
-			bool param_applyBrown = true);
+			bool param_applyBrown = true, int param_type = -1, int param_direction = -1);
 
 	/**
 	 * /brief Initialize the Thermostat. The temperatures will change until a target is reached.
@@ -92,11 +97,14 @@ public:
 	 * @param param_delta_temp The step size in which the temperature is changed.
 	 * @param param_steps_tempchange The number of timesteps after which the temperature is changed.
 	 * @param param_applyBrown Determines whether the brownian motion should be applied to the particles. Default: yes.
+	 * @param param_type Determines to which type of particles the temperature control is applied. Default: all.
+	 * @param param_direction Determines in which direction the velocity of particles should not contribute to temperature. Default: none.
 	 */
 	Thermostat(ParticleContainer& param_particles, int param_num_dimensions,
 			double param_init_temp, int param_steps_thermostat,
 			double param_target_temp, double param_delta_temp,
-			int param_steps_tempchange, bool param_applyBrown = true);
+			int param_steps_tempchange, bool param_applyBrown = true,
+			int param_type = -1, int param_direction = -1);
 
 	~Thermostat();
 

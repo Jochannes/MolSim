@@ -41,6 +41,7 @@ src/ParticleContainer/CellContainer.cpp\
 src/ParticleContainer/MembraneContainer.cpp\
 src/MaxwellBoltzmannDistribution.cpp\
 src/MembraneGenerator.cpp\
+src/handler/MeanVelocityHandler.cpp\
 src/handler/plotHandler_VTK.cpp\
 src/handler/RDFHandler.cpp\
 src/handler/MaxwellBoltzmannHandler.cpp\

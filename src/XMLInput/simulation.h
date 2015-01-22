@@ -234,6 +234,8 @@ class constant_force_t;
 class simulation_mode_t;
 class thermostat_t;
 class thermodyn_stats_t;
+class fixed_t;
+class veldenprof_t;
 class simulation_parameters_t;
 class cuboid_t;
 class sphere_t;
@@ -847,6 +849,24 @@ class gravity_t: public ::xml_schema::type
   void
   direction (::std::auto_ptr< direction_type > p);
 
+  // type
+  // 
+  typedef ::xml_schema::int_ type_type;
+  typedef ::xsd::cxx::tree::optional< type_type > type_optional;
+  typedef ::xsd::cxx::tree::traits< type_type, char > type_traits;
+
+  const type_optional&
+  type () const;
+
+  type_optional&
+  type ();
+
+  void
+  type (const type_type& x);
+
+  void
+  type (const type_optional& x);
+
   // Constructors.
   //
   gravity_t (const g_grav_type&);
@@ -876,6 +896,7 @@ class gravity_t: public ::xml_schema::type
   protected:
   ::xsd::cxx::tree::one< g_grav_type > g_grav_;
   direction_optional direction_;
+  type_optional type_;
 };
 
 class harmonic_t: public ::xml_schema::type
@@ -1339,6 +1360,42 @@ class thermostat_t: public ::xml_schema::type
   void
   apply_brown (const apply_brown_optional& x);
 
+  // direction
+  // 
+  typedef ::xml_schema::int_ direction_type;
+  typedef ::xsd::cxx::tree::optional< direction_type > direction_optional;
+  typedef ::xsd::cxx::tree::traits< direction_type, char > direction_traits;
+
+  const direction_optional&
+  direction () const;
+
+  direction_optional&
+  direction ();
+
+  void
+  direction (const direction_type& x);
+
+  void
+  direction (const direction_optional& x);
+
+  // type
+  // 
+  typedef ::xml_schema::int_ type_type;
+  typedef ::xsd::cxx::tree::optional< type_type > type_optional;
+  typedef ::xsd::cxx::tree::traits< type_type, char > type_traits;
+
+  const type_optional&
+  type () const;
+
+  type_optional&
+  type ();
+
+  void
+  type (const type_type& x);
+
+  void
+  type (const type_optional& x);
+
   // Constructors.
   //
   thermostat_t (const dim_type&,
@@ -1375,6 +1432,8 @@ class thermostat_t: public ::xml_schema::type
   delta_temp_optional delta_temp_;
   steps_changetemp_optional steps_changetemp_;
   apply_brown_optional apply_brown_;
+  direction_optional direction_;
+  type_optional type_;
 };
 
 class thermodyn_stats_t: public ::xml_schema::type
@@ -1510,6 +1569,159 @@ class thermodyn_stats_t: public ::xml_schema::type
   ::xsd::cxx::tree::one< rdffile_type > rdffile_;
 };
 
+class fixed_t: public ::xml_schema::simple_type,
+  public ::xsd::cxx::tree::list< ::xml_schema::int_, char >
+{
+  public:
+  fixed_t ();
+
+  fixed_t (size_type n, const ::xml_schema::int_& x);
+
+  template < typename I >
+  fixed_t (const I& begin, const I& end)
+  : ::xsd::cxx::tree::list< ::xml_schema::int_, char > (begin, end, this)
+  {
+  }
+
+  fixed_t (const ::xercesc::DOMElement& e,
+           ::xml_schema::flags f = 0,
+           ::xml_schema::container* c = 0);
+
+  fixed_t (const ::xercesc::DOMAttr& a,
+           ::xml_schema::flags f = 0,
+           ::xml_schema::container* c = 0);
+
+  fixed_t (const ::std::string& s,
+           const ::xercesc::DOMElement* e,
+           ::xml_schema::flags f = 0,
+           ::xml_schema::container* c = 0);
+
+  fixed_t (const fixed_t& x,
+           ::xml_schema::flags f = 0,
+           ::xml_schema::container* c = 0);
+
+  virtual fixed_t*
+  _clone (::xml_schema::flags f = 0,
+          ::xml_schema::container* c = 0) const;
+
+  virtual 
+  ~fixed_t ();
+};
+
+class veldenprof_t: public ::xml_schema::type
+{
+  public:
+  // x_start
+  // 
+  typedef ::xml_schema::double_ x_start_type;
+  typedef ::xsd::cxx::tree::traits< x_start_type, char, ::xsd::cxx::tree::schema_type::double_ > x_start_traits;
+
+  const x_start_type&
+  x_start () const;
+
+  x_start_type&
+  x_start ();
+
+  void
+  x_start (const x_start_type& x);
+
+  // x_end
+  // 
+  typedef ::xml_schema::double_ x_end_type;
+  typedef ::xsd::cxx::tree::traits< x_end_type, char, ::xsd::cxx::tree::schema_type::double_ > x_end_traits;
+
+  const x_end_type&
+  x_end () const;
+
+  x_end_type&
+  x_end ();
+
+  void
+  x_end (const x_end_type& x);
+
+  // x_count
+  // 
+  typedef ::xml_schema::unsigned_int x_count_type;
+  typedef ::xsd::cxx::tree::traits< x_count_type, char > x_count_traits;
+
+  const x_count_type&
+  x_count () const;
+
+  x_count_type&
+  x_count ();
+
+  void
+  x_count (const x_count_type& x);
+
+  // file
+  // 
+  typedef ::xml_schema::string file_type;
+  typedef ::xsd::cxx::tree::traits< file_type, char > file_traits;
+
+  const file_type&
+  file () const;
+
+  file_type&
+  file ();
+
+  void
+  file (const file_type& x);
+
+  void
+  file (::std::auto_ptr< file_type > p);
+
+  // freq
+  // 
+  typedef ::xml_schema::unsigned_int freq_type;
+  typedef ::xsd::cxx::tree::traits< freq_type, char > freq_traits;
+
+  const freq_type&
+  freq () const;
+
+  freq_type&
+  freq ();
+
+  void
+  freq (const freq_type& x);
+
+  // Constructors.
+  //
+  veldenprof_t (const x_start_type&,
+                const x_end_type&,
+                const x_count_type&,
+                const file_type&,
+                const freq_type&);
+
+  veldenprof_t (const ::xercesc::DOMElement& e,
+                ::xml_schema::flags f = 0,
+                ::xml_schema::container* c = 0);
+
+  veldenprof_t (const veldenprof_t& x,
+                ::xml_schema::flags f = 0,
+                ::xml_schema::container* c = 0);
+
+  virtual veldenprof_t*
+  _clone (::xml_schema::flags f = 0,
+          ::xml_schema::container* c = 0) const;
+
+  virtual 
+  ~veldenprof_t ();
+
+  // Implementation.
+  //
+  protected:
+  void
+  parse (::xsd::cxx::xml::dom::parser< char >&,
+         ::xml_schema::flags);
+
+  protected:
+  ::xsd::cxx::tree::one< x_start_type > x_start_;
+  ::xsd::cxx::tree::one< x_end_type > x_end_;
+  ::xsd::cxx::tree::one< x_count_type > x_count_;
+  ::xsd::cxx::tree::one< file_type > file_;
+  ::xsd::cxx::tree::one< freq_type > freq_;
+};
+
 class simulation_parameters_t: public ::xml_schema::type
 {
   public:
@@ -1614,6 +1826,48 @@ class simulation_parameters_t: public ::xml_schema::type
   void
   thermodyn_stats (::std::auto_ptr< thermodyn_stats_type > p);
 
+  // fixed
+  // 
+  typedef ::fixed_t fixed_type;
+  typedef ::xsd::cxx::tree::optional< fixed_type > fixed_optional;
+  typedef ::xsd::cxx::tree::traits< fixed_type, char > fixed_traits;
+
+  const fixed_optional&
+  fixed () const;
+
+  fixed_optional&
+  fixed ();
+
+  void
+  fixed (const fixed_type& x);
+
+  void
+  fixed (const fixed_optional& x);
+
+  void
+  fixed (::std::auto_ptr< fixed_type > p);
+
+  // velocity-density-profile
+  // 
+  typedef ::veldenprof_t velocity_density_profile_type;
+  typedef ::xsd::cxx::tree::optional< velocity_density_profile_type > velocity_density_profile_optional;
+  typedef ::xsd::cxx::tree::traits< velocity_density_profile_type, char > velocity_density_profile_traits;
+
+  const velocity_density_profile_optional&
+  velocity_density_profile () const;
+
+  velocity_density_profile_optional&
+  velocity_density_profile ();
+
+  void
+  velocity_density_profile (const velocity_density_profile_type& x);
+
+  void
+  velocity_density_profile (const velocity_density_profile_optional& x);
+
+  void
+  velocity_density_profile (::std::auto_ptr< velocity_density_profile_type > p);
+
   // Constructors.
   //
   simulation_parameters_t (const start_time_type&,
@@ -1655,6 +1909,8 @@ class simulation_parameters_t: public ::xml_schema::type
   ::xsd::cxx::tree::one< simulation_mode_type > simulation_mode_;
   thermostat_optional thermostat_;
   thermodyn_stats_optional thermodyn_stats_;
+  fixed_optional fixed_;
+  velocity_density_profile_optional velocity_density_profile_;
 };
 
 class cuboid_t: public ::xml_schema::type

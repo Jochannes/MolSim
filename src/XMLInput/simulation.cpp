@@ -536,6 +536,30 @@ direction (::std::auto_ptr< direction_type > x)
   this->direction_.set (x);
 }
 
+const gravity_t::type_optional& gravity_t::
+type () const
+{
+  return this->type_;
+}
+
+gravity_t::type_optional& gravity_t::
+type ()
+{
+  return this->type_;
+}
+
+void gravity_t::
+type (const type_type& x)
+{
+  this->type_.set (x);
+}
+
+void gravity_t::
+type (const type_optional& x)
+{
+  this->type_ = x;
+}
+
 
 // harmonic_t
 // 
@@ -1008,6 +1032,54 @@ apply_brown (const apply_brown_optional& x)
   this->apply_brown_ = x;
 }
 
+const thermostat_t::direction_optional& thermostat_t::
+direction () const
+{
+  return this->direction_;
+}
+
+thermostat_t::direction_optional& thermostat_t::
+direction ()
+{
+  return this->direction_;
+}
+
+void thermostat_t::
+direction (const direction_type& x)
+{
+  this->direction_.set (x);
+}
+
+void thermostat_t::
+direction (const direction_optional& x)
+{
+  this->direction_ = x;
+}
+
+const thermostat_t::type_optional& thermostat_t::
+type () const
+{
+  return this->type_;
+}
+
+thermostat_t::type_optional& thermostat_t::
+type ()
+{
+  return this->type_;
+}
+
+void thermostat_t::
+type (const type_type& x)
+{
+  this->type_.set (x);
+}
+
+void thermostat_t::
+type (const type_optional& x)
+{
+  this->type_ = x;
+}
+
 
 // thermodyn_stats_t
 // 
@@ -1130,6 +1202,130 @@ void thermodyn_stats_t::
 rdffile (::std::auto_ptr< rdffile_type > x)
 {
   this->rdffile_.set (x);
+}
+
+
+// fixed_t
+//
+
+fixed_t::
+fixed_t ()
+: ::xsd::cxx::tree::list< ::xml_schema::int_, char > ( ::xml_schema::flags (0), this)
+{
+}
+
+fixed_t::
+fixed_t (size_type n, const ::xml_schema::int_& x)
+: ::xsd::cxx::tree::list< ::xml_schema::int_, char > (n, x, this)
+{
+}
+
+fixed_t::
+fixed_t (const fixed_t& o,
+         ::xml_schema::flags f,
+         ::xml_schema::container* c)
+: ::xml_schema::simple_type (o, f, c),
+  ::xsd::cxx::tree::list< ::xml_schema::int_, char > (o, f, this)
+{
+}
+
+// veldenprof_t
+// 
+
+const veldenprof_t::x_start_type& veldenprof_t::
+x_start () const
+{
+  return this->x_start_.get ();
+}
+
+veldenprof_t::x_start_type& veldenprof_t::
+x_start ()
+{
+  return this->x_start_.get ();
+}
+
+void veldenprof_t::
+x_start (const x_start_type& x)
+{
+  this->x_start_.set (x);
+}
+
+const veldenprof_t::x_end_type& veldenprof_t::
+x_end () const
+{
+  return this->x_end_.get ();
+}
+
+veldenprof_t::x_end_type& veldenprof_t::
+x_end ()
+{
+  return this->x_end_.get ();
+}
+
+void veldenprof_t::
+x_end (const x_end_type& x)
+{
+  this->x_end_.set (x);
+}
+
+const veldenprof_t::x_count_type& veldenprof_t::
+x_count () const
+{
+  return this->x_count_.get ();
+}
+
+veldenprof_t::x_count_type& veldenprof_t::
+x_count ()
+{
+  return this->x_count_.get ();
+}
+
+void veldenprof_t::
+x_count (const x_count_type& x)
+{
+  this->x_count_.set (x);
+}
+
+const veldenprof_t::file_type& veldenprof_t::
+file () const
+{
+  return this->file_.get ();
+}
+
+veldenprof_t::file_type& veldenprof_t::
+file ()
+{
+  return this->file_.get ();
+}
+
+void veldenprof_t::
+file (const file_type& x)
+{
+  this->file_.set (x);
+}
+
+void veldenprof_t::
+file (::std::auto_ptr< file_type > x)
+{
+  this->file_.set (x);
+}
+
+const veldenprof_t::freq_type& veldenprof_t::
+freq () const
+{
+  return this->freq_.get ();
+}
+
+veldenprof_t::freq_type& veldenprof_t::
+freq ()
+{
+  return this->freq_.get ();
+}
+
+void veldenprof_t::
+freq (const freq_type& x)
+{
+  this->freq_.set (x);
 }
 
 
@@ -1272,6 +1468,66 @@ void simulation_parameters_t::
 thermodyn_stats (::std::auto_ptr< thermodyn_stats_type > x)
 {
   this->thermodyn_stats_.set (x);
+}
+
+const simulation_parameters_t::fixed_optional& simulation_parameters_t::
+fixed () const
+{
+  return this->fixed_;
+}
+
+simulation_parameters_t::fixed_optional& simulation_parameters_t::
+fixed ()
+{
+  return this->fixed_;
+}
+
+void simulation_parameters_t::
+fixed (const fixed_type& x)
+{
+  this->fixed_.set (x);
+}
+
+void simulation_parameters_t::
+fixed (const fixed_optional& x)
+{
+  this->fixed_ = x;
+}
+
+void simulation_parameters_t::
+fixed (::std::auto_ptr< fixed_type > x)
+{
+  this->fixed_.set (x);
+}
+
+const simulation_parameters_t::velocity_density_profile_optional& simulation_parameters_t::
+velocity_density_profile () const
+{
+  return this->velocity_density_profile_;
+}
+
+simulation_parameters_t::velocity_density_profile_optional& simulation_parameters_t::
+velocity_density_profile ()
+{
+  return this->velocity_density_profile_;
+}
+
+void simulation_parameters_t::
+velocity_density_profile (const velocity_density_profile_type& x)
+{
+  this->velocity_density_profile_.set (x);
+}
+
+void simulation_parameters_t::
+velocity_density_profile (const velocity_density_profile_optional& x)
+{
+  this->velocity_density_profile_ = x;
+}
+
+void simulation_parameters_t::
+velocity_density_profile (::std::auto_ptr< velocity_density_profile_type > x)
+{
+  this->velocity_density_profile_.set (x);
 }
 
 
@@ -3067,7 +3323,8 @@ gravity_t::
 gravity_t (const g_grav_type& g_grav)
 : ::xml_schema::type (),
   g_grav_ (g_grav, ::xml_schema::flags (), this),
-  direction_ (::xml_schema::flags (), this)
+  direction_ (::xml_schema::flags (), this),
+  type_ (::xml_schema::flags (), this)
 {
 }
 
@@ -3077,7 +3334,8 @@ gravity_t (const gravity_t& x,
            ::xml_schema::container* c)
 : ::xml_schema::type (x, f, c),
   g_grav_ (x.g_grav_, f, this),
-  direction_ (x.direction_, f, this)
+  direction_ (x.direction_, f, this),
+  type_ (x.type_, f, this)
 {
 }
 
@@ -3087,7 +3345,8 @@ gravity_t (const ::xercesc::DOMElement& e,
            ::xml_schema::container* c)
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
   g_grav_ (f, this),
-  direction_ (f, this)
+  direction_ (f, this),
+  type_ (f, this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
   {
@@ -3118,6 +3377,12 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
         direction_traits::create (i, f, this));
 
       this->direction_.set (r);
+      continue;
+    }
+
+    if (n.name () == "type" && n.namespace_ ().empty ())
+    {
+      this->type_.set (type_traits::create (i, f, this));
       continue;
     }
   }
@@ -3535,7 +3800,9 @@ thermostat_t (const dim_type& dim,
   target_temp_ (::xml_schema::flags (), this),
   delta_temp_ (::xml_schema::flags (), this),
   steps_changetemp_ (::xml_schema::flags (), this),
-  apply_brown_ (::xml_schema::flags (), this)
+  apply_brown_ (::xml_schema::flags (), this),
+  direction_ (::xml_schema::flags (), this),
+  type_ (::xml_schema::flags (), this)
 {
 }
 
@@ -3550,7 +3817,9 @@ thermostat_t (const thermostat_t& x,
   target_temp_ (x.target_temp_, f, this),
   delta_temp_ (x.delta_temp_, f, this),
   steps_changetemp_ (x.steps_changetemp_, f, this),
-  apply_brown_ (x.apply_brown_, f, this)
+  apply_brown_ (x.apply_brown_, f, this),
+  direction_ (x.direction_, f, this),
+  type_ (x.type_, f, this)
 {
 }
 
@@ -3565,7 +3834,9 @@ thermostat_t (const ::xercesc::DOMElement& e,
   target_temp_ (f, this),
   delta_temp_ (f, this),
   steps_changetemp_ (f, this),
-  apply_brown_ (f, this)
+  apply_brown_ (f, this),
+  direction_ (f, this),
+  type_ (f, this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
   {
@@ -3623,6 +3894,18 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     if (n.name () == "apply_brown" && n.namespace_ ().empty ())
     {
       this->apply_brown_.set (apply_brown_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "direction" && n.namespace_ ().empty ())
+    {
+      this->direction_.set (direction_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "type" && n.namespace_ ().empty ())
+    {
+      this->type_.set (type_traits::create (i, f, this));
       continue;
     }
   }
@@ -3822,6 +4105,190 @@ thermodyn_stats_t::
 {
 }
 
+// fixed_t
+//
+
+fixed_t::
+fixed_t (const ::xercesc::DOMElement& e,
+         ::xml_schema::flags f,
+         ::xml_schema::container* c)
+: ::xml_schema::simple_type (e, f, c),
+  ::xsd::cxx::tree::list< ::xml_schema::int_, char > (e, f, this)
+{
+}
+
+fixed_t::
+fixed_t (const ::xercesc::DOMAttr& a,
+         ::xml_schema::flags f,
+         ::xml_schema::container* c)
+: ::xml_schema::simple_type (a, f, c),
+  ::xsd::cxx::tree::list< ::xml_schema::int_, char > (a, f, this)
+{
+}
+
+fixed_t::
+fixed_t (const ::std::string& s,
+         const ::xercesc::DOMElement* e,
+         ::xml_schema::flags f,
+         ::xml_schema::container* c)
+: ::xml_schema::simple_type (s, e, f, c),
+  ::xsd::cxx::tree::list< ::xml_schema::int_, char > (s, e, f, this)
+{
+}
+
+fixed_t* fixed_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class fixed_t (*this, f, c);
+}
+
+fixed_t::
+~fixed_t ()
+{
+}
+
+// veldenprof_t
+//
+
+veldenprof_t::
+veldenprof_t (const x_start_type& x_start,
+              const x_end_type& x_end,
+              const x_count_type& x_count,
+              const file_type& file,
+              const freq_type& freq)
+: ::xml_schema::type (),
+  x_start_ (x_start, ::xml_schema::flags (), this),
+  x_end_ (x_end, ::xml_schema::flags (), this),
+  x_count_ (x_count, ::xml_schema::flags (), this),
+  file_ (file, ::xml_schema::flags (), this),
+  freq_ (freq, ::xml_schema::flags (), this)
+{
+}
+
+veldenprof_t::
+veldenprof_t (const veldenprof_t& x,
+              ::xml_schema::flags f,
+              ::xml_schema::container* c)
+: ::xml_schema::type (x, f, c),
+  x_start_ (x.x_start_, f, this),
+  x_end_ (x.x_end_, f, this),
+  x_count_ (x.x_count_, f, this),
+  file_ (x.file_, f, this),
+  freq_ (x.freq_, f, this)
+{
+}
+
+veldenprof_t::
+veldenprof_t (const ::xercesc::DOMElement& e,
+              ::xml_schema::flags f,
+              ::xml_schema::container* c)
+: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  x_start_ (f, this),
+  x_end_ (f, this),
+  x_count_ (f, this),
+  file_ (f, this),
+  freq_ (f, this)
+{
+  if ((f & ::xml_schema::flags::base) == 0)
+  {
+    ::xsd::cxx::xml::dom::parser< char > p (e, false, true);
+    this->parse (p, f);
+  }
+}
+
+void veldenprof_t::
+parse (::xsd::cxx::xml::dom::parser< char >& p,
+       ::xml_schema::flags f)
+{
+  while (p.more_attributes ())
+  {
+    const ::xercesc::DOMAttr& i (p.next_attribute ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    if (n.name () == "x_start" && n.namespace_ ().empty ())
+    {
+      this->x_start_.set (x_start_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "x_end" && n.namespace_ ().empty ())
+    {
+      this->x_end_.set (x_end_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "x_count" && n.namespace_ ().empty ())
+    {
+      this->x_count_.set (x_count_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "file" && n.namespace_ ().empty ())
+    {
+      ::std::auto_ptr< file_type > r (
+        file_traits::create (i, f, this));
+
+      this->file_.set (r);
+      continue;
+    }
+
+    if (n.name () == "freq" && n.namespace_ ().empty ())
+    {
+      this->freq_.set (freq_traits::create (i, f, this));
+      continue;
+    }
+  }
+
+  if (!x_start_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "x_start",
+      "");
+  }
+
+  if (!x_end_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "x_end",
+      "");
+  }
+
+  if (!x_count_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "x_count",
+      "");
+  }
+
+  if (!file_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "file",
+      "");
+  }
+
+  if (!freq_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "freq",
+      "");
+  }
+}
+
+veldenprof_t* veldenprof_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class veldenprof_t (*this, f, c);
+}
+
+veldenprof_t::
+~veldenprof_t ()
+{
+}
+
 // simulation_parameters_t
 //
 
@@ -3836,7 +4303,9 @@ simulation_parameters_t (const start_time_type& start_time,
   delta_t_ (delta_t, ::xml_schema::flags (), this),
   simulation_mode_ (simulation_mode, ::xml_schema::flags (), this),
   thermostat_ (::xml_schema::flags (), this),
-  thermodyn_stats_ (::xml_schema::flags (), this)
+  thermodyn_stats_ (::xml_schema::flags (), this),
+  fixed_ (::xml_schema::flags (), this),
+  velocity_density_profile_ (::xml_schema::flags (), this)
 {
 }
 
@@ -3851,7 +4320,9 @@ simulation_parameters_t (const start_time_type& start_time,
   delta_t_ (delta_t, ::xml_schema::flags (), this),
   simulation_mode_ (simulation_mode, ::xml_schema::flags (), this),
   thermostat_ (::xml_schema::flags (), this),
-  thermodyn_stats_ (::xml_schema::flags (), this)
+  thermodyn_stats_ (::xml_schema::flags (), this),
+  fixed_ (::xml_schema::flags (), this),
+  velocity_density_profile_ (::xml_schema::flags (), this)
 {
 }
 
@@ -3865,7 +4336,9 @@ simulation_parameters_t (const simulation_parameters_t& x,
   delta_t_ (x.delta_t_, f, this),
   simulation_mode_ (x.simulation_mode_, f, this),
   thermostat_ (x.thermostat_, f, this),
-  thermodyn_stats_ (x.thermodyn_stats_, f, this)
+  thermodyn_stats_ (x.thermodyn_stats_, f, this),
+  fixed_ (x.fixed_, f, this),
+  velocity_density_profile_ (x.velocity_density_profile_, f, this)
 {
 }
 
@@ -3879,7 +4352,9 @@ simulation_parameters_t (const ::xercesc::DOMElement& e,
   delta_t_ (f, this),
   simulation_mode_ (f, this),
   thermostat_ (f, this),
-  thermodyn_stats_ (f, this)
+  thermodyn_stats_ (f, this),
+  fixed_ (f, this),
+  velocity_density_profile_ (f, this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
   {
@@ -3969,6 +4444,34 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       if (!this->thermodyn_stats_)
       {
         this->thermodyn_stats_.set (r);
+        continue;
+      }
+    }
+
+    // fixed
+    //
+    if (n.name () == "fixed" && n.namespace_ ().empty ())
+    {
+      ::std::auto_ptr< fixed_type > r (
+        fixed_traits::create (i, f, this));
+
+      if (!this->fixed_)
+      {
+        this->fixed_.set (r);
+        continue;
+      }
+    }
+
+    // velocity-density-profile
+    //
+    if (n.name () == "velocity-density-profile" && n.namespace_ ().empty ())
+    {
+      ::std::auto_ptr< velocity_density_profile_type > r (
+        velocity_density_profile_traits::create (i, f, this));
+
+      if (!this->velocity_density_profile_)
+      {
+        this->velocity_density_profile_.set (r);
         continue;
       }
     }

@@ -10,5 +10,11 @@
 
 void TemperatureAdjustHandler::compute(Particle& p)
 {
-	p.getV() = beta * p.getV();
+	if( type == -1  ||  p.getType() == type ) {
+		for( int i=0; i < 3; i++ ) {
+			if( direction != i )
+				p.getV()[i] = beta * p.getV()[i];
+		}
+	}
 }
+

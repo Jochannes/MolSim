@@ -32,7 +32,7 @@
   
   
   <output>
-    <iteration base_filename="Output/sheet5_ex1/MD_vtk" output_freq="1" />
+    <iteration base_filename="Output/sheet5_ex1/MD_vtk" output_freq="20" />
   </output>
   
   
