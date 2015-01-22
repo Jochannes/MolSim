@@ -6,6 +6,7 @@
 #include "handler/PositionCalculator.h"
 #include "handler/VelocityCalculator.h"
 #include "handler/ForceCalculator.h"
+#include "handler/ForceCalculator_Constant.h"
 #include "Thermostat.h"
 #include "ThermoDynStats.h"
 
@@ -63,6 +64,7 @@ void calculateV();
 void plotParticles(int iteration);
 
 // global variables
+double current_time;		//!< current time of the simulation
 double start_time = 0.0;	//!< Starting time of the simulation.
 double end_time = 1000; 	//!< End time of the simulation.
 double delta_t = 0.014; 	//!< Time step size of the simulation.
@@ -77,8 +79,12 @@ ParticleOutput* particleOut = NULL; //!< Object for defining the output method t
 ResultOutput* resultOut = NULL;	//!< Object for defining the result output method.
 PositionCalculator* xcalc = NULL; //!< Object for defining the coordinate calculator used in the simulation.
 VelocityCalculator* vcalc = NULL; //!< Object for defining the velocity calculator used in the simulation.
+
 ForceCalculator** fcalcs; //!< Object for defining the force calculators used in the simulation.
 int numForceCalcs;			//!< Number of force calculators.
+
+ForceCalculator_Constant** tfcalcs; //!< Object for defining the timed force calculators used in the simulation. (currently only ForceCalculator_Constant)
+int numTimedForceCalcs;			//!< Number of timed force calculators.
 
 bool timing = false;	//!< Specifies if the iteration time will be measured.
 char* timingFile;	//!< Name of the file to store the timing results.
@@ -101,7 +107,7 @@ int main(int argc, char* argsv[]) {
 	calculateF();
 
 
-	double current_time = start_time;
+	current_time = start_time;
 
 	int iteration = 0;
 
@@ -342,6 +348,19 @@ void calculateF() {
 			particles->iterate_pairs_half(*fcalcs[i]);
 		} else {
 			particles->iterate_all(*fcalcs[i]);
+		}
+	}
+	
+	// calculate forces, which are only active in a defined period of time
+	for (int i = 0; i < numTimedForceCalcs; i++) {
+		if( current_time <= tfcalcs[i]->getEndTime()  &&
+			current_time >= tfcalcs[i]->getStartTime() )
+		{
+			if (tfcalcs[i]->interaction) {
+				particles->iterate_pairs_half(*tfcalcs[i]);
+			} else {
+				particles->iterate_all(*tfcalcs[i]);
+			}
 		}
 	}
 }

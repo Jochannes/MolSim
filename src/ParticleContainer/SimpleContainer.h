@@ -58,9 +58,13 @@ public:
 		return particleList.size();
 	}
 
-	void add(Particle& P);
+	Particle* add(Particle& P);
 	void add(std::vector<Particle>& list);
-
+	
+	void reserve(unsigned int n) {
+		particleList.reserve(n);
+	}
+	
 	void remove(Particle& P);
 	void remove_all();
 	void remove_virtual();

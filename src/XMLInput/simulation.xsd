@@ -5,6 +5,7 @@
     <xs:restriction base="xs:string">
       <xs:enumeration value="normal"/>
       <xs:enumeration value="linked-cell"/>
+      <xs:enumeration value="membrane"/>
     </xs:restriction>
   </xs:simpleType>
   
@@ -15,7 +16,15 @@
       <xs:enumeration value="periodic"/>
     </xs:restriction>
   </xs:simpleType>
-
+  
+  <xs:simpleType name="direction_t">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="x"/>
+      <xs:enumeration value="y"/>
+      <xs:enumeration value="z"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
 
   <xs:complexType name="boundary_t">
     <xs:attribute name="x_0" type="boundary-type_t" use="required"/>
@@ -31,6 +40,8 @@
       <xs:element maxOccurs="unbounded" minOccurs="0" name="lennard-jones" type="lj_cutoff_t"/>
       <xs:element maxOccurs="unbounded" minOccurs="0" name="lj-smoothed" type="lj_smoothed_t"/>
       <xs:element maxOccurs="unbounded" minOccurs="0" name="gravity" type="gravity_t"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="harmonic" type="harmonic_t"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="constant" type="constant_force_t"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -45,6 +56,21 @@
 
   <xs:complexType name="gravity_t">
   	<xs:attribute name="g_grav" type="xs:double" use="required"/>
+	<xs:attribute name="direction" type="direction_t" use="optional"/>
+  </xs:complexType>
+  
+  <xs:complexType name="harmonic_t">
+  	<xs:attribute name="k" type="xs:double" use="required"/>
+	<xs:attribute name="r" type="xs:double" use="required"/>
+  </xs:complexType>
+  
+  <xs:complexType name="constant_force_t">
+        <xs:attribute name="type" type="xs:int" use="required"/>
+  	<xs:attribute name="force_x" type="xs:double" use="required"/>
+	<xs:attribute name="force_y" type="xs:double" use="required"/>
+	<xs:attribute name="force_z" type="xs:double" use="required"/>
+	<xs:attribute name="start_time" type="xs:double" use="optional"/>
+	<xs:attribute name="end_time" type="xs:double" use="optional"/>
   </xs:complexType>
   
   
@@ -122,11 +148,32 @@
     <xs:attribute name="v3" type="xs:double" use="required"/>
   </xs:complexType>
   
+  <xs:complexType name="membrane_t">
+    <xs:attribute name="x1" type="xs:double" use="required"/>
+    <xs:attribute name="x2" type="xs:double" use="required"/>
+    <xs:attribute name="x3" type="xs:double" use="required"/>
+    <xs:attribute name="n1" type="xs:unsignedInt" use="required"/>
+    <xs:attribute name="n2" type="xs:unsignedInt" use="required"/>
+    <xs:attribute name="n3" type="xs:unsignedInt" use="required"/>
+    <xs:attribute name="h" type="xs:double" use="required"/>
+    <xs:attribute name="m" type="xs:double" use="required"/>
+    <xs:attribute name="epsilon" type="xs:double" use="required"/>
+    <xs:attribute name="sigma" type="xs:double" use="required"/>
+    <xs:attribute name="type" type="xs:int" use="required"/>
+    <xs:attribute name="v1" type="xs:double" use="required"/>
+    <xs:attribute name="v2" type="xs:double" use="required"/>
+    <xs:attribute name="v3" type="xs:double" use="required"/>
+    <xs:attribute name="mark_type" type="xs:int" use="optional"/>
+    <xs:attribute name="mark_x" type="xs:unsignedInt" use="optional"/>
+    <xs:attribute name="mark_y" type="xs:unsignedInt" use="optional"/>
+  </xs:complexType>
+  
   <xs:complexType name="simulation_input_t">
     <xs:sequence>
       <xs:element maxOccurs="unbounded" minOccurs="0" name="particle_file" type="xs:string"/>
       <xs:element maxOccurs="unbounded" minOccurs="0" name="cuboid" type="cuboid_t"/>
       <xs:element maxOccurs="unbounded" minOccurs="0" name="sphere" type="sphere_t"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="membrane" type="membrane_t"/>
     </xs:sequence>
   </xs:complexType>
   

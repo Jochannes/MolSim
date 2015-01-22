@@ -109,7 +109,7 @@ public:
 	bool empty();
 	int size();
 
-	void add(Particle& p);
+	Particle* add(Particle& p);
 	void add(vector<Particle>& list);
 
 	void remove(Particle& p);

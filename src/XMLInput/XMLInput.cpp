@@ -9,6 +9,7 @@
 
 #include "ParticleContainer/CellContainer.h"
 #include "ParticleContainer/SimpleContainer.h"
+#include "ParticleContainer/MembraneContainer.h"
 #include "ParticleFileReader.h"
 #include "CuboidGenerator.h"
 #include "ParticleOutput_VTK.h"
@@ -84,6 +85,12 @@ void XMLInput::ReadFile()
 			LOG4CXX_DEBUG(xmllogger, "using normal simulation mode.");
 		}
 		break;
+
+	case simulation_mode_type_t::membrane: {
+			LOG4CXX_DEBUG(xmllogger, "using Membrane simulation mode.");
+
+		}
+		// no break;
 
 	case simulation_mode_type_t::linked_cell: {
 			LOG4CXX_DEBUG(xmllogger, "using Linked-Cell simulation mode.");
@@ -165,7 +172,7 @@ void XMLInput::ReadFile()
 			}
 			else {
 				LOG4CXX_DEBUG(xmllogger, "no boundary conditions specified for Linked-Cell-mode.");
-				// using default behaviour
+				// using default behavior
 			}
 		}
 		break;
@@ -283,10 +290,69 @@ void XMLInput::ReadFile()
 		 it++ )
 	{
 		double g_grav = it->g_grav();
-		this->gravity.push_back(ForceCalculator_Gravity(g_grav));
+		unsigned int direction = 1;	// y axis
 
-		LOG4CXX_DEBUG(xmllogger, "using gravity force calculator, g_grav=" << g_grav << ".");
+		if( it->direction().present() ) {
+			switch( it->direction().get() )
+			{
+			case direction_t::x:
+				direction = 0;
+				break;
+
+			case direction_t::y:
+				direction = 1;
+				break;
+
+			case direction_t::z:
+				direction = 2;
+				break;
+			}
+		}
+
+		this->gravity.push_back(ForceCalculator_Gravity(g_grav, direction));
+
+		LOG4CXX_DEBUG(xmllogger, "using gravity force calculator, g_grav=" << g_grav << ", direction=" << direction << ".");
 	}
+
+	// 2.4: element "harmonic"
+	forceCalcCnt += fc.harmonic().size();
+	this->harmonic.reserve( fc.harmonic().size() );
+	for( simulation_force_calculator_t::harmonic_const_iterator it = fc.harmonic().begin();
+		 it != fc.harmonic().end();
+		 it++ )
+	{
+		double k = it->k();
+		double r = it->r();
+		this->harmonic.push_back(ForceCalculator_Harmonic(k ,r));
+
+		LOG4CXX_DEBUG(xmllogger, "using harmonic force calculator, k=" << k << ", r=" << r << ".");
+	}
+
+	// 2.5: element "constant"
+	this->constant_force.reserve( fc.constant().size() );
+	for( simulation_force_calculator_t::constant_const_iterator it = fc.constant().begin();
+		 it != fc.constant().end();
+		 it++ )
+	{
+		int particle_type = it->type();
+		double force[3] = { it->force_x(), it->force_y(), it->force_z() };
+		double start_time = 0.0;
+		double end_time = DBL_MAX;
+
+		if( it->start_time().present() ) {
+			start_time = it->start_time().get();
+		}
+		if( it->end_time().present() ) {
+			end_time = it->end_time().get();
+		}
+
+		this->constant_force.push_back(ForceCalculator_Constant(force, particle_type, start_time, end_time));
+
+		LOG4CXX_DEBUG(xmllogger, "using constant force calculator, type=" <<
+				particle_type << ", force=" << force << ", start_time=" <<
+				start_time << ", end_time=" << end_time << ".");
+	}
+
 
 	// 3: element "input"
 	const simulation_input_t& in = s->input();
@@ -346,6 +412,42 @@ void XMLInput::ReadFile()
 		LOG4CXX_DEBUG(xmllogger, "reading sphere " << s.toString());
 	}
 	
+	// 3.4: element "membrane"
+	this->membrane.reserve( in.membrane().size() );
+	for( simulation_input_t::membrane_const_iterator it = in.membrane().begin();
+		 it != in.membrane().end();
+		 it++ )
+	{
+		double corner_position[3] = {it->x1(), it->x2(), it->x3()};
+		int    num_particles[3]   = {it->n1(), it->n2(), it->n3()};
+		double distance           = it->h();
+		double mass               = it->m();
+		double epsilon            = it->epsilon();
+		double sigma              = it->sigma();
+		int type	              = it->type();
+		double velocity[3]        = {it->v1(), it->v2(), it->v3()};
+
+		int mark_type = 0;
+		int mark_x = -1;
+		int mark_y = -1;
+
+		if( it->mark_type().present() ) {
+			mark_type = it->mark_type().get();
+
+			if( it->mark_x().present() && it->mark_y().present() ) {
+				mark_x = it->mark_x().get();
+				mark_y = it->mark_y().get();
+			} else {
+				LOG4CXX_FATAL(xmllogger, "Error reading membrane! Marking not fully specified.");
+				exit(1);
+			}
+		}
+
+		MembraneGenerator m(corner_position, num_particles, distance, mass, velocity, type, epsilon, sigma, mark_type, mark_x, mark_y);
+		this->membrane.push_back(m);
+
+		LOG4CXX_DEBUG(xmllogger, "reading membrane " << m.toString());
+	}
 
 	// 4: element "output"
 	const simulation_output_t& out = s->output();
@@ -385,11 +487,48 @@ void XMLInput::configureApplication()
 	::delta_t    = this->delta_t;
 
 	switch (this->sm_type) {
-	case simulation_mode_type_t::normal:
+	case simulation_mode_type_t::normal: {
 		::particles = new SimpleContainer();
+		}
 		break;
 
-	case simulation_mode_type_t::linked_cell:
+	case simulation_mode_type_t::membrane: {
+		MembraneContainer *tmp_mparticles = new MembraneContainer();
+
+		// add particles
+		for( vector<MembraneGenerator>::iterator it = this->membrane.begin();
+			 it != this->membrane.end();
+			 it++ )
+		{
+			std::list<Particle> particleListMem;
+			it->input(particleListMem);
+			cout << "a" << endl;
+			tmp_mparticles->fill_grid(particleListMem, it->getSizeX(), it->getSizeY());
+			cout << "b" << endl;
+		}
+
+		/*// set boundary conditions
+		for(int i=0; i<6; i++) {
+			switch (this->boundary[i]) {
+			case boundary_type_t::outflow:
+				tmp_mparticles->boundConds[i] = new Outflow(i);
+				break;
+
+			case boundary_type_t::reflect:
+				tmp_mparticles->boundConds[i] = new Reflection(tmp_mparticles, i);
+				break;
+
+			case boundary_type_t::periodic:
+				tmp_mparticles->boundConds[i] = new Periodic(tmp_mparticles, i);
+				break;
+			}
+		}*/
+
+		::particles = tmp_mparticles;
+		}
+		break;
+
+	case simulation_mode_type_t::linked_cell: {
 		CellContainer *tmp_particles = new CellContainer(this->domain_size, this->cutoff_radius);
 
 		// set boundary conditions
@@ -410,6 +549,7 @@ void XMLInput::configureApplication()
 		}
 
 		::particles = tmp_particles;
+		}
 		break;
 	}
 
@@ -436,9 +576,28 @@ void XMLInput::configureApplication()
 		 it != this->gravity.end();
 		 it++ )
 	{
-		::fcalcs[i] = new ForceCalculator_Gravity(it->g);
+		::fcalcs[i] = new ForceCalculator_Gravity(*it);
 		i++;
 	}
+	for( vector<ForceCalculator_Harmonic>::iterator it = this->harmonic.begin();
+		 it != this->harmonic.end();
+		 it++ )
+	{
+		::fcalcs[i] = new ForceCalculator_Harmonic(*it);
+		i++;
+	}
+
+	::numTimedForceCalcs = this->constant_force.size();
+	::tfcalcs = new ForceCalculator_Constant*[::numTimedForceCalcs];
+	i = 0;
+	for( vector<ForceCalculator_Constant>::iterator it = this->constant_force.begin();
+		 it != this->constant_force.end();
+		 it++ )
+	{
+		::tfcalcs[i] = new ForceCalculator_Constant(*it);
+		i++;
+	}
+
 
 	// input
 	std::list<Particle> particleList;
@@ -502,7 +661,6 @@ void XMLInput::configureApplication()
 	if( !this->res_filename.empty() ) {
 		::resultOut = new ResultOutput(*::particles, this->res_filename);
 	}
-
 
 	// create default position and velocity calculators
 	::xcalc = new PositionCalculator();

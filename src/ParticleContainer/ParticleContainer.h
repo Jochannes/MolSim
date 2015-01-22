@@ -30,7 +30,7 @@ public:
 
 	virtual int size() = 0;
 
-	virtual void add(Particle& P) = 0;
+	virtual Particle* add(Particle& P) = 0;
 	virtual void add(std::vector<Particle>& list) = 0;
 
 	virtual void remove(Particle& P) = 0;

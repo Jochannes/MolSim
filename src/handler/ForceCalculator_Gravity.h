@@ -19,8 +19,10 @@
 class ForceCalculator_Gravity : public ForceCalculator
 {
 public:
-	double g; //!< Acceleration coefficient.
-	ForceCalculator_Gravity(double arg_g);
+	double g;		//!< Acceleration coefficient.
+	unsigned int direction;	//!< Direction. 0: x-axis; 1: y-axis (default); 2: z-axis
+
+	ForceCalculator_Gravity(double arg_g, unsigned int arg_direction = 1);
 	virtual ~ForceCalculator_Gravity();
 
 	/**

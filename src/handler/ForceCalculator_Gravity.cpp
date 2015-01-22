@@ -10,7 +10,8 @@
 
 #include <cmath>
 
-ForceCalculator_Gravity::ForceCalculator_Gravity(double arg_g) : g(arg_g) {
+ForceCalculator_Gravity::ForceCalculator_Gravity(double arg_g, unsigned int arg_direction)
+	: g(arg_g), direction(arg_direction) {
 	ForceCalculator::interaction = false;
 }
 
@@ -30,6 +31,6 @@ ForceCalculator_Gravity::~ForceCalculator_Gravity() {
  * \f]
  */
 void ForceCalculator_Gravity::compute(Particle& p) {
-	p.getF()[1] += p.getM() * g;
+	p.getF()[direction] += p.getM() * g;
 }
 

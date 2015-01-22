@@ -11,9 +11,12 @@
 #include "ParticleFileReader.h"
 #include "CuboidGenerator.h"
 #include "SphereGenerator.h"
+#include "MembraneGenerator.h"
 #include "handler/ForceCalculator_Gravity.h"
 #include "handler/ForceCalculator_LennardJones.h"
 #include "handler/ForceCalculator_LJ_smoothed.h"
+#include "handler/ForceCalculator_Harmonic.h"
+#include "handler/ForceCalculator_Constant.h"
 #include "Thermostat.h"
 #include "ThermoDynStats.h"
 #include "XMLInput/simulation.h"
@@ -39,6 +42,8 @@ private:
 	std::vector<ForceCalculator_LennardJones> lennard_jones;
 	std::vector<ForceCalculator_LJ_smoothed> lj_smoothed;
 	std::vector<ForceCalculator_Gravity> gravity;
+	std::vector<ForceCalculator_Harmonic> harmonic;
+	std::vector<ForceCalculator_Constant> constant_force;
 	int forceCalcCnt;
 	int typesCnt;
 
@@ -65,6 +70,7 @@ private:
 	std::vector<ParticleFileReader> particle_file;
 	std::vector<CuboidGenerator> cuboid;
 	std::vector<SphereGenerator> sphere;
+	std::vector<MembraneGenerator> membrane;
 
 	std::string base_filename;
 	int output_freq;

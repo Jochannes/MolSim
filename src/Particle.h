@@ -44,6 +44,8 @@ private:
 
 	bool virt; //!< sets if the particle is virtual.
 
+	Particle* neighbors[8];	//!< stores the surrounding particles. Index: starting with the upper-left corner, counting clock-wise.
+
 public:
 	static double def_sigma;	//!< Default sigma value used for the Lennard-Jones potential
 	static double def_epsilon;	//!< Default epsilon value used for the Lennard-Jones potential
@@ -78,7 +80,12 @@ public:
 	double getSigma();
 
 	int getType();
+	void setType(int type);
+
 	bool getVirtual();
+
+	Particle* getNeighbor(int side);
+	void setNeighbor(int side, Particle& p);
 
 	bool operator==(Particle& other);
 

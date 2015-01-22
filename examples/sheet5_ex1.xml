@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="../src/XMLInput/simulation.xsd">
+
+
+  <parameter>
+    <start-time>0</start-time>
+    <end-time>500</end-time>
+    <delta-t>0.01</delta-t>
+    
+    <simulation-mode>
+      <type>membrane</type>
+      <cutoff_radius>4.0</cutoff_radius>
+      <domain_size_x>148</domain_size_x>
+      <domain_size_y>148</domain_size_y>
+      <domain_size_z>148</domain_size_z>
+      <boundary x_0="reflect" x_max="reflect" y_0="reflect" y_max="reflect" z_0="reflect" z_max="reflect" />
+    </simulation-mode>
+    
+  </parameter>
+  
+  <force-calculator>
+    <lennard-jones cutoff_factor="1.12246204831" />
+    <gravity g_grav="-0.001" direction="z" />
+    <harmonic k="300" r="2.2" />
+    <constant type="2" force_x="0" force_y="0" force_z="0.8" end_time="150" />
+  </force-calculator>
+  
+  <input>
+    <membrane x1="15" x2="15" x3="1.5" n1="50" n2="50" n3="1" h="2.2" m="1.0" epsilon="1.0" sigma="1.0" type="1" v1="0.0" v2="0.0" v3="0.0" mark_type="2" mark_x="17" mark_y="24" />
+  </input>
+  
+  
+  <output>
+    <iteration base_filename="Output/sheet5_ex1/MD_vtk" output_freq="1" />
+  </output>
+  
+  
+</simulation>
+

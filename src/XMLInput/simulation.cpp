@@ -130,6 +130,51 @@ operator= (value v)
 }
 
 
+// direction_t
+// 
+
+direction_t::
+direction_t (value v)
+: ::xml_schema::string (_xsd_direction_t_literals_[v])
+{
+}
+
+direction_t::
+direction_t (const char* v)
+: ::xml_schema::string (v)
+{
+}
+
+direction_t::
+direction_t (const ::std::string& v)
+: ::xml_schema::string (v)
+{
+}
+
+direction_t::
+direction_t (const ::xml_schema::string& v)
+: ::xml_schema::string (v)
+{
+}
+
+direction_t::
+direction_t (const direction_t& v,
+             ::xml_schema::flags f,
+             ::xml_schema::container* c)
+: ::xml_schema::string (v, f, c)
+{
+}
+
+direction_t& direction_t::
+operator= (value v)
+{
+  static_cast< ::xml_schema::string& > (*this) = 
+  ::xml_schema::string (_xsd_direction_t_literals_[v]);
+
+  return *this;
+}
+
+
 // boundary_t
 // 
 
@@ -335,6 +380,42 @@ gravity (const gravity_sequence& s)
   this->gravity_ = s;
 }
 
+const simulation_force_calculator_t::harmonic_sequence& simulation_force_calculator_t::
+harmonic () const
+{
+  return this->harmonic_;
+}
+
+simulation_force_calculator_t::harmonic_sequence& simulation_force_calculator_t::
+harmonic ()
+{
+  return this->harmonic_;
+}
+
+void simulation_force_calculator_t::
+harmonic (const harmonic_sequence& s)
+{
+  this->harmonic_ = s;
+}
+
+const simulation_force_calculator_t::constant_sequence& simulation_force_calculator_t::
+constant () const
+{
+  return this->constant_;
+}
+
+simulation_force_calculator_t::constant_sequence& simulation_force_calculator_t::
+constant ()
+{
+  return this->constant_;
+}
+
+void simulation_force_calculator_t::
+constant (const constant_sequence& s)
+{
+  this->constant_ = s;
+}
+
 
 // lj_cutoff_t
 // 
@@ -423,6 +504,200 @@ void gravity_t::
 g_grav (const g_grav_type& x)
 {
   this->g_grav_.set (x);
+}
+
+const gravity_t::direction_optional& gravity_t::
+direction () const
+{
+  return this->direction_;
+}
+
+gravity_t::direction_optional& gravity_t::
+direction ()
+{
+  return this->direction_;
+}
+
+void gravity_t::
+direction (const direction_type& x)
+{
+  this->direction_.set (x);
+}
+
+void gravity_t::
+direction (const direction_optional& x)
+{
+  this->direction_ = x;
+}
+
+void gravity_t::
+direction (::std::auto_ptr< direction_type > x)
+{
+  this->direction_.set (x);
+}
+
+
+// harmonic_t
+// 
+
+const harmonic_t::k_type& harmonic_t::
+k () const
+{
+  return this->k_.get ();
+}
+
+harmonic_t::k_type& harmonic_t::
+k ()
+{
+  return this->k_.get ();
+}
+
+void harmonic_t::
+k (const k_type& x)
+{
+  this->k_.set (x);
+}
+
+const harmonic_t::r_type& harmonic_t::
+r () const
+{
+  return this->r_.get ();
+}
+
+harmonic_t::r_type& harmonic_t::
+r ()
+{
+  return this->r_.get ();
+}
+
+void harmonic_t::
+r (const r_type& x)
+{
+  this->r_.set (x);
+}
+
+
+// constant_force_t
+// 
+
+const constant_force_t::type_type& constant_force_t::
+type () const
+{
+  return this->type_.get ();
+}
+
+constant_force_t::type_type& constant_force_t::
+type ()
+{
+  return this->type_.get ();
+}
+
+void constant_force_t::
+type (const type_type& x)
+{
+  this->type_.set (x);
+}
+
+const constant_force_t::force_x_type& constant_force_t::
+force_x () const
+{
+  return this->force_x_.get ();
+}
+
+constant_force_t::force_x_type& constant_force_t::
+force_x ()
+{
+  return this->force_x_.get ();
+}
+
+void constant_force_t::
+force_x (const force_x_type& x)
+{
+  this->force_x_.set (x);
+}
+
+const constant_force_t::force_y_type& constant_force_t::
+force_y () const
+{
+  return this->force_y_.get ();
+}
+
+constant_force_t::force_y_type& constant_force_t::
+force_y ()
+{
+  return this->force_y_.get ();
+}
+
+void constant_force_t::
+force_y (const force_y_type& x)
+{
+  this->force_y_.set (x);
+}
+
+const constant_force_t::force_z_type& constant_force_t::
+force_z () const
+{
+  return this->force_z_.get ();
+}
+
+constant_force_t::force_z_type& constant_force_t::
+force_z ()
+{
+  return this->force_z_.get ();
+}
+
+void constant_force_t::
+force_z (const force_z_type& x)
+{
+  this->force_z_.set (x);
+}
+
+const constant_force_t::start_time_optional& constant_force_t::
+start_time () const
+{
+  return this->start_time_;
+}
+
+constant_force_t::start_time_optional& constant_force_t::
+start_time ()
+{
+  return this->start_time_;
+}
+
+void constant_force_t::
+start_time (const start_time_type& x)
+{
+  this->start_time_.set (x);
+}
+
+void constant_force_t::
+start_time (const start_time_optional& x)
+{
+  this->start_time_ = x;
+}
+
+const constant_force_t::end_time_optional& constant_force_t::
+end_time () const
+{
+  return this->end_time_;
+}
+
+constant_force_t::end_time_optional& constant_force_t::
+end_time ()
+{
+  return this->end_time_;
+}
+
+void constant_force_t::
+end_time (const end_time_type& x)
+{
+  this->end_time_.set (x);
+}
+
+void constant_force_t::
+end_time (const end_time_optional& x)
+{
+  this->end_time_ = x;
 }
 
 
@@ -1476,6 +1751,334 @@ v3 (const v3_type& x)
 }
 
 
+// membrane_t
+// 
+
+const membrane_t::x1_type& membrane_t::
+x1 () const
+{
+  return this->x1_.get ();
+}
+
+membrane_t::x1_type& membrane_t::
+x1 ()
+{
+  return this->x1_.get ();
+}
+
+void membrane_t::
+x1 (const x1_type& x)
+{
+  this->x1_.set (x);
+}
+
+const membrane_t::x2_type& membrane_t::
+x2 () const
+{
+  return this->x2_.get ();
+}
+
+membrane_t::x2_type& membrane_t::
+x2 ()
+{
+  return this->x2_.get ();
+}
+
+void membrane_t::
+x2 (const x2_type& x)
+{
+  this->x2_.set (x);
+}
+
+const membrane_t::x3_type& membrane_t::
+x3 () const
+{
+  return this->x3_.get ();
+}
+
+membrane_t::x3_type& membrane_t::
+x3 ()
+{
+  return this->x3_.get ();
+}
+
+void membrane_t::
+x3 (const x3_type& x)
+{
+  this->x3_.set (x);
+}
+
+const membrane_t::n1_type& membrane_t::
+n1 () const
+{
+  return this->n1_.get ();
+}
+
+membrane_t::n1_type& membrane_t::
+n1 ()
+{
+  return this->n1_.get ();
+}
+
+void membrane_t::
+n1 (const n1_type& x)
+{
+  this->n1_.set (x);
+}
+
+const membrane_t::n2_type& membrane_t::
+n2 () const
+{
+  return this->n2_.get ();
+}
+
+membrane_t::n2_type& membrane_t::
+n2 ()
+{
+  return this->n2_.get ();
+}
+
+void membrane_t::
+n2 (const n2_type& x)
+{
+  this->n2_.set (x);
+}
+
+const membrane_t::n3_type& membrane_t::
+n3 () const
+{
+  return this->n3_.get ();
+}
+
+membrane_t::n3_type& membrane_t::
+n3 ()
+{
+  return this->n3_.get ();
+}
+
+void membrane_t::
+n3 (const n3_type& x)
+{
+  this->n3_.set (x);
+}
+
+const membrane_t::h_type& membrane_t::
+h () const
+{
+  return this->h_.get ();
+}
+
+membrane_t::h_type& membrane_t::
+h ()
+{
+  return this->h_.get ();
+}
+
+void membrane_t::
+h (const h_type& x)
+{
+  this->h_.set (x);
+}
+
+const membrane_t::m_type& membrane_t::
+m () const
+{
+  return this->m_.get ();
+}
+
+membrane_t::m_type& membrane_t::
+m ()
+{
+  return this->m_.get ();
+}
+
+void membrane_t::
+m (const m_type& x)
+{
+  this->m_.set (x);
+}
+
+const membrane_t::epsilon_type& membrane_t::
+epsilon () const
+{
+  return this->epsilon_.get ();
+}
+
+membrane_t::epsilon_type& membrane_t::
+epsilon ()
+{
+  return this->epsilon_.get ();
+}
+
+void membrane_t::
+epsilon (const epsilon_type& x)
+{
+  this->epsilon_.set (x);
+}
+
+const membrane_t::sigma_type& membrane_t::
+sigma () const
+{
+  return this->sigma_.get ();
+}
+
+membrane_t::sigma_type& membrane_t::
+sigma ()
+{
+  return this->sigma_.get ();
+}
+
+void membrane_t::
+sigma (const sigma_type& x)
+{
+  this->sigma_.set (x);
+}
+
+const membrane_t::type_type& membrane_t::
+type () const
+{
+  return this->type_.get ();
+}
+
+membrane_t::type_type& membrane_t::
+type ()
+{
+  return this->type_.get ();
+}
+
+void membrane_t::
+type (const type_type& x)
+{
+  this->type_.set (x);
+}
+
+const membrane_t::v1_type& membrane_t::
+v1 () const
+{
+  return this->v1_.get ();
+}
+
+membrane_t::v1_type& membrane_t::
+v1 ()
+{
+  return this->v1_.get ();
+}
+
+void membrane_t::
+v1 (const v1_type& x)
+{
+  this->v1_.set (x);
+}
+
+const membrane_t::v2_type& membrane_t::
+v2 () const
+{
+  return this->v2_.get ();
+}
+
+membrane_t::v2_type& membrane_t::
+v2 ()
+{
+  return this->v2_.get ();
+}
+
+void membrane_t::
+v2 (const v2_type& x)
+{
+  this->v2_.set (x);
+}
+
+const membrane_t::v3_type& membrane_t::
+v3 () const
+{
+  return this->v3_.get ();
+}
+
+membrane_t::v3_type& membrane_t::
+v3 ()
+{
+  return this->v3_.get ();
+}
+
+void membrane_t::
+v3 (const v3_type& x)
+{
+  this->v3_.set (x);
+}
+
+const membrane_t::mark_type_optional& membrane_t::
+mark_type () const
+{
+  return this->mark_type_;
+}
+
+membrane_t::mark_type_optional& membrane_t::
+mark_type ()
+{
+  return this->mark_type_;
+}
+
+void membrane_t::
+mark_type (const mark_type_type& x)
+{
+  this->mark_type_.set (x);
+}
+
+void membrane_t::
+mark_type (const mark_type_optional& x)
+{
+  this->mark_type_ = x;
+}
+
+const membrane_t::mark_x_optional& membrane_t::
+mark_x () const
+{
+  return this->mark_x_;
+}
+
+membrane_t::mark_x_optional& membrane_t::
+mark_x ()
+{
+  return this->mark_x_;
+}
+
+void membrane_t::
+mark_x (const mark_x_type& x)
+{
+  this->mark_x_.set (x);
+}
+
+void membrane_t::
+mark_x (const mark_x_optional& x)
+{
+  this->mark_x_ = x;
+}
+
+const membrane_t::mark_y_optional& membrane_t::
+mark_y () const
+{
+  return this->mark_y_;
+}
+
+membrane_t::mark_y_optional& membrane_t::
+mark_y ()
+{
+  return this->mark_y_;
+}
+
+void membrane_t::
+mark_y (const mark_y_type& x)
+{
+  this->mark_y_.set (x);
+}
+
+void membrane_t::
+mark_y (const mark_y_optional& x)
+{
+  this->mark_y_ = x;
+}
+
+
 // simulation_input_t
 // 
 
@@ -1531,6 +2134,24 @@ void simulation_input_t::
 sphere (const sphere_sequence& s)
 {
   this->sphere_ = s;
+}
+
+const simulation_input_t::membrane_sequence& simulation_input_t::
+membrane () const
+{
+  return this->membrane_;
+}
+
+simulation_input_t::membrane_sequence& simulation_input_t::
+membrane ()
+{
+  return this->membrane_;
+}
+
+void simulation_input_t::
+membrane (const membrane_sequence& s)
+{
+  this->membrane_ = s;
 }
 
 
@@ -1818,11 +2439,11 @@ _xsd_simulation_mode_type_t_convert () const
   ::xsd::cxx::tree::enum_comparator< char > c (_xsd_simulation_mode_type_t_literals_);
   const value* i (::std::lower_bound (
                     _xsd_simulation_mode_type_t_indexes_,
-                    _xsd_simulation_mode_type_t_indexes_ + 2,
+                    _xsd_simulation_mode_type_t_indexes_ + 3,
                     *this,
                     c));
 
-  if (i == _xsd_simulation_mode_type_t_indexes_ + 2 || _xsd_simulation_mode_type_t_literals_[*i] != *this)
+  if (i == _xsd_simulation_mode_type_t_indexes_ + 3 || _xsd_simulation_mode_type_t_literals_[*i] != *this)
   {
     throw ::xsd::cxx::tree::unexpected_enumerator < char > (*this);
   }
@@ -1831,16 +2452,18 @@ _xsd_simulation_mode_type_t_convert () const
 }
 
 const char* const simulation_mode_type_t::
-_xsd_simulation_mode_type_t_literals_[2] =
+_xsd_simulation_mode_type_t_literals_[3] =
 {
   "normal",
-  "linked-cell"
+  "linked-cell",
+  "membrane"
 };
 
 const simulation_mode_type_t::value simulation_mode_type_t::
-_xsd_simulation_mode_type_t_indexes_[2] =
+_xsd_simulation_mode_type_t_indexes_[3] =
 {
   ::simulation_mode_type_t::linked_cell,
+  ::simulation_mode_type_t::membrane,
   ::simulation_mode_type_t::normal
 };
 
@@ -1914,6 +2537,78 @@ _xsd_boundary_type_t_indexes_[3] =
   ::boundary_type_t::outflow,
   ::boundary_type_t::periodic,
   ::boundary_type_t::reflect
+};
+
+// direction_t
+//
+
+direction_t::
+direction_t (const ::xercesc::DOMElement& e,
+             ::xml_schema::flags f,
+             ::xml_schema::container* c)
+: ::xml_schema::string (e, f, c)
+{
+  _xsd_direction_t_convert ();
+}
+
+direction_t::
+direction_t (const ::xercesc::DOMAttr& a,
+             ::xml_schema::flags f,
+             ::xml_schema::container* c)
+: ::xml_schema::string (a, f, c)
+{
+  _xsd_direction_t_convert ();
+}
+
+direction_t::
+direction_t (const ::std::string& s,
+             const ::xercesc::DOMElement* e,
+             ::xml_schema::flags f,
+             ::xml_schema::container* c)
+: ::xml_schema::string (s, e, f, c)
+{
+  _xsd_direction_t_convert ();
+}
+
+direction_t* direction_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class direction_t (*this, f, c);
+}
+
+direction_t::value direction_t::
+_xsd_direction_t_convert () const
+{
+  ::xsd::cxx::tree::enum_comparator< char > c (_xsd_direction_t_literals_);
+  const value* i (::std::lower_bound (
+                    _xsd_direction_t_indexes_,
+                    _xsd_direction_t_indexes_ + 3,
+                    *this,
+                    c));
+
+  if (i == _xsd_direction_t_indexes_ + 3 || _xsd_direction_t_literals_[*i] != *this)
+  {
+    throw ::xsd::cxx::tree::unexpected_enumerator < char > (*this);
+  }
+
+  return *i;
+}
+
+const char* const direction_t::
+_xsd_direction_t_literals_[3] =
+{
+  "x",
+  "y",
+  "z"
+};
+
+const direction_t::value direction_t::
+_xsd_direction_t_indexes_[3] =
+{
+  ::direction_t::x,
+  ::direction_t::y,
+  ::direction_t::z
 };
 
 // boundary_t
@@ -2097,7 +2792,9 @@ simulation_force_calculator_t ()
 : ::xml_schema::type (),
   lennard_jones_ (::xml_schema::flags (), this),
   lj_smoothed_ (::xml_schema::flags (), this),
-  gravity_ (::xml_schema::flags (), this)
+  gravity_ (::xml_schema::flags (), this),
+  harmonic_ (::xml_schema::flags (), this),
+  constant_ (::xml_schema::flags (), this)
 {
 }
 
@@ -2108,7 +2805,9 @@ simulation_force_calculator_t (const simulation_force_calculator_t& x,
 : ::xml_schema::type (x, f, c),
   lennard_jones_ (x.lennard_jones_, f, this),
   lj_smoothed_ (x.lj_smoothed_, f, this),
-  gravity_ (x.gravity_, f, this)
+  gravity_ (x.gravity_, f, this),
+  harmonic_ (x.harmonic_, f, this),
+  constant_ (x.constant_, f, this)
 {
 }
 
@@ -2119,7 +2818,9 @@ simulation_force_calculator_t (const ::xercesc::DOMElement& e,
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
   lennard_jones_ (f, this),
   lj_smoothed_ (f, this),
-  gravity_ (f, this)
+  gravity_ (f, this),
+  harmonic_ (f, this),
+  constant_ (f, this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
   {
@@ -2168,6 +2869,28 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
         gravity_traits::create (i, f, this));
 
       this->gravity_.push_back (r);
+      continue;
+    }
+
+    // harmonic
+    //
+    if (n.name () == "harmonic" && n.namespace_ ().empty ())
+    {
+      ::std::auto_ptr< harmonic_type > r (
+        harmonic_traits::create (i, f, this));
+
+      this->harmonic_.push_back (r);
+      continue;
+    }
+
+    // constant
+    //
+    if (n.name () == "constant" && n.namespace_ ().empty ())
+    {
+      ::std::auto_ptr< constant_type > r (
+        constant_traits::create (i, f, this));
+
+      this->constant_.push_back (r);
       continue;
     }
 
@@ -2343,7 +3066,8 @@ lj_smoothed_t::
 gravity_t::
 gravity_t (const g_grav_type& g_grav)
 : ::xml_schema::type (),
-  g_grav_ (g_grav, ::xml_schema::flags (), this)
+  g_grav_ (g_grav, ::xml_schema::flags (), this),
+  direction_ (::xml_schema::flags (), this)
 {
 }
 
@@ -2352,7 +3076,8 @@ gravity_t (const gravity_t& x,
            ::xml_schema::flags f,
            ::xml_schema::container* c)
 : ::xml_schema::type (x, f, c),
-  g_grav_ (x.g_grav_, f, this)
+  g_grav_ (x.g_grav_, f, this),
+  direction_ (x.direction_, f, this)
 {
 }
 
@@ -2361,7 +3086,8 @@ gravity_t (const ::xercesc::DOMElement& e,
            ::xml_schema::flags f,
            ::xml_schema::container* c)
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
-  g_grav_ (f, this)
+  g_grav_ (f, this),
+  direction_ (f, this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
   {
@@ -2385,6 +3111,15 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       this->g_grav_.set (g_grav_traits::create (i, f, this));
       continue;
     }
+
+    if (n.name () == "direction" && n.namespace_ ().empty ())
+    {
+      ::std::auto_ptr< direction_type > r (
+        direction_traits::create (i, f, this));
+
+      this->direction_.set (r);
+      continue;
+    }
   }
 
   if (!g_grav_.present ())
@@ -2404,6 +3139,232 @@ _clone (::xml_schema::flags f,
 
 gravity_t::
 ~gravity_t ()
+{
+}
+
+// harmonic_t
+//
+
+harmonic_t::
+harmonic_t (const k_type& k,
+            const r_type& r)
+: ::xml_schema::type (),
+  k_ (k, ::xml_schema::flags (), this),
+  r_ (r, ::xml_schema::flags (), this)
+{
+}
+
+harmonic_t::
+harmonic_t (const harmonic_t& x,
+            ::xml_schema::flags f,
+            ::xml_schema::container* c)
+: ::xml_schema::type (x, f, c),
+  k_ (x.k_, f, this),
+  r_ (x.r_, f, this)
+{
+}
+
+harmonic_t::
+harmonic_t (const ::xercesc::DOMElement& e,
+            ::xml_schema::flags f,
+            ::xml_schema::container* c)
+: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  k_ (f, this),
+  r_ (f, this)
+{
+  if ((f & ::xml_schema::flags::base) == 0)
+  {
+    ::xsd::cxx::xml::dom::parser< char > p (e, false, true);
+    this->parse (p, f);
+  }
+}
+
+void harmonic_t::
+parse (::xsd::cxx::xml::dom::parser< char >& p,
+       ::xml_schema::flags f)
+{
+  while (p.more_attributes ())
+  {
+    const ::xercesc::DOMAttr& i (p.next_attribute ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    if (n.name () == "k" && n.namespace_ ().empty ())
+    {
+      this->k_.set (k_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "r" && n.namespace_ ().empty ())
+    {
+      this->r_.set (r_traits::create (i, f, this));
+      continue;
+    }
+  }
+
+  if (!k_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "k",
+      "");
+  }
+
+  if (!r_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "r",
+      "");
+  }
+}
+
+harmonic_t* harmonic_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class harmonic_t (*this, f, c);
+}
+
+harmonic_t::
+~harmonic_t ()
+{
+}
+
+// constant_force_t
+//
+
+constant_force_t::
+constant_force_t (const type_type& type,
+                  const force_x_type& force_x,
+                  const force_y_type& force_y,
+                  const force_z_type& force_z)
+: ::xml_schema::type (),
+  type_ (type, ::xml_schema::flags (), this),
+  force_x_ (force_x, ::xml_schema::flags (), this),
+  force_y_ (force_y, ::xml_schema::flags (), this),
+  force_z_ (force_z, ::xml_schema::flags (), this),
+  start_time_ (::xml_schema::flags (), this),
+  end_time_ (::xml_schema::flags (), this)
+{
+}
+
+constant_force_t::
+constant_force_t (const constant_force_t& x,
+                  ::xml_schema::flags f,
+                  ::xml_schema::container* c)
+: ::xml_schema::type (x, f, c),
+  type_ (x.type_, f, this),
+  force_x_ (x.force_x_, f, this),
+  force_y_ (x.force_y_, f, this),
+  force_z_ (x.force_z_, f, this),
+  start_time_ (x.start_time_, f, this),
+  end_time_ (x.end_time_, f, this)
+{
+}
+
+constant_force_t::
+constant_force_t (const ::xercesc::DOMElement& e,
+                  ::xml_schema::flags f,
+                  ::xml_schema::container* c)
+: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  type_ (f, this),
+  force_x_ (f, this),
+  force_y_ (f, this),
+  force_z_ (f, this),
+  start_time_ (f, this),
+  end_time_ (f, this)
+{
+  if ((f & ::xml_schema::flags::base) == 0)
+  {
+    ::xsd::cxx::xml::dom::parser< char > p (e, false, true);
+    this->parse (p, f);
+  }
+}
+
+void constant_force_t::
+parse (::xsd::cxx::xml::dom::parser< char >& p,
+       ::xml_schema::flags f)
+{
+  while (p.more_attributes ())
+  {
+    const ::xercesc::DOMAttr& i (p.next_attribute ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    if (n.name () == "type" && n.namespace_ ().empty ())
+    {
+      this->type_.set (type_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "force_x" && n.namespace_ ().empty ())
+    {
+      this->force_x_.set (force_x_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "force_y" && n.namespace_ ().empty ())
+    {
+      this->force_y_.set (force_y_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "force_z" && n.namespace_ ().empty ())
+    {
+      this->force_z_.set (force_z_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "start_time" && n.namespace_ ().empty ())
+    {
+      this->start_time_.set (start_time_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "end_time" && n.namespace_ ().empty ())
+    {
+      this->end_time_.set (end_time_traits::create (i, f, this));
+      continue;
+    }
+  }
+
+  if (!type_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "type",
+      "");
+  }
+
+  if (!force_x_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "force_x",
+      "");
+  }
+
+  if (!force_y_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "force_y",
+      "");
+  }
+
+  if (!force_z_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "force_z",
+      "");
+  }
+}
+
+constant_force_t* constant_force_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class constant_force_t (*this, f, c);
+}
+
+constant_force_t::
+~constant_force_t ()
 {
 }
 
@@ -3604,6 +4565,324 @@ sphere_t::
 {
 }
 
+// membrane_t
+//
+
+membrane_t::
+membrane_t (const x1_type& x1,
+            const x2_type& x2,
+            const x3_type& x3,
+            const n1_type& n1,
+            const n2_type& n2,
+            const n3_type& n3,
+            const h_type& h,
+            const m_type& m,
+            const epsilon_type& epsilon,
+            const sigma_type& sigma,
+            const type_type& type,
+            const v1_type& v1,
+            const v2_type& v2,
+            const v3_type& v3)
+: ::xml_schema::type (),
+  x1_ (x1, ::xml_schema::flags (), this),
+  x2_ (x2, ::xml_schema::flags (), this),
+  x3_ (x3, ::xml_schema::flags (), this),
+  n1_ (n1, ::xml_schema::flags (), this),
+  n2_ (n2, ::xml_schema::flags (), this),
+  n3_ (n3, ::xml_schema::flags (), this),
+  h_ (h, ::xml_schema::flags (), this),
+  m_ (m, ::xml_schema::flags (), this),
+  epsilon_ (epsilon, ::xml_schema::flags (), this),
+  sigma_ (sigma, ::xml_schema::flags (), this),
+  type_ (type, ::xml_schema::flags (), this),
+  v1_ (v1, ::xml_schema::flags (), this),
+  v2_ (v2, ::xml_schema::flags (), this),
+  v3_ (v3, ::xml_schema::flags (), this),
+  mark_type_ (::xml_schema::flags (), this),
+  mark_x_ (::xml_schema::flags (), this),
+  mark_y_ (::xml_schema::flags (), this)
+{
+}
+
+membrane_t::
+membrane_t (const membrane_t& x,
+            ::xml_schema::flags f,
+            ::xml_schema::container* c)
+: ::xml_schema::type (x, f, c),
+  x1_ (x.x1_, f, this),
+  x2_ (x.x2_, f, this),
+  x3_ (x.x3_, f, this),
+  n1_ (x.n1_, f, this),
+  n2_ (x.n2_, f, this),
+  n3_ (x.n3_, f, this),
+  h_ (x.h_, f, this),
+  m_ (x.m_, f, this),
+  epsilon_ (x.epsilon_, f, this),
+  sigma_ (x.sigma_, f, this),
+  type_ (x.type_, f, this),
+  v1_ (x.v1_, f, this),
+  v2_ (x.v2_, f, this),
+  v3_ (x.v3_, f, this),
+  mark_type_ (x.mark_type_, f, this),
+  mark_x_ (x.mark_x_, f, this),
+  mark_y_ (x.mark_y_, f, this)
+{
+}
+
+membrane_t::
+membrane_t (const ::xercesc::DOMElement& e,
+            ::xml_schema::flags f,
+            ::xml_schema::container* c)
+: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  x1_ (f, this),
+  x2_ (f, this),
+  x3_ (f, this),
+  n1_ (f, this),
+  n2_ (f, this),
+  n3_ (f, this),
+  h_ (f, this),
+  m_ (f, this),
+  epsilon_ (f, this),
+  sigma_ (f, this),
+  type_ (f, this),
+  v1_ (f, this),
+  v2_ (f, this),
+  v3_ (f, this),
+  mark_type_ (f, this),
+  mark_x_ (f, this),
+  mark_y_ (f, this)
+{
+  if ((f & ::xml_schema::flags::base) == 0)
+  {
+    ::xsd::cxx::xml::dom::parser< char > p (e, false, true);
+    this->parse (p, f);
+  }
+}
+
+void membrane_t::
+parse (::xsd::cxx::xml::dom::parser< char >& p,
+       ::xml_schema::flags f)
+{
+  while (p.more_attributes ())
+  {
+    const ::xercesc::DOMAttr& i (p.next_attribute ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    if (n.name () == "x1" && n.namespace_ ().empty ())
+    {
+      this->x1_.set (x1_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "x2" && n.namespace_ ().empty ())
+    {
+      this->x2_.set (x2_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "x3" && n.namespace_ ().empty ())
+    {
+      this->x3_.set (x3_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "n1" && n.namespace_ ().empty ())
+    {
+      this->n1_.set (n1_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "n2" && n.namespace_ ().empty ())
+    {
+      this->n2_.set (n2_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "n3" && n.namespace_ ().empty ())
+    {
+      this->n3_.set (n3_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "h" && n.namespace_ ().empty ())
+    {
+      this->h_.set (h_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "m" && n.namespace_ ().empty ())
+    {
+      this->m_.set (m_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "epsilon" && n.namespace_ ().empty ())
+    {
+      this->epsilon_.set (epsilon_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "sigma" && n.namespace_ ().empty ())
+    {
+      this->sigma_.set (sigma_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "type" && n.namespace_ ().empty ())
+    {
+      this->type_.set (type_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "v1" && n.namespace_ ().empty ())
+    {
+      this->v1_.set (v1_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "v2" && n.namespace_ ().empty ())
+    {
+      this->v2_.set (v2_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "v3" && n.namespace_ ().empty ())
+    {
+      this->v3_.set (v3_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "mark_type" && n.namespace_ ().empty ())
+    {
+      this->mark_type_.set (mark_type_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "mark_x" && n.namespace_ ().empty ())
+    {
+      this->mark_x_.set (mark_x_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "mark_y" && n.namespace_ ().empty ())
+    {
+      this->mark_y_.set (mark_y_traits::create (i, f, this));
+      continue;
+    }
+  }
+
+  if (!x1_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "x1",
+      "");
+  }
+
+  if (!x2_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "x2",
+      "");
+  }
+
+  if (!x3_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "x3",
+      "");
+  }
+
+  if (!n1_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "n1",
+      "");
+  }
+
+  if (!n2_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "n2",
+      "");
+  }
+
+  if (!n3_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "n3",
+      "");
+  }
+
+  if (!h_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "h",
+      "");
+  }
+
+  if (!m_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "m",
+      "");
+  }
+
+  if (!epsilon_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "epsilon",
+      "");
+  }
+
+  if (!sigma_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "sigma",
+      "");
+  }
+
+  if (!type_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "type",
+      "");
+  }
+
+  if (!v1_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "v1",
+      "");
+  }
+
+  if (!v2_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "v2",
+      "");
+  }
+
+  if (!v3_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "v3",
+      "");
+  }
+}
+
+membrane_t* membrane_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class membrane_t (*this, f, c);
+}
+
+membrane_t::
+~membrane_t ()
+{
+}
+
 // simulation_input_t
 //
 
@@ -3612,7 +4891,8 @@ simulation_input_t ()
 : ::xml_schema::type (),
   particle_file_ (::xml_schema::flags (), this),
   cuboid_ (::xml_schema::flags (), this),
-  sphere_ (::xml_schema::flags (), this)
+  sphere_ (::xml_schema::flags (), this),
+  membrane_ (::xml_schema::flags (), this)
 {
 }
 
@@ -3623,7 +4903,8 @@ simulation_input_t (const simulation_input_t& x,
 : ::xml_schema::type (x, f, c),
   particle_file_ (x.particle_file_, f, this),
   cuboid_ (x.cuboid_, f, this),
-  sphere_ (x.sphere_, f, this)
+  sphere_ (x.sphere_, f, this),
+  membrane_ (x.membrane_, f, this)
 {
 }
 
@@ -3634,7 +4915,8 @@ simulation_input_t (const ::xercesc::DOMElement& e,
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
   particle_file_ (f, this),
   cuboid_ (f, this),
-  sphere_ (f, this)
+  sphere_ (f, this),
+  membrane_ (f, this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
   {
@@ -3683,6 +4965,17 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
         sphere_traits::create (i, f, this));
 
       this->sphere_.push_back (r);
+      continue;
+    }
+
+    // membrane
+    //
+    if (n.name () == "membrane" && n.namespace_ ().empty ())
+    {
+      ::std::auto_ptr< membrane_type > r (
+        membrane_traits::create (i, f, this));
+
+      this->membrane_.push_back (r);
       continue;
     }
 

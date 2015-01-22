@@ -471,9 +471,10 @@ int CellContainer::size() {
 /**
  * \brief Adds a particle to the right particle container.
  * @param p Particle to add.
+ * @return Pointer to the added particle.
  */
-void CellContainer::add(Particle& p) {
-	getCell(p.getX())->add(p);
+Particle* CellContainer::add(Particle& p) {
+	return getCell(p.getX())->add(p);
 }
 
 /**

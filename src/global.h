@@ -44,5 +44,8 @@ extern VelocityCalculator* vcalc;
 extern ForceCalculator** fcalcs;
 extern int numForceCalcs;
 
+extern ForceCalculator_Constant** tfcalcs;
+extern int numTimedForceCalcs;
+
 
 #endif /* GLOBAL_H_ */

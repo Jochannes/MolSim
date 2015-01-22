@@ -22,9 +22,11 @@ SimpleContainer::SimpleContainer(
 /**
  * \brief Adds a particle to the particle container.
  * @param p Particle to add.
+ * @return Pointer to the added particle.
  */
-void SimpleContainer::add(Particle& p) {
+Particle* SimpleContainer::add(Particle& p) {
 	particleList.push_back(p);
+	return &(particleList.back());
 }
 
 /**
