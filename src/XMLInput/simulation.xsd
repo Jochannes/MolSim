@@ -115,7 +115,8 @@
     <xs:attribute name="x_start" type="xs:double" use="required"/>
     <xs:attribute name="x_end" type="xs:double" use="required"/>
     <xs:attribute name="x_count" type="xs:unsignedInt" use="required"/>
-    <xs:attribute name="file" type="xs:string" use="required"/>
+    <xs:attribute name="vfile" type="xs:string" use="required"/>
+    <xs:attribute name="dfile" type="xs:string" use="required"/>
     <xs:attribute name="freq" type="xs:unsignedInt" use="required"/>
   </xs:complexType>
   

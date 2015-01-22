@@ -1286,28 +1286,52 @@ x_count (const x_count_type& x)
   this->x_count_.set (x);
 }
 
-const veldenprof_t::file_type& veldenprof_t::
-file () const
+const veldenprof_t::vfile_type& veldenprof_t::
+vfile () const
 {
-  return this->file_.get ();
+  return this->vfile_.get ();
 }
 
-veldenprof_t::file_type& veldenprof_t::
-file ()
+veldenprof_t::vfile_type& veldenprof_t::
+vfile ()
 {
-  return this->file_.get ();
-}
-
-void veldenprof_t::
-file (const file_type& x)
-{
-  this->file_.set (x);
+  return this->vfile_.get ();
 }
 
 void veldenprof_t::
-file (::std::auto_ptr< file_type > x)
+vfile (const vfile_type& x)
 {
-  this->file_.set (x);
+  this->vfile_.set (x);
+}
+
+void veldenprof_t::
+vfile (::std::auto_ptr< vfile_type > x)
+{
+  this->vfile_.set (x);
+}
+
+const veldenprof_t::dfile_type& veldenprof_t::
+dfile () const
+{
+  return this->dfile_.get ();
+}
+
+veldenprof_t::dfile_type& veldenprof_t::
+dfile ()
+{
+  return this->dfile_.get ();
+}
+
+void veldenprof_t::
+dfile (const dfile_type& x)
+{
+  this->dfile_.set (x);
+}
+
+void veldenprof_t::
+dfile (::std::auto_ptr< dfile_type > x)
+{
+  this->dfile_.set (x);
 }
 
 const veldenprof_t::freq_type& veldenprof_t::
@@ -4155,13 +4179,15 @@ veldenprof_t::
 veldenprof_t (const x_start_type& x_start,
               const x_end_type& x_end,
               const x_count_type& x_count,
-              const file_type& file,
+              const vfile_type& vfile,
+              const dfile_type& dfile,
               const freq_type& freq)
 : ::xml_schema::type (),
   x_start_ (x_start, ::xml_schema::flags (), this),
   x_end_ (x_end, ::xml_schema::flags (), this),
   x_count_ (x_count, ::xml_schema::flags (), this),
-  file_ (file, ::xml_schema::flags (), this),
+  vfile_ (vfile, ::xml_schema::flags (), this),
+  dfile_ (dfile, ::xml_schema::flags (), this),
   freq_ (freq, ::xml_schema::flags (), this)
 {
 }
@@ -4174,7 +4200,8 @@ veldenprof_t (const veldenprof_t& x,
   x_start_ (x.x_start_, f, this),
   x_end_ (x.x_end_, f, this),
   x_count_ (x.x_count_, f, this),
-  file_ (x.file_, f, this),
+  vfile_ (x.vfile_, f, this),
+  dfile_ (x.dfile_, f, this),
   freq_ (x.freq_, f, this)
 {
 }
@@ -4187,7 +4214,8 @@ veldenprof_t (const ::xercesc::DOMElement& e,
   x_start_ (f, this),
   x_end_ (f, this),
   x_count_ (f, this),
-  file_ (f, this),
+  vfile_ (f, this),
+  dfile_ (f, this),
   freq_ (f, this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
@@ -4225,12 +4253,21 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       continue;
     }
 
-    if (n.name () == "file" && n.namespace_ ().empty ())
+    if (n.name () == "vfile" && n.namespace_ ().empty ())
     {
-      ::std::auto_ptr< file_type > r (
-        file_traits::create (i, f, this));
+      ::std::auto_ptr< vfile_type > r (
+        vfile_traits::create (i, f, this));
 
-      this->file_.set (r);
+      this->vfile_.set (r);
+      continue;
+    }
+
+    if (n.name () == "dfile" && n.namespace_ ().empty ())
+    {
+      ::std::auto_ptr< dfile_type > r (
+        dfile_traits::create (i, f, this));
+
+      this->dfile_.set (r);
       continue;
     }
 
@@ -4262,10 +4299,17 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       "");
   }
 
-  if (!file_.present ())
+  if (!vfile_.present ())
   {
     throw ::xsd::cxx::tree::expected_attribute< char > (
-      "file",
+      "vfile",
+      "");
+  }
+
+  if (!dfile_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "dfile",
       "");
   }
 

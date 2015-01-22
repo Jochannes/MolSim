@@ -14,14 +14,14 @@
       <domain_size_x>35</domain_size_x>
       <domain_size_y>25</domain_size_y>
       <domain_size_z>10</domain_size_z>
-      <boundary x_0="periodic" x_max="periodic" y_0="periodic" y_max="periodic" z_0="periodic" z_max="periodic" />
+      <boundary x_0="outflow" x_max="outflow" y_0="periodic" y_max="periodic" z_0="periodic" z_max="periodic" />
     </simulation-mode>
     
     <thermostat dim="3" steps="10" init_temp="40" type="2" direction="1" />
     
     <fixed>0 1</fixed>
     
-    <velocity-density-profile x_start="0.0" x_end="30.0" x_count="50" file="veldenprof.csv" freq="10000" />
+    <velocity-density-profile x_start="0.0" x_end="30.0" x_count="50" vfile="velocity.csv" dfile="density.csv" freq="10000" />
   </parameter>
   
   <force-calculator>

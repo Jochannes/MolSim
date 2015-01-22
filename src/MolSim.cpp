@@ -9,6 +9,7 @@
 #include "handler/ForceCalculator_Constant.h"
 #include "Thermostat.h"
 #include "ThermoDynStats.h"
+#include "VelDenProfile.h"
 
 #include <cstring>
 #include <cstdlib>
@@ -73,6 +74,7 @@ int output_freq = 10;	//!< Output frequency of the simulation.
 Thermostat* thermostat;	//!< Thermostat controlling the temperatures of the particles.
 
 ThermoDynStats* thdynStats = NULL;	//!< Class controlling the calculation of thermodynamical statistics.
+VelDenProfile* VelDenPr = NULL;		//!< Class for profiling density and velocity.
 
 ParticleContainer* particles;//!< Container for encapsulating the particle list.
 ParticleOutput* particleOut = NULL; //!< Object for defining the output method to be used.
@@ -131,6 +133,11 @@ int main(int argc, char* argsv[]) {
 		//Calculate the thermodynamical statistics (if activated)
 		if (thdynStats != NULL) {
 			thdynStats->analyze(particles, iteration);
+		}
+
+		// update velocity and density profile
+		if( VelDenPr != NULL ) {
+			VelDenPr->analyse(iteration);
 		}
 
 		iteration++;

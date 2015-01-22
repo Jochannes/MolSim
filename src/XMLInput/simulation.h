@@ -1653,22 +1653,39 @@ class veldenprof_t: public ::xml_schema::type
   void
   x_count (const x_count_type& x);
 
-  // file
+  // vfile
   // 
-  typedef ::xml_schema::string file_type;
-  typedef ::xsd::cxx::tree::traits< file_type, char > file_traits;
+  typedef ::xml_schema::string vfile_type;
+  typedef ::xsd::cxx::tree::traits< vfile_type, char > vfile_traits;
 
-  const file_type&
-  file () const;
+  const vfile_type&
+  vfile () const;
 
-  file_type&
-  file ();
-
-  void
-  file (const file_type& x);
+  vfile_type&
+  vfile ();
 
   void
-  file (::std::auto_ptr< file_type > p);
+  vfile (const vfile_type& x);
+
+  void
+  vfile (::std::auto_ptr< vfile_type > p);
+
+  // dfile
+  // 
+  typedef ::xml_schema::string dfile_type;
+  typedef ::xsd::cxx::tree::traits< dfile_type, char > dfile_traits;
+
+  const dfile_type&
+  dfile () const;
+
+  dfile_type&
+  dfile ();
+
+  void
+  dfile (const dfile_type& x);
+
+  void
+  dfile (::std::auto_ptr< dfile_type > p);
 
   // freq
   // 
@@ -1689,7 +1706,8 @@ class veldenprof_t: public ::xml_schema::type
   veldenprof_t (const x_start_type&,
                 const x_end_type&,
                 const x_count_type&,
-                const file_type&,
+                const vfile_type&,
+                const dfile_type&,
                 const freq_type&);
 
   veldenprof_t (const ::xercesc::DOMElement& e,
@@ -1718,7 +1736,8 @@ class veldenprof_t: public ::xml_schema::type
   ::xsd::cxx::tree::one< x_start_type > x_start_;
   ::xsd::cxx::tree::one< x_end_type > x_end_;
   ::xsd::cxx::tree::one< x_count_type > x_count_;
-  ::xsd::cxx::tree::one< file_type > file_;
+  ::xsd::cxx::tree::one< vfile_type > vfile_;
+  ::xsd::cxx::tree::one< dfile_type > dfile_;
   ::xsd::cxx::tree::one< freq_type > freq_;
 };
 

@@ -20,6 +20,7 @@
 #include "BoundaryCondition/Reflection.h"
 #include "BoundaryCondition/Periodic.h"
 #include "Thermostat.h"
+#include "VelDenProfile.h"
 #include "global.h"
 #include "utils/Vector.h"
 #include "simulation.h"
@@ -278,6 +279,25 @@ void XMLInput::ReadFile()
 		}
 	}
 
+	// 1.8: VelDenProfile
+	const simulation_parameters_t::velocity_density_profile_optional vdp = param.velocity_density_profile();
+	if( vdp.present() ) {
+		this->vlp_use     = true;
+		this->vlp_x_start = vdp.get().x_start();
+		this->vlp_x_end   = vdp.get().x_end();
+		this->vlp_x_count = vdp.get().x_count();
+		this->vlp_vfile   = vdp.get().vfile();
+		this->vlp_dfile   = vdp.get().dfile();
+		this->vlp_freq	  = vdp.get().freq();
+
+		LOG4CXX_DEBUG(xmllogger, "using velocity-density-profiling:" <<
+				"x_start=" << this->vlp_x_start <<
+				", x_end=" << this->vlp_x_end <<
+				", x_count=" << this->vlp_x_count <<
+				", vfile=" << this->vlp_vfile <<
+				", dfile=" << this->vlp_dfile <<
+				", freq=" << this->vlp_freq );
+	}
 
 	// 2: element "force-calculator"
 	const simulation_force_calculator_t& fc = s->force_calculator();
@@ -690,6 +710,11 @@ void XMLInput::configureApplication()
 		::thdynStats = new ThermoDynStats(this->thdyn_freq, this->thdyn_avgover, this->thdyn_dr, this->thdyn_maxrad, this->thdyn_varfile, this->thdyn_rdffile);
 	} else {
 		::thdynStats = NULL;
+	}
+
+	// VelDenProfile
+	if( this->vlp_use ) {
+		::VelDenPr = new VelDenProfile(::particles, this->vlp_x_count, this->vlp_x_start, this->vlp_x_end, this->vlp_vfile, this->vlp_dfile, this->vlp_freq);
 	}
 
 	// output

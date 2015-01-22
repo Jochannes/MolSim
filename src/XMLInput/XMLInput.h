@@ -72,6 +72,12 @@ private:
 	int fixed_count;
 	int* fixed_types;
 
+	// VelDenProfile
+	bool vlp_use;
+	double vlp_x_start, vlp_x_end;
+	int vlp_x_count, vlp_freq;
+	std::string vlp_vfile, vlp_dfile;
+
 	std::vector<ParticleFileReader> particle_file;
 	std::vector<CuboidGenerator> cuboid;
 	std::vector<SphereGenerator> sphere;
@@ -101,7 +107,7 @@ public:
 			xmlfilename(param_xmlfilename), start_time(0), end_time(1000), delta_t(0.014), forceCalcCnt(0),
 			sm_type(simulation_mode_type_t::linked_cell), cutoff_radius(3),
 			dim(0), init_temp(0), steps(0), target_temp(0), delta_temp(0), steps_changetemp(0), applyBrown(true),
-			therm_direction(-1), therm_type(-1), fixed_count(0), fixed_types(NULL),
+			therm_direction(-1), therm_type(-1), fixed_count(0), fixed_types(NULL), vlp_use(false),
 			output_freq(10), base_filename(""), res_filename("")
 	{
 		domain_size[0] = 1;

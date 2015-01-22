@@ -6,6 +6,7 @@ src/ParticleFileReader.cpp\
 src/CuboidGenerator.cpp\
 src/FileReader.cpp\
 src/ThermoDynStats.cpp\
+src/VelDenProfile.cpp\
 src/outputWriter/VTKWriter.cpp\
 src/outputWriter/vtk-unstructured.cpp\
 src/BoundaryCondition/Outflow.cpp\
@@ -59,6 +60,7 @@ src/handler/TemperatureAdjustHandler.cpp\
 src/handler/ReflectionHandler.cpp\
 src/handler/ForceCalculator_LJ_smoothed.cpp\
 src/handler/PeriodicHandler.cpp\
+src/handler/VelDenHandler.cpp\
 src/handler/ForceCalculator_Gravity.cpp\
 src/handler/PairHandlerConverter.cpp\
 src/handler/KineticEnergyHandler.cpp\
