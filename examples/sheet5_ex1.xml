@@ -9,7 +9,7 @@
     <delta-t>0.01</delta-t>
     
     <simulation-mode>
-      <type>membrane</type>
+      <type>linked-cell</type>
       <cutoff_radius>4.0</cutoff_radius>
       <domain_size_x>148</domain_size_x>
       <domain_size_y>148</domain_size_y>
@@ -19,7 +19,7 @@
     
   </parameter>
   
-  <force-calculator>
+  <force-calculator>	
     <lennard-jones cutoff_factor="1.12246204831" />
     <gravity g_grav="-0.001" direction="z" />
     <harmonic k="300" r="2.2" />

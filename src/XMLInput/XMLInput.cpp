@@ -9,7 +9,6 @@
 
 #include "ParticleContainer/CellContainer.h"
 #include "ParticleContainer/SimpleContainer.h"
-#include "ParticleContainer/MembraneContainer.h"
 #include "ParticleFileReader.h"
 #include "CuboidGenerator.h"
 #include "ParticleOutput_VTK.h"
@@ -86,12 +85,6 @@ void XMLInput::ReadFile()
 			LOG4CXX_DEBUG(xmllogger, "using normal simulation mode.");
 		}
 		break;
-
-	case simulation_mode_type_t::membrane: {
-			LOG4CXX_DEBUG(xmllogger, "using Membrane simulation mode.");
-
-		}
-		// no break;
 
 	case simulation_mode_type_t::linked_cell: {
 			LOG4CXX_DEBUG(xmllogger, "using Linked-Cell simulation mode.");
@@ -550,42 +543,6 @@ void XMLInput::configureApplication()
 		}
 		break;
 
-	case simulation_mode_type_t::membrane: {
-		MembraneContainer *tmp_mparticles = new MembraneContainer();
-
-		// add particles
-		for( vector<MembraneGenerator>::iterator it = this->membrane.begin();
-			 it != this->membrane.end();
-			 it++ )
-		{
-			std::list<Particle> particleListMem;
-			it->input(particleListMem);
-			cout << "a" << endl;
-			tmp_mparticles->fill_grid(particleListMem, it->getSizeX(), it->getSizeY());
-			cout << "b" << endl;
-		}
-
-		/*// set boundary conditions
-		for(int i=0; i<6; i++) {
-			switch (this->boundary[i]) {
-			case boundary_type_t::outflow:
-				tmp_mparticles->boundConds[i] = new Outflow(i);
-				break;
-
-			case boundary_type_t::reflect:
-				tmp_mparticles->boundConds[i] = new Reflection(tmp_mparticles, i);
-				break;
-
-			case boundary_type_t::periodic:
-				tmp_mparticles->boundConds[i] = new Periodic(tmp_mparticles, i);
-				break;
-			}
-		}*/
-
-		::particles = tmp_mparticles;
-		}
-		break;
-
 	case simulation_mode_type_t::linked_cell: {
 		CellContainer *tmp_particles = new CellContainer(this->domain_size, this->cutoff_radius);
 
@@ -676,6 +633,13 @@ void XMLInput::configureApplication()
 
 	for( vector<SphereGenerator>::iterator it = this->sphere.begin();
 		 it != this->sphere.end();
+		 it++ )
+	{
+		it->input(particleList);
+	}
+
+	for( vector<MembraneGenerator>::iterator it = this->membrane.begin();
+		 it != this->membrane.end();
 		 it++ )
 	{
 		it->input(particleList);

@@ -45,16 +45,16 @@ public:
 	virtual ~ForceCalculator_Harmonic();
 
 	/**
-	 * /brief Function for adding the (harmonic) interaction with its neighbors to a particle.
+	 * /brief Function for calculating the force for a particle.
+	 *
+	 * Since this is calculated per particle pair, this method does nothing.
 	 */
-	virtual void compute(Particle& p);
+	virtual void compute(Particle& p) {}
 
 	/**
-	 * /brief Function for calculating the force between two particles.
-	 *
-	 * Since this is calculated per single particle, this method does nothing.
+	 * /brief Function for adding the (harmonic) interaction, if the particles are neighbors.
 	 */
-	virtual void compute(Particle& p1, Particle& p2) {}
+	virtual void compute(Particle& p1, Particle& p2);
 };
 
 

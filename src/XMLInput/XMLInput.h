@@ -108,7 +108,7 @@ public:
 			sm_type(simulation_mode_type_t::linked_cell), cutoff_radius(3),
 			dim(0), init_temp(0), steps(0), target_temp(0), delta_temp(0), steps_changetemp(0), applyBrown(true),
 			therm_direction(-1), therm_type(-1), fixed_count(0), fixed_types(NULL), vlp_use(false),
-			output_freq(10), base_filename(""), res_filename("")
+			output_freq(10), base_filename(""), res_filename(""), thdyn_use(false)
 	{
 		domain_size[0] = 1;
 		domain_size[1] = 1;

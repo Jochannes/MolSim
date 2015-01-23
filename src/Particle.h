@@ -44,7 +44,8 @@ private:
 
 	bool virt; //!< sets if the particle is virtual.
 
-	Particle* neighbors[8];	//!< stores the surrounding particles. Index: starting with the upper-left corner, counting clock-wise.
+	int id;		//!< unique number used to identify the number (optional)
+	int neighbors[8];	//!< stores the ids of surrounding particles. Index: starting with the upper-left corner, counting clock-wise.
 
 public:
 	static double def_sigma;	//!< Default sigma value used for the Lennard-Jones potential
@@ -58,11 +59,13 @@ public:
 			// for visualization, we need always 3 coordinates
 			// -> in case of 2d, we use only the first and the second
 			utils::Vector<double, 3> x_arg, utils::Vector<double, 3> v_arg,
-			double m_arg, int type = 0, double epsilon_arg = def_epsilon, double sigma_arg = def_sigma, bool virt_arg = false);
+			double m_arg, int type = 0, double epsilon_arg = def_epsilon, double sigma_arg = def_sigma,
+			bool virt_arg = false, int id_arg = -1);
 
 	Particle(utils::Vector<double, 3> x_arg, utils::Vector<double, 3> v_arg,
 			 utils::Vector<double, 3> f_arg, utils::Vector<double, 3> old_f_arg,
-			 double m_arg, double epsilon_arg = def_epsilon, double sigma_arg = def_sigma, int type_arg = 0, bool virt_arg = false);
+			 double m_arg, double epsilon_arg = def_epsilon, double sigma_arg = def_sigma,
+			 int type_arg = 0, bool virt_arg = false, int id_arg = -1);
 
 	virtual ~Particle();
 
@@ -84,8 +87,14 @@ public:
 
 	bool getVirtual();
 
-	Particle* getNeighbor(int side);
+	int getID();
+	void setID(int new_id);
+
+	int  getNeighbor(int side);
+	void setNeighbor(int side, int id_neighbor);
 	void setNeighbor(int side, Particle& p);
+	bool isDirectNeighbor(Particle& p);
+	bool isDiagNeighbor(Particle& p);
 
 	bool operator==(Particle& other);
 

@@ -17,7 +17,7 @@ using namespace utils;
 
 
 ForceCalculator_Harmonic::ForceCalculator_Harmonic(double arg_k, double arg_r) : k(arg_k), r(arg_r) {
-	ForceCalculator::interaction = false;
+	ForceCalculator::interaction = true;
 }
 
 ForceCalculator_Harmonic::~ForceCalculator_Harmonic() {
@@ -37,6 +37,7 @@ void ForceCalculator_Harmonic::calc_direct(Particle& p1, Particle& p2)
 	Vector<double, 3> force = diff_x * k * (1.0 - r/diff_x.L2Norm());
 
 	p1.getF() = p1.getF() + force;
+	p2.getF() = p2.getF() - force;
 }
 
 
@@ -53,26 +54,23 @@ void ForceCalculator_Harmonic::calc_diag(Particle& p1, Particle& p2)
 	Vector<double, 3> force = diff_x * k * (1.0 - M_SQRT2*r/diff_x.L2Norm());
 
 	p1.getF() = p1.getF() + force;
+	p2.getF() = p2.getF() - force;
 }
 
 
 /**
- * \brief Function for adding the (harmonic) interaction with its neighbors to a particle.
+ * \brief Function for adding the (harmonic) interaction, if the particles are neighbors.
  *
- * @param p Particle for which the force is calculated
- *
+ * @param p First particle of the particle pair.
+ * @param p Other particle of the particle pair.
  */
-void ForceCalculator_Harmonic::compute(Particle& p) {
+void ForceCalculator_Harmonic::compute(Particle& p1, Particle& p2) {
 
-	for(int i=0; i<8; i++) {
-		Particle* neighbor = p.getNeighbor(i);
-
-		if( neighbor != NULL ) {
-			if( (i%2) == 0 )
-				calc_diag(p, *neighbor);
-			else
-				calc_direct(p, *neighbor);
-		}
+	if( p1.isDiagNeighbor(p2) ) {
+		calc_diag(p1, p2);
+	}
+	else if( p1.isDirectNeighbor(p2) ) {
+		calc_direct(p1, p2);
 	}
 }
 
