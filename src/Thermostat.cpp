@@ -95,7 +95,7 @@ double Thermostat::calculateKineticEnergy()
 		return h.getKineticEnergy();
 	}
 	else {
-		utils::Vector<double, 3> v_mean;
+		utils::Vector<double, 3> v_mean(0.0);
 		MeanVelocityHandler h1(direction, type);
 		particles.iterate_all(h1);
 		v_mean[direction] = h1.getMeanV();

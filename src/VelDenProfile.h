@@ -23,9 +23,15 @@ private:
 	const int N;			//!< number of bins
 	const double x_start;	//!< left edge of the first bin
 	const double x_end;		//!< right edge of the last bin
+	const double width;		//!< width of a bin
 
 	double* bin_mass;	//!< array to store the mass
 	double* bin_vel;	//!< array to store the velocity
+	int*    bin_count;	//!< array to store the number of particles
+
+	double* bin_density;	//!< array to store the accumulated density
+	double* bin_avgvel;		//!< array to store the accumulated average velocity
+
 	ParticleContainer* cont;	//!< ParticleContainer storing the particles for the analysis.
 
 	int freq;					//!< number of time steps to wait between outputs.

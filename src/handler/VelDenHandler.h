@@ -26,12 +26,13 @@ private:
 
 	double* bin_mass;	//!< array to store the mass
 	double* bin_vel;	//!< array to store the velocity
+	int*	bin_count;	//!< array to store the number of particles
 
 public:
-	VelDenHandler(int arg_N, double arg_x_start, double arg_x_end, double* arg_bin_mass, double* arg_bin_vel) :
+	VelDenHandler(int arg_N, double arg_x_start, double arg_x_end, double* arg_bin_mass, double* arg_bin_vel, int* arg_bin_count) :
 		N(arg_N), x_start(arg_x_start), x_end(arg_x_end),
-		bin_mass(arg_bin_mass), bin_vel(arg_bin_vel),
-		width( (x_end-x_start)/double(N) ) {
+		bin_mass(arg_bin_mass), bin_vel(arg_bin_vel), bin_count(arg_bin_count),
+		width( (arg_x_end - arg_x_start)/double(arg_N) ) {
 	}
 
 	virtual ~VelDenHandler() {

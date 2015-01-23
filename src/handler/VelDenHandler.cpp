@@ -16,6 +16,7 @@ void VelDenHandler::compute(Particle& p)
 	if( index_d >= 0  &&  index_d < N ) {
 		bin_vel[index]  += p.getV()[1];
 		bin_mass[index] += p.getM();
+		bin_count[index]++;
 	}
 	else {
 		// out of bound
